@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sunil Art Gallery</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="author" content="">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <!-- script
+    ================================================== -->
+    <script src="js/modernizr.js"></script>
+  </head>
+  <body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%" data-bs-smooth-scroll="true" tabindex="0">
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+        <title>Search</title>
+        <path fill="currentColor" d="M19 3C13.488 3 9 7.488 9 13c0 2.395.84 4.59 2.25 6.313L3.281 27.28l1.439 1.44l7.968-7.969A9.922 9.922 0 0 0 19 23c5.512 0 10-4.488 10-10S24.512 3 19 3zm0 2c4.43 0 8 3.57 8 8s-3.57 8-8 8s-8-3.57-8-8s3.57-8 8-8z" />
+      </symbol>
+      
+      <symbol xmlns="http://www.w3.org/2000/svg" id="user" width="16" height="18" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="cart" width="16" height="17" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
+        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="arrow-left" viewBox="0 0 32 32">
+        <path fill="currentColor" d="m13.281 6.781l-8.5 8.5l-.687.719l.687.719l8.5 8.5l1.438-1.438L7.938 17H28v-2H7.937l6.782-6.781z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="arrow-right" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M18.719 6.781L17.28 8.22L24.063 15H4v2h20.063l-6.782 6.781l1.438 1.438l8.5-8.5l.687-.719l-.687-.719z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="shipping-fast" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M0 6v2h19v15h-6.156c-.446-1.719-1.992-3-3.844-3c-1.852 0-3.398 1.281-3.844 3H4v-5H2v7h3.156c.446 1.719 1.992 3 3.844 3c1.852 0 3.398-1.281 3.844-3h8.312c.446 1.719 1.992 3 3.844 3c1.852 0 3.398-1.281 3.844-3H32v-8.156l-.063-.157l-2-6L29.72 10H21V6zm1 4v2h9v-2zm20 2h7.281L30 17.125V23h-1.156c-.446-1.719-1.992-3-3.844-3c-1.852 0-3.398 1.281-3.844 3H21zM2 14v2h6v-2zm7 8c1.117 0 2 .883 2 2s-.883 2-2 2s-2-.883-2-2s.883-2 2-2zm16 0c1.117 0 2 .883 2 2s-.883 2-2 2s-2-.883-2-2s.883-2 2-2z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="shopping-cart" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M5 7c-.55 0-1 .45-1 1s.45 1 1 1h2.219l2.625 10.5c.222.89 1.02 1.5 1.937 1.5H23.25c.902 0 1.668-.598 1.906-1.469L27.75 10H11l.5 2h13.656l-1.906 7H11.781L9.156 8.5A1.983 1.983 0 0 0 7.22 7zm17 14c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3zm-9 0c-1.645 0-3 1.355-3 3s1.355 3 3 3s3-1.355 3-3s-1.355-3-3-3zm0 2c.563 0 1 .438 1 1c0 .563-.438 1-1 1c-.563 0-1-.438-1-1c0-.563.438-1 1-1zm9 0c.563 0 1 .438 1 1c0 .563-.438 1-1 1c-.563 0-1-.438-1-1c0-.563.438-1 1-1z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="gift" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M12 5c-1.645 0-3 1.355-3 3c0 .352.074.684.188 1H4v6h1v13h22V15h1V9h-5.188A2.95 2.95 0 0 0 23 8c0-1.645-1.355-3-3-3c-1.75 0-2.938 1.328-3.719 2.438c-.105.148-.187.292-.281.437c-.094-.145-.176-.29-.281-.438C14.938 6.329 13.75 5 12 5zm0 2c.625 0 1.438.672 2.063 1.563c.152.218.128.23.25.437H12c-.566 0-1-.434-1-1c0-.566.434-1 1-1zm8 0c.566 0 1 .434 1 1c0 .566-.434 1-1 1h-2.313c.122-.207.098-.219.25-.438C18.563 7.673 19.375 7 20 7zM6 11h20v2h-9v-1h-2v1H6zm1 4h18v11h-8V16h-2v10H7z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="return" viewBox="0 0 32 32">
+        <path fill="currentColor" d="M16 3C8.832 3 3 8.832 3 16s5.832 13 13 13s13-5.832 13-13h-2c0 6.086-4.914 11-11 11S5 22.086 5 16S9.914 5 16 5c3.875 0 7.262 1.984 9.219 5H20v2h8V4h-2v3.719C23.617 4.844 20.02 3 16 3z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="quote" viewBox="0 0 24 24">
+        <path fill="currentColor" d="m15 17l2-4h-4V6h7v7l-2 4h-3Zm-9 0l2-4H4V6h7v7l-2 4H6Z" />
+      </symbol>      
+      <symbol xmlns="http://www.w3.org/2000/svg" id="nav-icon" viewBox="0 0 16 16">
+        <path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="close" viewBox="0 0 16 16">
+        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="navbar-icon" viewBox="0 0 16 16">
+        <path d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
+      </symbol>
+      <symbol xmlns="http://www.w3.org/2000/svg" id="wishlist-cart" width="16" height="17" fill="currentColor" class="bi bi-bag-heart-fill" viewBox="0 0 16 17">
+        <path d="M11.5 4v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m0 6.993c1.664-1.711 5.825 1.283 0 5.132-5.825-3.85-1.664-6.843 0-5.132" />
+      </symbol>
+    </svg>
+
+    <div id="preloader">
+      <span class="loader">
+        <span class="loader-inner"></span>
+      </span>
+    </div>
+
+    <div class="search-box position-relative overflow-hidden w-100">
+      <div class="search-wrap">
+        <div class="close-button position-absolute">
+          <svg class="close" width="22" height="22">
+            <use xlink:href="#close"></use>
+          </svg>
+        </div>
+        <form id="search-form" class="text-center pt-3" action="" method="">
+          <input type="text" class="search-input fs-5 p-4 bg-transparent" placeholder="Search...">
+          <svg class="search" width="22" height="22">
+            <use xlink:href="#search"></use>
+          </svg>
+        </form>
+      </div>
+    </div> 
+
+    <!-- Header part start -->
+    <header id="header" class="site-header text-black">
+      <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="index.html">
+            <img src="images/main-logo.png" class="logo">
+          </a>
+          <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
+            <svg class="navbar-icon" width="50" height="50">
+              <use xlink:href="#navbar-icon"></use>
+            </svg>
+          </button>
+          <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
+            <div class="offcanvas-header px-4 pb-0">
+              <a class="navbar-brand" href="index.html">
+                <img src="images/main-logo.png" class="logo">
+              </a>
+              <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-target="#bdNavbar"></button>
+            </div>
+            <div class="offcanvas-body">
+              <ul id="navbar" class="navbar-nav text-uppercase justify-content-end align-items-center flex-grow-1 pe-3">
+                <li class="nav-item dropdown">
+                  <a class="nav-link me-4" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="about-us.html">About</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="gallery.html">Gallery</a>
+                </li>
+                <!-- <li class="nav-item dropdown me-4">
+                  <a class="nav-link" href="shop.html">Shop</a>
+                </li> -->
+                <li class="nav-item dropdown me-4">
+                  <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+                
+                <!-- <li class="nav-item">
+                  <div class="user-items ps-5">
+                    <ul class="d-flex justify-content-end list-unstyled">
+                      <li class="search-item pe-3" data-bs-toggle="collapse" data-bs-target="#search-box" aria-controls="search-box" aria-expanded="false" aria-label="Toggle navigation">
+                        <svg class="search" width="18" height="18">
+                          <use xlink:href="#search"></use>
+                        </svg>
+                      </li>
+                      <li class="pe-3">
+                        <a href="my-account.html">
+                          <svg class="user" width="18" height="18">
+                            <use xlink:href="#user"></use>
+                          </svg>
+                        </a>
+                      </li>
+                      <li class="pe-3">
+                        <a href="wishlist.html">
+                          <svg class="wishlist-cart" width="18" height="18">
+                            <use xlink:href="#wishlist-cart"></use>
+                          </svg>
+                        </a>
+                      </li>
+                      <li>
+                        <a href="cart.html">
+                          <svg class="cart" width="18" height="18">
+                            <use xlink:href="#cart"></use>
+                          </svg>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </li> -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>    
+    </header>
+    <!-- Header part end -->
+
+    <section class="hero-section position-relative bg-gray padding-medium">
+      <div class="hero-content">
+        <div class="container">
+          <div class="row">
+            <div class="text-center">
+              <h1 class="display-2 text-uppercase text-dark">Gallery</h1>
+              <div class="breadcrumbs">
+                <span class="item">
+                  <a href="index.html">Home &gt;</a>
+                </span>
+                <span class="item">Gallery</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+   <section id="collections" class="position-relative padding-large">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">Whispers of the Fish</h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-5.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Room</h3>
+                          <p>In a world where dreams merge with reality, she sits gracefully on a branch of life, her thoughts swimming amidst the vibrant whispers of the fish, suspended in a moment where nature's wonders meet the surreal.</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Branch of Life
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-6.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>Amidst the vibrant embrace of nature, the white cow stands poised on a branch, a silent guardian of the lively chorus of birds. The scene pulses with the rhythm of life, where every creature and leaf plays its part in the grand tapestry of existence.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Harmony in Flight
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-7.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a world of vivid colors and flowing shapes, she becomes the canvas, her essence intertwined with the wings of birds. Each hue and form tells a story of freedom and unity, where the abstract meets the tangible in a dance of life and color.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+   
+   
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Silent Companions</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-8.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a vibrant embrace of nature, the person and cow lie side by side, their connection a quiet testament to the bond between living beings. Amidst a backdrop of lush greenery and lively colors, their shared moment speaks of peace and harmony, where the world fades away and only their companionship remains.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Nature’s Serenade
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-9.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>Amidst a vibrant tapestry of life, the deer stands as the gentle guardian, a yellow flower gracing its back. A peacock and butterfly, each a burst of color, dance nearby, as the forest hums with quiet beauty. Together, they create a serene symphony of nature's wonders.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Gallop of Freedom
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-10.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Kitchen</h3>
+                          <p>In a burst of motion, the horse surges forward, a powerful blend of brown and black against a whirlwind of vibrant colors. The abstract background swirls with green, blue, and orange, capturing the untamed spirit of the wild. This dynamic scene is a testament to the raw energy and freedom that only a galloping horse can embody.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Celestial Surge
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-11.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>The white horse leaps through a monochrome world, its flowing mane a symbol of unbridled energy. Against a vibrant sky of colors, with birds in vivid flight and a palm tree swaying, the scene captures the exhilarating rush of freedom and the beauty of the boundless horizon.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Dual Reverie
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-12.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a realm of vibrant contrasts, two horses emerge: one brown with fiery red and yellow stripes, the other blue adorned with green and yellow. Their striking forms stand out against a kaleidoscopic backdrop of blues, greens, and fiery splashes, evoking a dreamscape where color and imagination run wild.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Roots of Imagination
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-13.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A majestic tree, with its rich brown trunk and vibrant green leaves, anchors the scene, its roots reaching into the canvas's depths. Surrounded by whimsical elements—a pink building, a yellow bird, and a purple flower—this abstract composition celebrates the harmony of nature and imagination against a pristine white backdrop.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Hero’s Prism
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-14.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a burst of colors, a figure in a bold blue robe commands attention, sword raised in a moment of poised strength. Surrounded by a vibrant cast of yellow, green, and pink forms, the scene unfolds against a rich tapestry of green and pink, blending bravery with the kaleidoscope of dreams.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Celestial Steed and Aviary
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-15.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In an otherworldly realm, a majestic horse in vivid orange and brown stands poised, its mane and tail rippling like ethereal flames. Surrounding it, a vibrant flurry of birds in green, blue, and purple weave through the air, some perched upon the horse, as if sharing tales of a fantastical journey. Framed by a bold black border, this scene captures a timeless moment of grace and wonder.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Enchanted Menagerie
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-16.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a whimsical sketch, a black cow stands center stage, its gaze gentle and curious. To the left, a pink bird perches on a branch, while a black cat rests on a green plant, its tail curled around itself. The background brims with lively details—a blue fish, a pink flower, and more—creating a playful narrative where each character adds its own touch to the magical tableau.</p>
+                          
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Abstract Grazing
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-17.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a vibrant dreamscape, a cow with a whimsical pink and purple tail roams through a meadow of abstract blooms. Each flower, in hues of pink, purple, and gold, seems to sing a silent melody as the cow, outlined in bold lines, moves through a world where colors and patterns dance together in harmony.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Wildlife Interlude"
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-18.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In this art brought to life with vibrant hues, a cow, a bird, and a horse mingle amidst a lively tapestry of plants. The warm oranges and reds of the animals contrast with the cool blues and greens of their surroundings, while green leaves and brown trunks anchor the scene. From a unique perspective, they appear to interact in a harmonious dance, capturing a moment where nature’s rhythms blend seamlessly</p>
+                      
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Watchful Wanderer
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-19.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A monkey, frozen in a dynamic pose, eyes an unseen secret beyond the frame. Its dark fur stands out against a light beige background, capturing a moment of focused curiosity.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      The Horse Amidst Blooming Splendor
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-20.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A vibrant horse stands amidst a lush tapestry of plants and flowers, its brown coat contrasting against a vivid backdrop.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Crimson Sentinel
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-21.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A vibrant red bull with a white face dominates the scene, surrounded by a swirl of colorful figures. The dynamic arrangement of a red-haired woman, a green and red man, and a pink and green woman creates a lively burst of energy against a stark white backdrop.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Equine Blossom
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-22.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>AIn a whimsical garden, a brown horse roams serenely among pink and purple blooms, its gaze fixed on a towering blue tree with green branches. As the scene unfolds, the horse and tree weave a quiet tale of harmony amidst the vibrant tapestry of nature.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Tranquil Bull
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-23.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a vibrant realm, a bull in shades of orange, purple, and green rests serenely, its majestic antlers framing a peaceful scene. Reclining against a backdrop of rich greens and blues, it embodies a tranquil moment amidst a tapestry of leaves and flowers.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Dynamic Fusion
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-24.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a burst of abstract brilliance, a brown cow, green tree, and red bird engage in a dance across a vivid landscape of blue and green. Their interplay of shapes and colors weaves a tale of lively movement and interaction, captured in a striking collage that bursts with depth and energy.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Colorful Cavalier
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-25.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>Amidst a stark white canvas, a horse adorned with a green hat and white scarf stands in vivid shades of orange, pink, and green. Positioned centrally and facing right, it brings a whimsical burst of color and character to the scene.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Melodic Harmony
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-26.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A guitar, painted in vivid reds, blues, and greens, leans gracefully to the left, its neck reaching skyward. Set against a crisp white backdrop, it becomes a vibrant centerpiece surrounded by a bird, a flower, and a sun, together crafting a visual symphony of color and melody.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Peaceful Pasture
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-27.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>On a tranquil hill, a brown goat lies contentedly while a white goat stands watchful. Surrounded by a lush green field and gentle trees, this loose, sketchy painting in bold blues, greens, and yellows captures a serene moment of quiet companionship.</p>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Masked Melodies
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-28.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>Amidst a burst of tropical colors, a masked man holds a guitar, blending into a vibrant tapestry of lush plants and bold flowers. The stark white background accentuates the lively interplay of hues, capturing a moment of musical mystery in a lively garden scene.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Vibrant Currents
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-29.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a whirl of blue, orange, green, and purple, dynamic shapes and curves flow across the canvas, evoking a sense of energetic movement. Framed by a crisp white border, this modern abstract piece bursts with life and rhythm, capturing the essence of vibrant expression.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Colorful Trio
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-30.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A vibrant abstract scene unfolds with a brown and black horse on the left, a person in blue and red outstretched at the center, and a blue and green bird to the right. Set against a lush green backdrop of trees and foliage, this lively composition blends shapes and colors into a dynamic visual narrative.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Animated Grace
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-31.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a vibrant scene, a brown cow charges forward with raised horns, while a woman in a red dress cradles a white bird. Set against a lush green backdrop of trees and foliage, the abstract lines and bold colors capture a dynamic dance of energy and grace.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Elegance Amidst Tropics
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-32.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A graceful woman with a necklace and earrings gazes thoughtfully to the left, surrounded by a lush burst of tropical plants and flowers in vibrant greens, blues, and pinks. The stark white background enhances her elegance and the dynamic abstract forms that bring the scene to life.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Vivid Menagerie
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-33.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>A green horse adorned with pink and orange patterns stands proudly as a peacock fans its vibrant blue and green feathers nearby. An orange and yellow bird soars between them, all set against a stark white backdrop that amplifies their lively colors and abstract forms.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Chromatic Whirl
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-34.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a swirl of vivid reds, oranges, and blues, abstract shapes dance across the canvas, creating a vibrant symphony of color. Each hue pulses with energy, drawing the viewer into a lively world where form gives way to pure emotion.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Forest Harmony
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-35.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a vibrant woodland, a cow stands proudly beneath a green canopy, while a parrot and bird perch playfully on nearby branches. The sky above stretches blue and wide, embracing the lively scene below. Each creature adds its unique voice to the forest’s symphony, creating a colorful tapestry of life and connection.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Weightless Stillness
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-36.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a world of black and white, a woman drifts through the void, her form suspended in the air. Her limbs extend freely, embracing the emptiness around her. The simplicity of the lines captures a moment of serene solitude, where time and space seem to dissolve, leaving only the pure essence of her graceful, floating figure.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Threads of Unity
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-37.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>Three figures reach out, their forms interwoven in a dance of lines and curves. The central figure anchors the trio, their outstretched arms bridging the gap between them. Each stroke of black ink captures a fleeting moment of connection, where individuality merges into a shared embrace.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Restful Companions
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-38.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>Three goats find solace in each other’s presence, their forms sketched with ease and grace. One lies peacefully on the ground, while the others stand close, as if sharing a quiet moment. The simplicity of the lines speaks of contentment, capturing a fleeting scene of quiet camaraderie.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Whispers in the Meadow
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-39.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a quiet meadow, four goats bask in the warmth of the day. Their simple forms, drawn with gentle lines, capture a fleeting moment of peace. Some stand, others rest, all sharing in the calm that surrounds them. The artist’s touch brings light and shadow into play, adding depth to this serene scene where nature’s tranquility reigns.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Tales of the Tropics
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-40.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a lush tropical haven, a woman in pink and blue stands poised, clutching a brown pot. Behind her, a blue boat rests amid the palms, the scene alive with color and movement as she readies herself for the journey ahead.</p>
+                          
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      Visionary Dreamscape
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-41.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Art</h3>
+                          <p>In a realm of dreams, a watchful eye surveys a surreal world. Amidst abstract forms, a meditative figure finds serenity, while a bird and a tree weave through the tangled lines of this enigmatic vision.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Bed Rooms</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-42.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Room</h3>
+                          <p>Assumenda temporibus quidem ipsam. fuga corporis iusto similique voluptates sint quibusdam.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Kitchens</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-43.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Kitchen</h3>
+                          <p>Assumenda temporibus quidem ipsam. fuga corporis iusto similique voluptates sint quibusdam.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Living Rooms</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-44.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Room</h3>
+                          <p>Assumenda temporibus quidem ipsam. fuga corporis iusto similique voluptates sint quibusdam.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Bed Rooms</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-45.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Room</h3>
+                          <p>Assumenda temporibus quidem ipsam. fuga corporis iusto similique voluptates sint quibusdam.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Kitchens</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-46.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Kitchen</h3>
+                          <p>Assumenda temporibus quidem ipsam. fuga corporis iusto similique voluptates sint quibusdam.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+
+    <section id="collections" class="position-relative padding">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="swiper collection-swiper">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Living Rooms</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-47.jpg" alt="product-item" class="product-image img-fluid">
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Room</h3>
+                          <p>Assumenda temporibus quidem ipsam. fuga corporis iusto similique voluptates sint quibusdam.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>                  
+                </div>
+              </div>
+              <div class="swiper-slide overflow-hidden">
+                <div class="product-card">
+                  <div class="card-detail d-flex justify-content-between align-items-baseline pt-3">
+                    <h3 class="card-title text-uppercase">
+                      <a href="shop.html">Bed Rooms</a>
+                    </h3>
+                  </div>
+                  <div class="image-overlay position-relative">
+                    <div class="product-image">
+                      <img src="images/gallery-48.jpg" alt="product-item" class="product-image img-fluid">
+
+                      <div class="text-box box-slide position-absolute">
+                        <div class="text-content p-5 bg-light">
+                          <h3>About Room</h3>
+                          <p>Assumenda temporibus quidem ipsam. fuga corporis iusto similique voluptates sint quibusdam.</p>
+                          <ul>
+                            <li>Various Types of Bedroom</li>
+                            <li>Different Size of Bed</li>
+                            <li>Comfortable and Clean Room</li>
+                          </ul>
+                          <a href="#" class="btn btn-normal mt-3">Learn More</a>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- product-image -->
+                  </div>                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- footer -->
+    <footer id="footer" class="overflow-hidden">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="row d-flex flex-wrap justify-content-between">
+            <div class="col-lg-3 col-sm-6 pb-3 pe-4">
+              <div class="footer-menu">
+                <img src="images/main-logo.png" alt="logo" class="pb-3">
+                <p>Welcome to the official website of Sunil A. Sawane. Here, you can explore a diverse collection of my artwork, including Pen & Ink. My work is inspired by nature, abstract concepts, and personal experiences, and I aim to paint all this on my canvas. Thank you for visiting, and I hope you enjoy exploring my creations.</p>
+              </div>
+              <div class="copyright">
+                <p>© 2024, Sunil A. Sawane. All rights to artwork and content reserved. Unauthorized use or reproduction of any material from this site is prohibited.</p>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-6 pb-3">
+              <div class="footer-menu text-uppercase">
+                <h5 class="widget-title pb-2">Quick Links</h5>
+                <ul class="menu-list list-unstyled text-uppercase">
+                  <li class="menu-item pb-2">
+                    <a href="#billboard">Home</a>
+                  </li>
+                  <li class="menu-item pb-2">
+                    <a href="#about-us">About</a>
+                  </li>
+                  <!-- <li class="menu-item pb-2">
+                    <a href="#featured-products">Shop</a>
+                  </li> -->
+                  <li class="menu-item pb-2">
+                    <a href="#contact">Contact</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-lg-2 col-sm-6 pb-3">
+              <div class="footer-menu text-uppercase">
+                <h5 class="widget-title pb-2">Social</h5>
+                <div class="social-links">
+                  <ul class="list-unstyled">
+                    <li class="pb-2">
+                      <a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg">Facebook</a>
+                    </li>
+                    <li class="pb-2">
+                      <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&s=08">Twitter</a>
+                    </li>
+                    <li class="pb-2">
+                      <a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl">Instagram</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+              <div class="footer-menu contact-item">
+                <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
+                <p><a href="">+ 91-9810238984</a></p>
+                <p><a href="mailto:">sunilart@gmail.com</a></p>
+                <p>Gurgaon, Haryana, India</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/jquery-1.11.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/plugins.js"></script>
+    <script type="text/javascript" src="js/script.js"></script>
+  
+</body>
+</html>
