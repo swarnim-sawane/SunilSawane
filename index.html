@@ -655,14 +655,28 @@
                 <h2 class="display-4">Contact Me</h2>
               </div>
               <form id="form">
-                <input type="text" name="email" placeholder="Enter Your Email Addresss" class="w-100 bg-light border-0 ps-5 fst-italic">
-                <button class="btn btn-full btn-black text-uppercase">Submit</button>
+                <input type="text" name="email" placeholder="Enter Your Email Address" class="w-100 bg-light border-0 ps-5 fst-italic" required>
+                <button type="submit" class="btn btn-full btn-black text-uppercase">Submit</button>
               </form>
             </div>
           </div>
         </div>
       </div>
     </section>
+  
+    <script>
+      document.getElementById('form').addEventListener('submit', function(event) {
+        event.preventDefault();
+    
+        const email = document.querySelector('input[name="email"]').value;
+    
+        // Debugging statement
+        console.log('Email:', email);
+    
+        // Use URL parameters to pass the email to contact.html
+        window.location.href = `contact.html?email=${encodeURIComponent(email)}`;
+      });
+    </script>
     <!-- Contact us end-->
 
     <!-- Trending Products same as featured products - Discarded -->
@@ -895,11 +909,14 @@
                   <li class="menu-item pb-2">
                     <a href="#about-us">About</a>
                   </li>
+                  <li class="menu-item pb-2">
+                    <a href="gallery.html">Gallery</a>
+                  </li>
                   <!-- <li class="menu-item pb-2">
                     <a href="#featured-products">Shop</a>
                   </li> -->
                   <li class="menu-item pb-2">
-                    <a href="#contact">Contact</a>
+                    <a href="contact.html">Contact</a>
                   </li>
                 </ul>
               </div>
