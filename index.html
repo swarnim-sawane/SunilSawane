@@ -16,6 +16,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+
     <!-- script
     ================================================== -->
     <script src="js/modernizr.js"></script>
@@ -287,9 +289,15 @@
             <div class="image-holder mb-4 jarallax">
                 <img src="images/Artist-img.jpg" alt="single" class="img-fluid jarallax-img">
                 <!-- <div class="quote text-center mt-2">
-                  <p>"Art is the most beautiful way to express the inexpressible."</p>
+                  <p>"Art is the most beautiful way to express the inexpressiblex."</p>
                   <footer>- Sunil Sawane</footer>
                 </div> -->
+            </div>
+            <div class="pb-3" style="padding-left: 30px; font-size: 17px; font-family: 'Georgia', serif; font-style: italic;">
+              <p>"All creativity is a gift from God, making it possible to manifest the divine in our work."</p>            
+            </div>          
+            <div class="quote mt-1 bold" style="padding-left: 280px;">
+              <p><i>- Sunil A. Sawane</i></p>          
             </div>
           </div>
           <div class="col-lg-6">
@@ -307,12 +315,7 @@
               </div>
             </div>
           </div>
-          <div class="pb-3" style="padding-left: 50px; font-weight: bold;">
-            <p>"All creativity is a gift from God, making it possible to manifest the divine in our work."</p>            
-          </div>
-          <div class="quote mt-1 bold" style="padding-left: 310px;">
-            <p>- Sunil A. Sawane</p>          
-          </div>
+          
         </div>
       </div>
     </section>
@@ -677,6 +680,62 @@
         window.location.href = `contact.html?email=${encodeURIComponent(email)}`;
       });
     </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var swiper = new Swiper('.collection-swiper', {
+        slidesPerView: 3,
+        spaceBetween: 20,
+        autoplay: {
+          delay: 3000, 
+          disableOnInteraction: false,
+          reverseDirection: false,
+        },
+        speed: 1000,
+        loop: false,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true, 
+          dynamicBullets: true, 
+        },
+        on: {
+          reachEnd: function () {
+            this.autoplay.reverseDirection = true;
+          },
+          reachBeginning: function () {
+            this.autoplay.reverseDirection = false;
+          },
+        },
+      });
+
+      //   var swiper = new Swiper('.main-swiper', {
+      //   slidesPerView: 1,
+      //   spaceBetween: 20,
+      //   autoplay: {
+      //     delay: 3000, 
+      //     disableOnInteraction: false,
+      //     reverseDirection: false,
+      //   },
+      //   speed: 1000,
+      //   loop: false,
+      //   pagination: {
+      //     el: '.swiper-pagination',
+      //     clickable: true, 
+      //     dynamicBullets: true, 
+      //   },
+      //   on: {
+      //     reachEnd: function () {
+      //       this.autoplay.reverseDirection = true;
+      //     },
+      //     reachBeginning: function () {
+      //       this.autoplay.reverseDirection = false;
+      //     },
+      //   },
+      // });
+
+      });
+    </script>
+
     <!-- Contact us end-->
 
     <!-- Trending Products same as featured products - Discarded -->
@@ -943,7 +1002,7 @@
               <div class="footer-menu contact-item">
                 <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
                 <p><a href="">+ 91-9810238984</a></p>
-                <p><a href="mailto:">sunilart@gmail.com</a></p>
+                <p><a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a></p>
                 <p>Gurgaon, Haryana, India</p>
               </div>
             </div>
@@ -958,5 +1017,6 @@
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/plugins.js"></script>
     <script type="text/javascript" src="js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
   </body>
 </html>
