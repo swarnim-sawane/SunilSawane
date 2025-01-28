@@ -1101,4 +1101,66 @@ h5 {
 }
 
 
+.swiper-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+  gap: 10px; /* Space between items */
+  padding: 20px;
+  /* For responsiveness: switch to 2 items per row on smaller screens, and 1 item per row on very small screens */
+}
 
+@media (max-width: 1024px) {
+  .swiper-wrapper {
+    grid-template-columns: repeat(2, 1fr); /* 2 items per row on medium screens */
+  }
+}
+
+@media (max-width: 600px) {
+  .swiper-wrapper {
+    grid-template-columns: 1fr; /* 1 item per row on small screens */
+  }
+}
+
+.product-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* .product-image img {
+  width: 100%;
+  height: auto;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-image:hover img {
+  transform: scale(1.05);
+}
+
+.text-box {
+  display: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.product-image:hover .text-box {
+  display: block;
+  opacity: 1;
+} */
+
+.text-content {
+  padding: 20px;
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+
+
+/* Increase the gap between rows */
+.gallery-grid {
+  row-gap: 50px; /* Adjust this value to increase/decrease the space between rows */
+}
+
+/* Optional: Control the spacing between columns as well */
+.gallery-grid .col-md-4 {
+  padding-bottom: 20px; /* Controls spacing between items in the same column */
+}
