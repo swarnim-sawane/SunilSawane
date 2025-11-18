@@ -1,0 +1,64 @@
+{
+  "kind": "collectionType",
+  "collectionName": "artworks",
+  "info": {
+    "singularName": "artwork",
+    "pluralName": "artworks",
+    "displayName": "Artwork"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "Description": {
+      "type": "blocks"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "images": {
+      "type": "media",
+      "multiple": true,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::category.category",
+      "inversedBy": "artwork"
+    },
+    "dimensions": {
+      "type": "string"
+    },
+    "medium": {
+      "type": "string"
+    },
+    "yearCreated": {
+      "type": "integer"
+    },
+    "isAvailable": {
+      "type": "boolean"
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title"
+    },
+    "isFeatured": {
+      "type": "boolean"
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::order.order",
+      "mappedBy": "artworks"
+    }
+  }
+}

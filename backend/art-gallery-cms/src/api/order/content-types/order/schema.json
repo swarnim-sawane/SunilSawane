@@ -1,0 +1,71 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "orderNumber": {
+      "type": "string",
+      "required": true
+    },
+    "customerName": {
+      "type": "string",
+      "required": true
+    },
+    "customerEmail": {
+      "type": "string",
+      "required": true
+    },
+    "customerPhone": {
+      "type": "string"
+    },
+    "artworks": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::artwork.artwork",
+      "inversedBy": "orders"
+    },
+    "totalAmount": {
+      "type": "decimal"
+    },
+    "orderStatus": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "confirmed",
+        "processing",
+        "shipped",
+        "delivered"
+      ]
+    },
+    "paymentId": {
+      "type": "string"
+    },
+    "orderDate": {
+      "type": "datetime"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    },
+    "pincode": {
+      "type": "string"
+    },
+    "orderItems": {
+      "type": "json"
+    },
+    "shippingAddress": {
+      "type": "text",
+      "required": true
+    }
+  }
+}

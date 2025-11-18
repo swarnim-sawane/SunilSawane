@@ -1,0 +1,41 @@
+{
+  "name": "strapi-provider-email-nodemailer",
+  "version": "2.0.0",
+  "description": "Nodemailer provider for Strapi with attacments support for latest Strapi versions and NTLM auth support",
+  "main": "./lib",
+  "directories": {
+    "lib": "./lib"
+  },
+  "dependencies": {
+    "dotenv": "8.1.0",
+    "lodash": "4.17.15",
+    "nodemailer": "6.3.0",
+    "nodemailer-ntlm-auth": "1.0.1"
+  },
+  "devDependencies": {
+    "release-it": "12.4.2"
+  },
+  "scripts": {
+    "release": "node -r dotenv/config node_modules/release-it/bin/release-it.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yutikom/strapi-provider-email-nodemailer.git"
+  },
+  "keywords": [
+    "Strapi",
+    "Automat-IT",
+    "Email",
+    "Provider"
+  ],
+  "author": "Yurii Tykhomyrov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yutikom/strapi-provider-email-nodemailer/issues"
+  },
+  "strapi": {
+    "isProvider": true
+  },
+  "homepage": "https://github.com/yutikom/strapi-provider-email-nodemailer#readme"
+}
