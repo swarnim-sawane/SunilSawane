@@ -2,7 +2,7 @@
 class ArtAPI {
     constructor() {
         // Update this when you deploy
-        this.baseURL = 'http://localhost:1337/api';
+        this.baseURL = 'https://growing-approval-51840080fc.strapiapp.com/api';
     }
 
     async fetchArtworks(filters = {}) {

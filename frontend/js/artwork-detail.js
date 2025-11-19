@@ -1,5 +1,5 @@
 
-const STRAPI_URL = 'http://localhost:1337';
+const STRAPI_URL = 'https://growing-approval-51840080fc.strapiapp.com';
 let currentArtwork = null;
 
 // Get artwork ID from URL

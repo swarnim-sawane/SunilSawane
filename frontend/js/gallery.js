@@ -146,22 +146,22 @@ function createArtworkCard(artwork) {
 function getImageUrl(artwork) {
   if (artwork.images?.data?.[0]?.attributes?.url) {
     const url = artwork.images.data[0].attributes.url;
-    return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+    return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
   }
 
   if (artwork.images?.data?.[0]?.url) {
     const url = artwork.images.data[0].url;
-    return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+    return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
   }
 
   if (Array.isArray(artwork.images) && artwork.images[0]?.url) {
     const url = artwork.images[0].url;
-    return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+    return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
   }
 
   if (artwork.Image?.url) {
     const url = artwork.Image.url;
-    return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+    return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
   }
 
   return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e0e0e0" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" font-size="18"%3ENo Image%3C/text%3E%3C/svg%3E';

@@ -135,22 +135,22 @@ function getProductImageUrl(product) {
     // Try multiple possible structures
     if (product.images?.data?.[0]?.attributes?.url) {
         const url = product.images.data[0].attributes.url;
-        return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+        return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
     }
 
     if (product.images?.data?.[0]?.url) {
         const url = product.images.data[0].url;
-        return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+        return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
     }
 
     if (Array.isArray(product.images) && product.images[0]?.url) {
         const url = product.images[0].url;
-        return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+        return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
     }
 
     if (product.Image?.url) {
         const url = product.Image.url;
-        return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+        return url.startsWith('http') ? url : `https://growing-approval-51840080fc.strapiapp.com${url}`;
     }
 
     // Return gray placeholder

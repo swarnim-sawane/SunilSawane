@@ -1,6 +1,6 @@
 
 const RAZORPAY_KEY_ID = 'rzp_test_RF4D0IMNMK7ce7';
-const STRAPI_URL = 'http://localhost:1337';
+const STRAPI_URL = 'https://growing-approval-51840080fc.strapiapp.com';
 
 async function sendOrderConfirmation(billing, items, total, paymentId) {
     try {

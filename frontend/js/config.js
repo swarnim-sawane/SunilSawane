@@ -14,6 +14,6 @@ const CONFIG = {
     
     // API Configuration
     api: {
-        baseUrl: 'https://your-strapi-url.com/api'
+        baseUrl: 'https://growing-approval-51840080fc.strapiapp.com/api'
     }
 };
