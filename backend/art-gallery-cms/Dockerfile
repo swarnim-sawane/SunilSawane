@@ -8,7 +8,7 @@ ENV HOST=0.0.0.0 \
     STRAPI_TELEMETRY_DISABLED=true
 
 COPY package.json package-lock.json ./
-RUN npm install --global npm@11.6.2 \
+RUN npm install --global npm@11.6.1 \
     && npm ci --no-audit --no-fund
 
 COPY . .
