@@ -1,0 +1,8 @@
+{
+  "name": "sunilsawane-art-gallery",
+  "private": true,
+  "scripts": {
+    "dev": "powershell -ExecutionPolicy Bypass -File ./scripts/dev.ps1",
+    "test": "node --test frontend/tests/*.test.js backend/art-gallery-cms/tests/*.test.js"
+  }
+}

@@ -31,9 +31,9 @@
     },
     "category": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::category.category",
-      "inversedBy": "artwork"
+      "inversedBy": "artworks"
     },
     "dimensions": {
       "type": "string"
@@ -45,14 +45,32 @@
       "type": "integer"
     },
     "isAvailable": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": true
     },
     "slug": {
       "type": "uid",
       "targetField": "title"
     },
     "isFeatured": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
+    },
+    "framingStatus": {
+      "type": "enumeration",
+      "enum": [
+        "unframed",
+        "framed",
+        "framing_available",
+        "to_be_confirmed"
+      ],
+      "default": "to_be_confirmed"
+    },
+    "shippingNote": {
+      "type": "text"
+    },
+    "certificateNote": {
+      "type": "text"
     },
     "orders": {
       "type": "relation",

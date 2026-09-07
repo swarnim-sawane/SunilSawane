@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Strapi runtime and build output
+.strapi/
+.tmp/
+dist/
+build/
+.cache/
+.strapi-updater.json
+.strapi-cloud.json
+
+# Local OS/editor files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local tooling and generated caches
+.superpowers/
+__pycache__/
+*.py[cod]

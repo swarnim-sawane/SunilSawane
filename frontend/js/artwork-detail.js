@@ -1,6 +1,28 @@
 
-const STRAPI_URL = 'https://growing-approval-51840080fc.strapiapp.com';
+const DETAIL_API_BASE_URL = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
+const STRAPI_URL = DETAIL_API_BASE_URL.replace(/\/api\/?$/, '');
 let currentArtwork = null;
+let previousCollectorEnquiryFocus = null;
+const detailDom = window.domUtils || {
+    safeUrl: (value, fallback) => value || fallback || '#',
+    text: (value) => value === undefined || value === null ? '' : String(value),
+    clear: (element) => { if (element) element.replaceChildren(); },
+    el: (tagName, options) => {
+        const element = document.createElement(tagName);
+        const opts = options || {};
+        if (opts.className) element.className = opts.className;
+        if (opts.text !== undefined) element.textContent = String(opts.text);
+        Object.keys(opts.attrs || {}).forEach(name => {
+            const value = opts.attrs[name];
+            if (value !== undefined && value !== null) element.setAttribute(name, String(value));
+        });
+        (opts.children || []).forEach(child => {
+            if (child !== undefined && child !== null) element.append(child);
+        });
+        return element;
+    },
+    formatINR: (value, options) => '\u20b9' + (Number(value) || 0).toLocaleString('en-IN', options)
+};
 
 // Get artwork ID from URL
 function getArtworkId() {
@@ -69,6 +91,7 @@ function renderArtwork(artwork) {
         const priceElement = document.getElementById('product-price');
         if (priceElement) {
             priceElement.textContent = `₹${price.toFixed(2)}`;
+            priceElement.textContent = detailDom.formatINR(price);
             console.log('Price set:', price);
         } else {
             console.error('product-price element not found!');
@@ -147,7 +170,7 @@ function renderArtwork(artwork) {
                 const fullImageUrl = imageUrl.startsWith('http') ? imageUrl : `${STRAPI_URL}${imageUrl}`;
                 console.log('✅ Final image URL:', fullImageUrl);
 
-                mainImage.src = fullImageUrl;
+                mainImage.src = detailDom.safeUrl(fullImageUrl);
                 mainImage.alt = title;
 
                 mainImage.onerror = function () {
@@ -171,8 +194,9 @@ function renderArtwork(artwork) {
         // Render thumbnails
         renderThumbnails(data);
 
-        // Render meta information
-        renderMetaInfo(data);
+        renderTrustSummary(data);
+        updatePurchaseState(data);
+        populateCollectorEnquiry(data);
 
         // Show product content - with null checks
         const loadingElement = document.getElementById('loading');
@@ -198,31 +222,227 @@ function renderArtwork(artwork) {
     }
 }
 
+function getArtworkMedium(data) {
+    return data.medium || data.Medium || 'Medium to be confirmed';
+}
+
+function getArtworkDimensions(data) {
+    return data.dimensions || data.Dimensions || 'Size to be confirmed';
+}
+
+function getArtworkYear(data) {
+    return data.yearCreated || data.YearCreated || data.year || data.Year || 'Year to be confirmed';
+}
+
+function isArtworkAvailable(data) {
+    return data.isAvailable !== false &&
+        data.IsAvailable !== false &&
+        data.inStock !== false &&
+        data.InStock !== false;
+}
+
+function getArtworkAvailabilityLabel(data) {
+    return isArtworkAvailable(data) ? 'Available for acquisition' : 'Collected';
+}
+
+function setDetailText(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = detailDom.text(value);
+}
+
+function renderTrustSummary(data) {
+    setDetailText('trust-medium', getArtworkMedium(data));
+    setDetailText('trust-dimensions', getArtworkDimensions(data));
+    setDetailText('trust-year', getArtworkYear(data));
+    setDetailText('trust-availability', getArtworkAvailabilityLabel(data));
+    setDetailText('trust-original', 'Original one-of-one work');
+}
+
+function updatePurchaseState(data) {
+    const addButton = document.querySelector('.artwork-purchase-panel .btn-add-cart');
+    const enquiryButton = document.getElementById('collector-enquiry-open');
+    const available = isArtworkAvailable(data);
+
+    if (addButton) {
+        addButton.disabled = !available;
+        addButton.classList.toggle('is-disabled', !available);
+        addButton.replaceChildren(
+            detailDom.el('i', { className: 'fas fa-shopping-cart', attrs: { 'aria-hidden': 'true' } }),
+            document.createTextNode(available ? ' Add Artwork to Cart' : ' No longer available')
+        );
+    }
+
+    if (enquiryButton) {
+        enquiryButton.textContent = available ? 'Enquire / Reserve' : 'Ask About Similar Work';
+    }
+}
+
+function getArtworkTitle(data) {
+    return data?.title || data?.Title || 'Untitled artwork';
+}
+
+function populateCollectorEnquiry(data) {
+    const title = getArtworkTitle(data);
+    const titleInput = document.getElementById('collector-artwork-title');
+    const urlInput = document.getElementById('collector-artwork-url');
+    const subjectInput = document.getElementById('collector-enquiry-subject');
+    const messageInput = document.getElementById('collector-message');
+
+    if (titleInput) titleInput.value = title;
+    if (urlInput) urlInput.value = window.location.href;
+    if (subjectInput) subjectInput.value = `Collector enquiry: ${title}`;
+    if (messageInput && !messageInput.value.trim()) {
+        messageInput.value = `I am interested in ${title}. Please share availability and delivery details.`;
+    }
+}
+
+function setCollectorEnquiryStatus(message, tone = '') {
+    const status = document.getElementById('collector-enquiry-status');
+    if (!status) return;
+
+    status.textContent = message;
+    status.classList.toggle('is-error', tone === 'error');
+    status.classList.toggle('is-success', tone === 'success');
+}
+
+function openCollectorEnquiry() {
+    const drawer = document.getElementById('collector-enquiry-drawer');
+    const body = document.body;
+    if (!drawer) return;
+
+    previousCollectorEnquiryFocus = document.activeElement;
+    populateCollectorEnquiry(currentArtwork || {});
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    body.classList.add('collector-enquiry-active');
+    setCollectorEnquiryStatus('');
+
+    const firstInput = document.getElementById('collector-name');
+    if (firstInput) firstInput.focus();
+}
+
+function closeCollectorEnquiry() {
+    const drawer = document.getElementById('collector-enquiry-drawer');
+    const body = document.body;
+    if (!drawer) return;
+
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    body.classList.remove('collector-enquiry-active');
+
+    if (previousCollectorEnquiryFocus && typeof previousCollectorEnquiryFocus.focus === 'function') {
+        previousCollectorEnquiryFocus.focus();
+    }
+}
+
+async function submitCollectorEnquiry(event) {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    const submitButton = form.querySelector('.collector-enquiry-submit');
+
+    if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+    }
+
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'Sending...';
+    }
+    setCollectorEnquiryStatus('Sending your enquiry...');
+
+    try {
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: new FormData(form),
+            headers: {
+                Accept: 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('The enquiry could not be sent.');
+        }
+
+        setCollectorEnquiryStatus('Enquiry received. We will respond with availability and delivery details.', 'success');
+        form.reset();
+        populateCollectorEnquiry(currentArtwork || {});
+    } catch (error) {
+        setCollectorEnquiryStatus('Unable to send right now. Please call or email from the contact page.', 'error');
+    } finally {
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.textContent = 'Send enquiry';
+        }
+    }
+}
+
+function initCollectorEnquiry() {
+    const openButton = document.getElementById('collector-enquiry-open');
+    const form = document.getElementById('collector-enquiry-form');
+
+    if (openButton) {
+        openButton.addEventListener('click', openCollectorEnquiry);
+    }
+
+    document.querySelectorAll('[data-collector-enquiry-close]').forEach(button => {
+        button.addEventListener('click', closeCollectorEnquiry);
+    });
+
+    if (form) {
+        form.addEventListener('submit', submitCollectorEnquiry);
+    }
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            closeCollectorEnquiry();
+        }
+    });
+}
+
 // Render thumbnail gallery
 function renderThumbnails(data) {
     const thumbnailGallery = document.getElementById('thumbnail-gallery');
     if (!thumbnailGallery) return;
 
-    thumbnailGallery.innerHTML = '';
+    detailDom.clear(thumbnailGallery);
 
-    let imageUrl = null;
+    const imageUrls = [];
 
-    if (data.image?.data?.attributes?.url) {
-        imageUrl = data.image.data.attributes.url;
-    } else if (data.image?.url) {
-        imageUrl = data.image.url;
+    if (Array.isArray(data.images)) {
+        data.images.forEach(image => {
+            const url = image?.url || image?.formats?.small?.url || image?.formats?.thumbnail?.url;
+            if (url) imageUrls.push(url);
+        });
+    } else if (data.images?.data?.length) {
+        data.images.data.forEach(image => {
+            const url = image?.attributes?.url;
+            if (url) imageUrls.push(url);
+        });
     }
 
-    if (imageUrl) {
+    if (data.image?.data?.attributes?.url) {
+        imageUrls.push(data.image.data.attributes.url);
+    } else if (data.image?.url) {
+        imageUrls.push(data.image.url);
+    }
+
+    Array.from(new Set(imageUrls)).forEach((imageUrl, index) => {
         const thumbnail = document.createElement('div');
-        thumbnail.className = 'thumbnail-item active';
+        thumbnail.className = index === 0 ? 'thumbnail-item active' : 'thumbnail-item';
         const fullUrl = imageUrl.startsWith('http') ? imageUrl : `${STRAPI_URL}${imageUrl}`;
-        thumbnail.innerHTML = `<img src="${fullUrl}" alt="${data.title || 'Artwork'}">`;
+        thumbnail.appendChild(detailDom.el('img', {
+            attrs: {
+                src: detailDom.safeUrl(fullUrl),
+                alt: data.title || 'Artwork'
+            }
+        }));
         thumbnail.onclick = function () {
             changeMainImage(imageUrl, this);
         };
         thumbnailGallery.appendChild(thumbnail);
-    }
+    });
 }
 
 // Change main image
@@ -230,7 +450,7 @@ function changeMainImage(imageUrl, thumbnailElement) {
     const fullUrl = imageUrl.startsWith('http') ? imageUrl : `${STRAPI_URL}${imageUrl}`;
     const mainImage = document.getElementById('main-image');
     if (mainImage) {
-        mainImage.src = fullUrl;
+        mainImage.src = detailDom.safeUrl(fullUrl);
     }
 
     // Update active thumbnail
@@ -239,65 +459,6 @@ function changeMainImage(imageUrl, thumbnailElement) {
     });
     thumbnailElement.classList.add('active');
 }
-
-// Render meta information
-// Render meta information
-function renderMetaInfo(data) {
-    const metaContainer = document.getElementById('product-meta');
-    if (!metaContainer) return;
-
-    console.log('Rendering meta with data:', data);
-
-    // Build meta items array, only including items with actual values
-    const metaItems = [];
-
-    // Medium
-    const medium = data.medium || data.Medium;
-    if (medium && medium !== 'N/A') {
-        metaItems.push({ label: 'Medium', value: medium });
-    }
-
-    // Dimensions
-    const dimensions = data.dimensions || data.Dimensions;
-    if (dimensions && dimensions !== 'N/A') {
-        metaItems.push({ label: 'Dimensions', value: dimensions });
-    }
-
-    // Year Created (check multiple possible field names)
-    const year = data.yearCreated || data.YearCreated || data.year || data.Year;
-    if (year && year !== 'N/A') {
-        metaItems.push({ label: 'Year', value: year });
-    }
-
-    // Category - Only show if it's an actual category name (not same as medium)
-    const categoryName = data.category?.data?.attributes?.name ||
-        data.Category?.data?.attributes?.name ||
-        data.category?.name ||
-        data.Category?.name;
-
-    // Only add category if it exists and is different from medium
-    if (categoryName && categoryName !== 'N/A' && categoryName !== medium) {
-        metaItems.push({ label: 'Category', value: categoryName });
-    }
-
-    // Availability
-    const inStock = data.inStock !== false && data.InStock !== false;
-    metaItems.push({
-        label: 'Availability',
-        value: inStock ? 'In Stock' : 'Out of Stock'
-    });
-
-    // Render meta items
-    metaContainer.innerHTML = metaItems.map(item => `
-        <div class="product-meta-item">
-            <span class="product-meta-label">${item.label}:</span>
-            <span class="product-meta-value">${item.value}</span>
-        </div>
-    `).join('');
-
-    console.log('Meta items rendered:', metaItems);
-}
-
 
 // Quantity controls
 function incrementQuantity() {
@@ -326,6 +487,11 @@ function decrementQuantity() {
 // Add to cart with proper localStorage handling
 function addToCart() {
     if (!currentArtwork) return;
+
+    if (!isArtworkAvailable(currentArtwork)) {
+        showNotification('This artwork is no longer available');
+        return;
+    }
 
     const quantity = parseInt(document.getElementById('quantity').value) || 1;
 
@@ -405,14 +571,21 @@ function showNotification(message) {
     const notification = document.createElement('div');
     notification.className = 'alert alert-success position-fixed cart-toast-notification';
     notification.style.cssText = 'top: 80px; right: 20px; z-index: 9999; min-width: 300px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); animation: slideInRight 0.3s ease-out;';
-    notification.innerHTML = `
-        <div class="d-flex align-items-center">
-            <svg width="24" height="24" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-                <path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/>
-            </svg>
-            <div>${message}</div>
-        </div>
-    `;
+
+    const content = document.createElement('div');
+    content.className = 'd-flex align-items-center';
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '24');
+    svg.setAttribute('height', '24');
+    svg.setAttribute('fill', 'currentColor');
+    svg.setAttribute('class', 'me-2');
+    svg.setAttribute('viewBox', '0 0 16 16');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z');
+    svg.appendChild(path);
+    content.appendChild(svg);
+    content.appendChild(detailDom.el('div', { text: message }));
+    notification.appendChild(content);
 
     document.body.appendChild(notification);
 
@@ -458,8 +631,10 @@ async function init() {
 // Run on page load - with delay to ensure DOM is ready
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+        initCollectorEnquiry();
         setTimeout(init, 100);
     });
 } else {
+    initCollectorEnquiry();
     setTimeout(init, 100);
 }

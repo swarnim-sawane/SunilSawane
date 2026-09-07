@@ -1,27 +1,45 @@
 // js/api.js
+window.ART_CONFIG = Object.assign({
+    apiBaseUrl: 'https://growing-approval-51840080fc.strapiapp.com/api'
+}, window.ART_CONFIG || {});
+
 class ArtAPI {
     constructor() {
-        // Update this when you deploy
-        this.baseURL = 'https://growing-approval-51840080fc.strapiapp.com/api';
+        this.baseURL = window.ART_CONFIG.apiBaseUrl;
     }
 
     async fetchArtworks(filters = {}) {
         try {
-            let url = `${this.baseURL}/artworks?populate=*`;
-            
-            // Add category filter if provided
-            if (filters.category) {
-                url += `&filters[category][slug][$eq]=${filters.category}`;
-            }
-            
-            // Add featured filter if provided
-            if (filters.featured) {
-                url += `&filters[isFeatured][$eq]=true`;
-            }
-            
-            const response = await fetch(url);
+            const pageSize = filters.pageSize || 100;
+            const buildUrl = (page) => {
+                const params = new URLSearchParams();
+                params.set('populate', '*');
+                params.set('pagination[pageSize]', pageSize);
+                params.set('pagination[page]', page);
+
+                if (filters.category) {
+                    params.set('filters[category][slug][$eq]', filters.category);
+                }
+
+                if (filters.featured) {
+                    params.set('filters[isFeatured][$eq]', 'true');
+                }
+
+                return `${this.baseURL}/artworks?${params.toString()}`;
+            };
+
+            const response = await fetch(buildUrl(1));
             const data = await response.json();
-            return data.data || [];
+            const artworks = data.data || [];
+            const pageCount = data.meta?.pagination?.pageCount || 1;
+
+            for (let page = 2; page <= pageCount; page += 1) {
+                const nextResponse = await fetch(buildUrl(page));
+                const nextData = await nextResponse.json();
+                artworks.push(...(nextData.data || []));
+            }
+
+            return artworks;
         } catch (error) {
             console.error('Error fetching artworks:', error);
             return [];
@@ -72,3 +90,4 @@ class ArtAPI {
 
 // Global instance
 const artAPI = new ArtAPI();
+window.artAPI = artAPI;

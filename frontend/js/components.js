@@ -63,12 +63,12 @@
                                     <li class="nav-item">
                                         <a class="nav-link me-4" href="contact.html">Contact</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link me-4" href="cart.html">
-                                            <svg width="24" height="24">
+                                    <li class="nav-action-item cart-nav-item">
+                                        <a class="header-action-link position-relative" href="cart.html" aria-label="View cart">
+                                            <svg class="cart" width="18" height="18">
                                                 <use xlink:href="#cart"></use>
                                             </svg>
-                                            <span class="cart-count badge bg-danger ms-1" style="display:none;">0</span>
+                                            <span class="cart-count header-action-badge badge bg-danger position-absolute top-0 start-100 translate-middle" style="display:none;">0</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -84,75 +84,61 @@
 
     function loadFooter() {
         var footerHTML = `
-            <footer id="footer" class="overflow-hidden padding-large">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="row d-flex flex-wrap justify-content-between">
-                            <!-- About Section -->
-                            <div class="col-lg-3 col-sm-6 pb-3 pe-4">
-                                <div class="footer-menu">
-                                    <img src="images/main-logo.png" alt="logo" class="pb-3">
-                                    <p>Welcome to the official website of Sunil A. Sawane. Here, you can explore a diverse collection of my artwork, including Pen & Ink. My work is inspired by nature, abstract concepts, and personal experiences, and I aim to paint all this on my canvas. Thank you for visiting, and I hope you enjoy exploring my creations.</p>
-                                </div>
-                                <div class="copyright">
-                                    <p>© 2024, Sunil A. Sawane. All rights to artwork and content reserved. Unauthorized use or reproduction of any material from this site is prohibited.</p>
-                                </div>
-                            </div>
-                            
-                            <!-- Quick Links -->
-                            <div class="col-lg-2 col-sm-6 pb-3">
-                                <div class="footer-menu text-uppercase">
-                                    <h5 class="widget-title pb-2">Quick Links</h5>
-                                    <ul class="menu-list list-unstyled text-uppercase">
-                                        <li class="menu-item pb-2">
-                                            <a href="index.html">Home</a>
-                                        </li>
-                                        <li class="menu-item pb-2">
-                                            <a href="about-us.html">About</a>
-                                        </li>
-                                        <li class="menu-item pb-2">
-                                            <a href="gallery.html">Gallery</a>
-                                        </li>
-                                        <li class="menu-item pb-2">
-                                            <a href="shop.html">Shop</a>
-                                        </li>
-                                        <li class="menu-item pb-2">
-                                            <a href="contact.html">Contact</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            
-                            <!-- Social Links -->
-                            <div class="col-lg-2 col-sm-6 pb-3">
-                                <div class="footer-menu text-uppercase">
-                                    <h5 class="widget-title pb-2">Social</h5>
-                                    <div class="social-links">
-                                        <ul class="list-unstyled">
-                                            <li class="pb-2">
-                                                <a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" target="_blank">Facebook</a>
-                                            </li>
-                                            <li class="pb-2">
-                                                <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5As08" target="_blank">Twitter</a>
-                                            </li>
-                                            <li class="pb-2">
-                                                <a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl" target="_blank">Instagram</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Contact Info -->
-                            <div class="col-lg-3 col-sm-6">
-                                <div class="footer-menu contact-item">
-                                    <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
-                                    <p><a href="tel:+91-9810238984">+91-9810238984</a></p>
-                                    <p><a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a></p>
-                                    <p>Gurgaon, Haryana, India</p>
-                                </div>
-                            </div>
+            <footer id="footer" class="gallery-footer overflow-hidden">
+                <div class="container-fluid gallery-footer-container">
+                    <div class="gallery-footer-grid">
+                        <div class="footer-brand-panel">
+                            <a class="footer-logo-link" href="index.html" aria-label="Sunil Sawane Art Gallery home">
+                                <img src="images/main-logo.png" alt="Sunil A. Sawane" class="footer-logo">
+                            </a>
+                            <p class="footer-brand-note">Original pen, ink, and color works by Sunil A. Sawane, curated for collectors and art lovers.</p>
+                            <a class="footer-primary-link" href="gallery.html">View Gallery</a>
                         </div>
+
+                        <nav class="footer-link-column" aria-label="Footer navigation">
+                            <h5 class="widget-title">Explore</h5>
+                            <ul class="menu-list list-unstyled">
+                                <li class="menu-item"><a href="index.html">Home</a></li>
+                                <li class="menu-item"><a href="about-us.html">About</a></li>
+                                <li class="menu-item"><a href="gallery.html">Gallery</a></li>
+                                <li class="menu-item"><a href="shop.html">Shop</a></li>
+                                <li class="menu-item"><a href="contact.html">Contact</a></li>
+                            </ul>
+                        </nav>
+
+                        <nav class="footer-link-column footer-commerce-links" aria-label="Collector support">
+                            <h5 class="widget-title">Collectors</h5>
+                            <ul class="menu-list list-unstyled">
+                                <li class="menu-item"><a href="shop.html">Shop</a></li>
+                                <li class="menu-item"><a href="cart.html">Cart</a></li>
+                                <li class="menu-item"><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+                                <li class="menu-item"><a href="returns-damage-policy.html">Returns &amp; Damage</a></li>
+                                <li class="menu-item"><a href="authenticity-policy.html">Authenticity</a></li>
+                                <li class="menu-item"><a href="privacy-policy.html">Privacy</a></li>
+                                <li class="menu-item"><a href="terms.html">Terms</a></li>
+                            </ul>
+                        </nav>
+
+                        <nav class="footer-link-column footer-social-links" aria-label="Social links">
+                            <h5 class="widget-title">Follow</h5>
+                            <ul class="menu-list list-unstyled">
+                                <li class="menu-item"><a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                                <li class="menu-item"><a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                                <li class="menu-item"><a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&amp;s=08" target="_blank" rel="noopener noreferrer">X</a></li>
+                            </ul>
+                        </nav>
+
+                        <address class="footer-link-column footer-contact-list">
+                            <h5 class="widget-title">Contact</h5>
+                            <a href="tel:+919810238984">+91 98102 38984</a>
+                            <a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a>
+                            <span>Gurgaon, Haryana, India</span>
+                        </address>
+                    </div>
+
+                    <div class="footer-legal-bar">
+                        <p>&copy; 2026 Sunil A. Sawane. Artwork and content protected.</p>
+                        <a href="contact.html">Usage inquiries</a>
                     </div>
                 </div>
             </footer>

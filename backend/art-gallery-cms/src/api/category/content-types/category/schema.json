@@ -22,9 +22,9 @@
       "type": "uid",
       "targetField": "Name"
     },
-    "artwork": {
+    "artworks": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::artwork.artwork",
       "mappedBy": "category"
     }

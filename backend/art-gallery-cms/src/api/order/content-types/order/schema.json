@@ -48,6 +48,13 @@
     "paymentId": {
       "type": "string"
     },
+    "razorpayOrderId": {
+      "type": "string"
+    },
+    "paymentSignature": {
+      "type": "string",
+      "private": true
+    },
     "orderDate": {
       "type": "datetime"
     },
@@ -66,6 +73,9 @@
     "shippingAddress": {
       "type": "text",
       "required": true
+    },
+    "orderNotes": {
+      "type": "text"
     }
   }
 }

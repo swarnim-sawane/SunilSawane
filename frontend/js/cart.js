@@ -11,15 +11,17 @@ const cart = {
         const existingItem = this.items.find(item => item.id === product.id);
 
         if (existingItem) {
-            existingItem.quantity += 1;
+            existingItem.quantity = 1;
         } else {
             this.items.push({
                 id: product.id,
+                documentId: product.documentId,
                 title: product.title || product.Title,
                 price: product.price || product.Price,
                 image: this.getImageUrl(product),
                 slug: product.slug || product.documentId,
-                quantity: 1
+                quantity: 1,
+                availabilityStatus: getCartArtworkAvailabilityStatus(product)
             });
         }
 
@@ -37,7 +39,7 @@ const cart = {
     updateQuantity(productId, quantity) {
         const item = this.items.find(item => item.id === productId);
         if (item) {
-            item.quantity = Math.max(1, quantity);
+            item.quantity = 1;
             this.saveToStorage();
             this.updateCartCount();
         }
@@ -63,7 +65,50 @@ const cart = {
 
     loadFromStorage() {
         const stored = localStorage.getItem('cart');
-        this.items = stored ? JSON.parse(stored) : [];
+        this.items = stored ? JSON.parse(stored).map(item => ({ ...item, quantity: 1 })) : [];
+    },
+
+    async refreshAvailability() {
+        if (!window.artAPI || this.items.length === 0) {
+            return this.items;
+        }
+
+        try {
+            const artworks = await artAPI.fetchArtworks({ pageSize: 100 });
+            const artworkMap = new Map();
+
+            artworks.forEach(artwork => {
+                [artwork.id, artwork.documentId, artwork.slug].forEach(key => {
+                    if (key !== undefined && key !== null && key !== '') {
+                        artworkMap.set(String(key), artwork);
+                    }
+                });
+            });
+
+            this.items = this.items.map(item => {
+                const match = artworkMap.get(String(item.documentId || '')) ||
+                    artworkMap.get(String(item.slug || '')) ||
+                    artworkMap.get(String(item.id || ''));
+
+                if (!match) {
+                    return item;
+                }
+
+                return {
+                    ...item,
+                    id: match.id || item.id,
+                    documentId: match.documentId || item.documentId,
+                    slug: match.slug || match.documentId || item.slug,
+                    availabilityStatus: getCartArtworkAvailabilityStatus(match)
+                };
+            });
+
+            this.saveToStorage();
+        } catch (error) {
+            console.warn('Unable to refresh cart artwork availability:', error);
+        }
+
+        return this.items;
     },
 
     updateCartCount() {
@@ -82,30 +127,30 @@ const cart = {
         // Structure 1: images.data[0].attributes.url
         if (product.images?.data?.[0]?.attributes?.url) {
             const url = product.images.data[0].attributes.url;
-            return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+            return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
         }
 
         // Structure 2: images.data[0].url
         if (product.images?.data?.[0]?.url) {
             const url = product.images.data[0].url;
-            return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+            return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
         }
 
         // Structure 3: images[0].url (array)
         if (Array.isArray(product.images) && product.images[0]?.url) {
             const url = product.images[0].url;
-            return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+            return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
         }
 
         // Structure 4: Image.url (single image field)
         if (product.Image?.url) {
             const url = product.Image.url;
-            return url.startsWith('http') ? url : `http://localhost:1337${url}`;
+            return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
         }
 
         // Structure 5: image (direct URL string)
         if (product.image && typeof product.image === 'string') {
-            return product.image.startsWith('http') ? product.image : `http://localhost:1337${product.image}`;
+            return product.image.startsWith('http') ? product.image : `${cartAssetBaseUrl}${product.image}`;
         }
 
         // Fallback: gray placeholder
@@ -113,17 +158,27 @@ const cart = {
     }
 };
 
+const cartDom = window.domUtils || {
+    PLACEHOLDER_IMAGE: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23ddd" width="100" height="100"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" font-size="14"%3ENo Image%3C/text%3E%3C/svg%3E',
+    safeUrl: (value, fallback) => value || fallback || '#',
+    formatINR: (value) => '\u20b9' + (Number(value) || 0).toLocaleString('en-IN')
+};
+const cartApiBaseUrl = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
+const cartAssetBaseUrl = cartApiBaseUrl.replace(/\/api\/?$/, '');
+const checkoutFlowTransitionKey = 'sunilsawaneCheckoutFlowTransition';
+const checkoutFlowScrollKey = 'sunilsawaneCheckoutFlowScroll';
+const checkoutTransitionDelayMs = 840;
+let cartCheckoutTransitionInProgress = false;
+
 // Initialize cart on page load
 $(document).ready(function () {
     cart.init();
+    if (document.getElementById('cart-items')) {
+        refreshCartAvailabilityForPage();
+    }
 });
 
-
-
-// Cart page specific code
-$(document).ready(function () {
-    displayCart();
-});
+window.addEventListener('pageshow', resetCartCheckoutTransition);
 
 // Custom Confirm Dialog
 function customConfirm(message, title = 'Confirm Action') {
@@ -196,51 +251,96 @@ function displayCart() {
     container.empty();
 
     items.forEach(item => {
-        const itemHtml = `
-                <div class="card mb-3" data-item-id="${item.id}">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-2">
-                                <img src="${item.image}" alt="${item.title}" class="cart-item-image">
-                            </div>
-                            <div class="col-md-4">
-                                <h5>${item.title}</h5>
-                                <p class="text-muted mb-0">₹${item.price.toLocaleString()}</p>
-                            </div>
-                            <div class="col-md-3">
-                                <div class="input-group">
-                                    <button class="btn btn-outline-secondary" onclick="updateItemQuantity(${item.id}, ${item.quantity - 1})">-</button>
-                                    <input type="text" class="form-control text-center" value="${item.quantity}" readonly>
-                                    <button class="btn btn-outline-secondary" onclick="updateItemQuantity(${item.id}, ${item.quantity + 1})">+</button>
-                                </div>
-                            </div>
-                            <div class="col-md-2 text-end">
-                                <strong>₹${(item.price * item.quantity).toLocaleString()}</strong>
-                            </div>
-                            <div class="col-md-1 text-end">
-                                <button class="btn btn-danger btn-sm" onclick="removeFromCart(${item.id})">
-                                    Remove
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        container.append(itemHtml);
+        const price = Number(item.price) || 0;
+        const detailHref = item.slug ? `artwork-detail.html?id=${encodeURIComponent(item.slug)}` : 'shop.html';
+        const unavailable = isCartItemUnavailable(item);
+        const $remove = $('<button>')
+            .addClass('cart-remove-action')
+            .attr('type', 'button')
+            .text('Remove')
+            .on('click', function () {
+                removeFromCart(item.id);
+            });
+
+        const $card = $('<div>')
+            .addClass(unavailable ? 'premium-cart-item cart-item-unavailable' : 'premium-cart-item')
+            .attr('data-item-id', item.id)
+            .append(
+                $('<a>')
+                    .addClass('cart-artwork-frame')
+                    .attr({
+                        href: detailHref,
+                        'aria-label': `View ${item.title || 'artwork'}`
+                    })
+                    .append(
+                        $('<img>')
+                            .attr({
+                                src: cartDom.safeUrl(item.image, cartDom.PLACEHOLDER_IMAGE),
+                                alt: item.title || 'Artwork'
+                            })
+                            .addClass('cart-item-image')
+                    ),
+                $('<div>').addClass('cart-item-body').append(
+                    $('<p>').addClass('cart-item-edition').text('1 original artwork'),
+                    $('<h3>').addClass('cart-item-title').append(
+                        $('<a>').attr('href', detailHref).text(item.title || 'Untitled')
+                    ),
+                    $('<p>').addClass('cart-item-meta').text(unavailable
+                        ? 'This work is now in a private collection.'
+                        : 'One-of-one work reserved for checkout review'),
+                    unavailable ? $('<p>').addClass('cart-item-status').text('No longer available') : null
+                ),
+                $('<div>').addClass('cart-item-purchase').append(
+                    $('<strong>').addClass('cart-item-price').text(cartDom.formatINR(price)),
+                    $remove
+                )
+            );
+
+        container.append($card);
     });
 
     updateCartSummary();
+    updateCheckoutAvailabilityState();
 }
 
 function updateCartSummary() {
     const total = cart.getTotal();
-    $('#cart-subtotal').text('₹' + total.toLocaleString());
-    $('#cart-total').text('₹' + total.toLocaleString());
+    $('#cart-summary-note').text(cartHasUnavailableItems()
+        ? 'Remove collected work before checkout. Available works can still be acquired securely.'
+        : 'Shipping, authenticity and damage support are confirmed at checkout.');
+    $('#cart-subtotal').text(cartDom.formatINR(total));
+    $('#cart-total').text(cartDom.formatINR(total));
 }
 
-function updateItemQuantity(productId, newQuantity) {
-    if (newQuantity < 1) return;
-    cart.updateQuantity(productId, newQuantity);
+function getCartArtworkAvailabilityStatus(artwork) {
+    const available = artwork?.isAvailable !== false &&
+        artwork?.IsAvailable !== false &&
+        artwork?.inStock !== false &&
+        artwork?.InStock !== false;
+
+    return available ? 'available' : 'unavailable';
+}
+
+function isCartItemUnavailable(item) {
+    return item?.availabilityStatus === 'unavailable';
+}
+
+function cartHasUnavailableItems() {
+    return cart.items.some(isCartItemUnavailable);
+}
+
+function updateCheckoutAvailabilityState() {
+    const checkoutButton = document.getElementById('cart-checkout-button');
+    if (!checkoutButton) return;
+
+    const blocked = cartHasUnavailableItems();
+    checkoutButton.disabled = blocked;
+    checkoutButton.textContent = blocked ? 'Remove collected work before checkout' : 'Proceed to Checkout';
+}
+
+async function refreshCartAvailabilityForPage() {
+    displayCart();
+    await cart.refreshAvailability();
     displayCart();
 }
 
@@ -266,7 +366,68 @@ function proceedToCheckout() {
         return;
     }
 
-    // Redirect to checkout page
-    window.location.href = 'checkout.html';
+    if (cartHasUnavailableItems()) {
+        alert('Please remove collected works before checkout.');
+        updateCheckoutAvailabilityState();
+        return;
+    }
+
+    if (cartCheckoutTransitionInProgress) {
+        return;
+    }
+
+    const progress = document.querySelector('.cart-flow-progress');
+    const checkoutButton = document.getElementById('cart-checkout-button');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!progress || prefersReducedMotion) {
+        window.location.assign('checkout.html');
+        return;
+    }
+
+    cartCheckoutTransitionInProgress = true;
+
+    try {
+        sessionStorage.setItem(checkoutFlowTransitionKey, 'cart-to-checkout');
+        sessionStorage.setItem(checkoutFlowScrollKey, 'rail');
+    } catch (error) {
+        console.warn('Checkout transition state could not be saved:', error);
+    }
+
+    document.body.classList.add('checkout-flow-leaving');
+    progress.classList.add('is-advancing-to-details');
+    window.setTimeout(() => {
+        progress.querySelectorAll('span').forEach((step, index) => {
+            step.classList.toggle('is-current', index === 1);
+        });
+    }, 520);
+
+    if (checkoutButton) {
+        checkoutButton.disabled = true;
+        checkoutButton.textContent = 'Opening checkout';
+    }
+
+    window.setTimeout(() => {
+        window.location.assign('checkout.html');
+    }, checkoutTransitionDelayMs);
+}
+
+function resetCartCheckoutTransition() {
+    cartCheckoutTransitionInProgress = false;
+    document.body.classList.remove('checkout-flow-leaving');
+
+    const progress = document.querySelector('.cart-flow-progress');
+    if (progress) {
+        progress.classList.remove('is-advancing-to-details');
+        progress.querySelectorAll('span').forEach((step, index) => {
+            step.classList.toggle('is-current', index === 0);
+        });
+    }
+
+    const checkoutButton = document.getElementById('cart-checkout-button');
+    if (checkoutButton) {
+        checkoutButton.disabled = false;
+        checkoutButton.textContent = 'Proceed to Checkout';
+    }
 }
 

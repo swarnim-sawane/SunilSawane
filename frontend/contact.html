@@ -12,7 +12,7 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="style.css?v=premium-contact-20260610a">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,7 +26,7 @@
   <script src="js/modernizr.js"></script>
 </head>
 
-<body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
+<body class="contact-page bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
   data-bs-smooth-scroll="true" tabindex="0">
   <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -153,13 +153,13 @@
               <li class="nav-item dropdown me-4">
                 <a class="nav-link" href="contact.html">Contact</a>
               </li>
-              <li>
-                <a href="cart.html" class="position-relative">
+              <li class="nav-action-item cart-nav-item">
+                <a href="cart.html" class="header-action-link position-relative" aria-label="View cart">
                   <svg class="cart" width="18" height="18">
                     <use xlink:href="#cart"></use>
                   </svg>
-                  <span class="cart-count badge bg-danger position-absolute top-0 start-100 translate-middle"
-                    style="display: none; font-size: 10px;">0</span>
+                  <span class="cart-count header-action-badge badge bg-danger position-absolute top-0 start-100 translate-middle"
+                    style="display: none;">0</span>
                 </a>
               </li>
 
@@ -171,117 +171,99 @@
   </header>
   <!-- Header part end -->
 
-  <section class="hero-section position-relative bg-gray padding-medium">
-    <div class="hero-content">
-      <div class="container">
-        <div class="row">
-          <div class="text-center">
-            <h1 class="display-2 text-uppercase text-dark">Contact</h1>
-            <div class="breadcrumbs">
-              <span class="item">
-                <a href="index.html">Home &gt;</a>
-              </span>
-              <span class="item">Contact</span>
-            </div>
-          </div>
-        </div>
+  <section class="hero-section contact-hero position-relative">
+    <div class="contact-hero-inner">
+      <p class="contact-hero-kicker">Collector inquiries</p>
+      <h1 class="contact-hero-title">Contact</h1>
+      <p class="contact-hero-copy">
+        For acquisitions, commissions, artwork availability, shipping, or artwork conversations, write directly to the artist.
+      </p>
+      <div class="breadcrumbs contact-breadcrumbs" aria-label="Contact path">
+        <a href="index.html">Home</a>
+        <span aria-hidden="true">&gt;</span>
+        <span>Contact</span>
       </div>
     </div>
   </section>
 
-  <section class="contact-us-wrap py-5">
-    <div class="container">
-      <div class="row">
-        <!-- Contact Information -->
-        <div class="contact-info col-md-6 mb-5">
-          <h2 class="fs-3 text-uppercase mb-4">Contact Information</h2>
-          <!-- <p class="mb-4">Tortor dignissim convallis aenean et tortor at risus viverra adipiscing.</p> -->
+  <section class="contact-page-section">
+    <div class="container-fluid contact-page-container">
+      <div class="contact-page-grid">
+        <aside class="contact-info-panel" aria-label="Artist contact details">
+          <p class="contact-section-kicker">Artist contact</p>
+          <h2>Speak with the artist</h2>
+          <p class="contact-info-lead">
+            Share the artwork title, commission thought, or delivery question. Collector inquiries are handled directly so the conversation stays personal and clear.
+          </p>
 
-          <!-- Head Office -->
-          <div class="content-box mb-4">
-            <h5 class="element-title text-uppercase mb-2">Mail</h5>
-            <div class="email-address mb-2">
-              <p>
-                <a href="mailto:sunilsawaneart@gmail.com" class="text-decoration-none">sunilsawaneart@gmail.com</a>
-              </p>
+          <div class="contact-detail-list">
+            <a class="contact-detail-link" href="mailto:sunilsawaneart@gmail.com">
+              <span>Mail</span>
+              <strong>sunilsawaneart@gmail.com</strong>
+              <small>Best for acquisitions, commissions, and artwork availability.</small>
+            </a>
+            <a class="contact-detail-link" href="tel:+919810238984">
+              <span>Phone</span>
+              <strong>+91 98102 38984</strong>
+              <small>For urgent collector coordination or delivery questions.</small>
+            </a>
+            <a class="contact-detail-link" href="tel:+919667766971">
+              <span>Alternate</span>
+              <strong>+91 96677 66971</strong>
+              <small>Use if the primary contact line is unavailable.</small>
+            </a>
+            <div class="contact-detail-link contact-detail-static">
+              <span>Location</span>
+              <strong>Gurgaon, Haryana, India</strong>
+              <small>Original works can be coordinated for secure domestic delivery.</small>
             </div>
           </div>
 
-          <!-- Branch Office -->
-          <div class="content-box mb-4">
-            <h5 class="element-title text-uppercase mb-2">Mobile</h5>
+          <div class="contact-social-row" aria-label="Social links">
+            <a href="https://www.instagram.com/sunil.sawane?igsh=dG9zZXpzbmU4aXFl" target="_blank" rel="noopener noreferrer">Instagram</a>
+            <a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" target="_blank" rel="noopener noreferrer">Facebook</a>
+            <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&amp;s=08" target="_blank" rel="noopener noreferrer">X</a>
+          </div>
+        </aside>
 
-            <div class="contact-number mb-2">
-              <p>
-                <a href="tel:+919810238984" class="text-decoration-none">+91-9810238984</a><br>
-                <a href="tel:+919667766971" class="text-decoration-none">+91-9667766971</a><br>
-              </p>
-            </div>
+        <div class="contact-form-panel">
+          <div class="contact-form-heading">
+            <p>Inquiry form</p>
+            <h2>Share the artwork or question you have in mind.</h2>
           </div>
 
-          <!-- Social Info -->
-          <div class="content-box">
-            <h5 class="element-title text-uppercase mb-2">Social Info</h5>
-            <div class="social-links">
-              <ul class="list-unstyled d-flex gap-3 mb-0">
-                <li>
-                  <a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" class="text-secondary"
-                    target="_blank">
-                    <i class="fab fa-facebook-f" style="color: black; font-size: 24px;"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&s=08" class="text-secondary"
-                    target="_blank">
-                    <i class="fab fa-twitter" style="color: black; font-size: 24px;"></i>
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.instagram.com/sunil.sawane?igsh=dG9zZXpzbmU4aXFl" class="text-secondary"
-                    target="_blank">
-                    <i class="fab fa-instagram" style="color: black; font-size: 24px;"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-        </div>
-
-
-
-        <!-- Inquiry Form -->
-        <div class="inquiry-item col-md-6">
-          <h2 class="fs-3 text-uppercase mb-4">Got Any Questions?</h2>
-          <p class="mb-4">Use the form below to get in touch with us.</p>
-
-
-          <form id="inquiry-form" class="form-group" action="https://formspree.io/f/mpwabwzz" method="POST">
-            <div class="row mb-3">
-              <div class="col-lg-6 mb-3 mb-lg-0">
-                <input type="text" name="name" placeholder="Your Name" class="form-control ps-3" required
+          <form id="inquiry-form" class="contact-form" action="https://formspree.io/f/mpwabwzz" method="POST">
+            <div class="contact-field-grid">
+              <div class="contact-field">
+                <label for="contact-name">Name</label>
+                <input type="text" name="name" id="contact-name" placeholder="Your name" class="form-control" required
                   aria-required="true">
               </div>
-              <div class="col-lg-6">
-                <input type="email" name="email" placeholder="Your Email" class="form-control ps-3" id="email-field"
+              <div class="contact-field">
+                <label for="email-field">Email</label>
+                <input type="email" name="email" placeholder="Your email" class="form-control" id="email-field"
                   required aria-required="true">
               </div>
+              <div class="contact-field">
+                <label for="contact-phone">Phone</label>
+                <input type="tel" name="phone" id="contact-phone" inputmode="tel" placeholder="Phone number" class="form-control">
+              </div>
+              <div class="contact-field">
+                <label for="contact-subject">Subject</label>
+                <input type="text" name="subject" id="contact-subject" placeholder="Artwork, commission, or shipping" class="form-control">
+              </div>
+              <div class="contact-field contact-field-wide">
+                <label for="contact-message">Message</label>
+                <textarea name="message" id="contact-message" placeholder="Tell us which work you are interested in, where it needs to be delivered, or what you would like to discuss." class="form-control" rows="7" required
+                  aria-required="true"></textarea>
+              </div>
             </div>
-            <div class="mb-3">
-              <input type="tel" name="phone" placeholder="Phone Number" class="form-control ps-3">
-            </div>
-            <div class="mb-3">
-              <input type="text" name="subject" placeholder="Subject" class="form-control ps-3">
-            </div>
-            <div class="mb-3">
-              <textarea name="message" placeholder="Your Message" class="form-control ps-3" rows="6" required
-                aria-required="true"></textarea>
-            </div>
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary btn-lg text-uppercase">Submit</button>
+
+            <div class="contact-submit-row">
+              <button type="submit" class="contact-submit-button">Send inquiry</button>
+              <p>Include the artwork name when possible so Sunil Sawane can respond with accurate availability and next steps.</p>
             </div>
           </form>
-
         </div>
       </div>
     </div>
@@ -370,70 +352,61 @@
         </div>
       </div>
     </section> -->
-
-  <footer id="footer" class="overflow-hidden">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="row d-flex flex-wrap justify-content-between">
-          <div class="col-lg-3 col-sm-6 pb-3 pe-4">
-            <div class="footer-menu">
-              <img src="images/main-logo.png" alt="logo" class="pb-3">
-              <p>Welcome to the official website of Sunil A. Sawane. Here, you can explore a diverse collection of my
-                artwork, including Pen & Ink. My work is inspired by nature, abstract concepts, and personal
-                experiences, and I aim to paint all this on my canvas. Thank you for visiting, and I hope you enjoy
-                exploring my creations.</p>
-            </div>
-            <div class="copyright">
-              <p>© 2024, Sunil A. Sawane. All rights to artwork and content reserved. Unauthorized use or reproduction
-                of any material from this site is prohibited.</p>
-            </div>
-          </div>
-          <div class="col-lg-2 col-sm-6 pb-3">
-            <div class="footer-menu text-uppercase">
-              <h5 class="widget-title pb-2">Quick Links</h5>
-              <ul class="menu-list list-unstyled text-uppercase">
-                <li class="menu-item pb-2">
-                  <a href="#billboard">Home</a>
-                </li>
-                <li class="menu-item pb-2">
-                  <a href="#about-us">About</a>
-                </li>
-                <!-- <li class="menu-item pb-2">
-                    <a href="#featured-products">Shop</a>
-                  </li> -->
-                <li class="menu-item pb-2">
-                  <a href="#contact">Contact</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-lg-2 col-sm-6 pb-3">
-            <div class="footer-menu text-uppercase">
-              <h5 class="widget-title pb-2">Social</h5>
-              <div class="social-links">
-                <ul class="list-unstyled">
-                  <li class="pb-2">
-                    <a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg">Facebook</a>
-                  </li>
-                  <li class="pb-2">
-                    <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&s=08">Twitter</a>
-                  </li>
-                  <li class="pb-2">
-                    <a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl">Instagram</a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-3 col-sm-6">
-            <div class="footer-menu contact-item">
-              <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
-              <p><a href="">+ 91-9810238984</a></p>
-              <p><a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a></p>
-              <p>Gurgaon, Haryana, India</p>
-            </div>
-          </div>
+  <footer id="footer" class="gallery-footer overflow-hidden">
+    <div class="container-fluid gallery-footer-container">
+      <div class="gallery-footer-grid">
+        <div class="footer-brand-panel">
+          <a class="footer-logo-link" href="index.html" aria-label="Sunil Sawane Art Gallery home">
+            <img src="images/main-logo.png" alt="Sunil A. Sawane" class="footer-logo">
+          </a>
+          <p class="footer-brand-note">Original pen, ink, and color works by Sunil A. Sawane, curated for collectors and art lovers.</p>
+          <a class="footer-primary-link" href="gallery.html">View Gallery</a>
         </div>
+
+        <nav class="footer-link-column" aria-label="Footer navigation">
+          <h5 class="widget-title">Explore</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="index.html">Home</a></li>
+            <li class="menu-item"><a href="about-us.html">About</a></li>
+            <li class="menu-item"><a href="gallery.html">Gallery</a></li>
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-commerce-links" aria-label="Collector support">
+          <h5 class="widget-title">Collectors</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="cart.html">Cart</a></li>
+            <li class="menu-item"><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+            <li class="menu-item"><a href="returns-damage-policy.html">Returns &amp; Damage</a></li>
+            <li class="menu-item"><a href="authenticity-policy.html">Authenticity</a></li>
+            <li class="menu-item"><a href="privacy-policy.html">Privacy</a></li>
+            <li class="menu-item"><a href="terms.html">Terms</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-social-links" aria-label="Social links">
+          <h5 class="widget-title">Follow</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li class="menu-item"><a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li class="menu-item"><a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&amp;s=08" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </nav>
+
+        <address class="footer-link-column footer-contact-list">
+          <h5 class="widget-title">Contact</h5>
+          <a href="tel:+919810238984">+91 98102 38984</a>
+          <a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a>
+          <span>Gurgaon, Haryana, India</span>
+        </address>
+      </div>
+
+      <div class="footer-legal-bar">
+        <p>&copy; 2026 Sunil A. Sawane. Artwork and content protected.</p>
+        <a href="contact.html">Usage inquiries</a>
       </div>
     </div>
   </footer>
@@ -442,7 +415,7 @@
   <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
   <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
   <script type="text/javascript" src="js/plugins.js"></script>
-  <script type="text/javascript" src="js/script.js"></script>
+  <script type="text/javascript" src="js/script.js?v=shared-guard-20260611a"></script>
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script src="js/contact.js"></script>
 

@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css?v=premium-order-success-20260611b">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +27,7 @@
     
 </head>
 
-<body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
+<body class="bg-body order-success-page" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
     data-bs-smooth-scroll="true" tabindex="0">
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -157,14 +157,14 @@
                             <li class="nav-item dropdown me-4">
                                 <a class="nav-link" href="contact.html">Contact</a>
                             </li>
-                            <li>
-                                <a href="cart.html" class="position-relative">
+                            <li class="nav-action-item cart-nav-item">
+                                <a href="cart.html" class="header-action-link position-relative" aria-label="View cart">
                                     <svg class="cart" width="18" height="18">
                                         <use xlink:href="#cart"></use>
                                     </svg>
                                     <span
-                                        class="cart-count badge bg-danger position-absolute top-0 start-100 translate-middle"
-                                        style="display: none; font-size: 10px;">0</span>
+                                        class="cart-count header-action-badge badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                        style="display: none;">0</span>
                                 </a>
                             </li>
 
@@ -176,153 +176,155 @@
     </header>
     <!-- Header part end -->
 
-    <!-- Success Content -->
-    <section class="padding-medium">
-        <div class="container">
-
-            <!-- Success Message -->
-            <div class="row justify-content-center mb-3">
-                <div class="col-md-8 text-center">
-                    <div class="success-icon mb-4">
-                        <svg width="80" height="80" fill="#28a745">
-                            <use xlink:href="#check-circle"></use>
-                        </svg>
-                    </div>
-                    <h2 class="text-uppercase mb-3">Thank You for Your Order!</h2>
-                    <p class="text-muted fs-5">Your payment was successful and your order has been confirmed.</p>
-                </div>
+    <section class="hero-section checkout-hero order-success-hero position-relative">
+        <div class="container checkout-hero-inner">
+            <p class="checkout-kicker">Payment received</p>
+            <h1 class="display-2 text-uppercase text-dark">Acquisition confirmed</h1>
+            <p class="checkout-hero-copy">
+                Your payment is complete. The selected original has been reserved under your order and removed from sale.
+            </p>
+            <div class="checkout-breadcrumbs" aria-label="Order path">
+                <a href="index.html">Home</a>
+                <span aria-hidden="true">&gt;</span>
+                <span>Order confirmed</span>
             </div>
-
-            <!-- Order Details -->
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-
-                    <!-- Order Info Box -->
-                    <div class="bg-grey padding-small mb-3">
-                        <h4 class="text-dark pb-3 border-bottom">Order Information</h4>
-                        <div id="order-info" class="pt-3">
-                            <!-- Will be loaded by JavaScript -->
-                        </div>
-                    </div>
-
-                    <!-- Shipping Address -->
-                    <div class="bg-grey padding-small mb-3">
-                        <h4 class="text-dark pb-3 border-bottom">Shipping Address</h4>
-                        <div id="shipping-info" class="pt-3">
-                            <!-- Will be loaded by JavaScript -->
-                        </div>
-                    </div>
-
-                    <!-- Order Items -->
-                    <div class="bg-grey padding-small mb-3">
-                        <h4 class="text-dark pb-3 border-bottom">Order Items</h4>
-                        <div id="items-info" class="pt-3">
-                            <!-- Will be loaded by JavaScript -->
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <!-- Action Buttons -->
-                    <div class="text-center mt-5 mb-3">
-                        <a href="index.html" class="btn btn-dark text-uppercase btn-rounded-none me-2">
-                            Back to Home
-                        </a>
-                        <a href="shop.html" class="btn btn-outline-dark text-uppercase btn-rounded-none">
-                            Continue Shopping
-                        </a>
-                    </div>
-
-
-
-                </div>
-            </div>
-
         </div>
     </section>
 
-    <footer id="footer" class="overflow-hidden">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="row d-flex flex-wrap justify-content-between">
-                    <div class="col-lg-3 col-sm-6 pb-3 pe-4">
-                        <div class="footer-menu">
-                            <img src="images/main-logo.png" alt="logo" class="pb-3">
-                            <p>Welcome to the official website of Sunil A. Sawane. Here, you can explore a diverse
-                                collection of my
-                                artwork, including Pen & Ink. My work is inspired by nature, abstract concepts, and
-                                personal
-                                experiences, and I aim to paint all this on my canvas. Thank you for visiting, and I
-                                hope you enjoy
-                                exploring my creations.</p>
+    <section class="order-success-section">
+        <div class="container-fluid order-success-container">
+            <div class="order-success-shell">
+                <div class="order-success-progress" aria-label="Order status">
+                    <span class="is-complete">Payment received</span>
+                    <span class="is-complete">Artwork reserved</span>
+                    <span>Artist follow-up</span>
+                </div>
+
+                <div class="order-success-grid">
+                    <section class="success-artwork-panel" aria-labelledby="success-artwork-heading">
+                        <div class="success-panel-heading">
+                            <p>Collected work</p>
+                            <h2 id="success-artwork-heading">Reserved for you</h2>
                         </div>
-                        <div class="copyright">
-                            <p>© 2024, Sunil A. Sawane. All rights to artwork and content reserved. Unauthorized use or
-                                reproduction
-                                of any material from this site is prohibited.</p>
+                        <div id="items-info" class="success-artwork-list">
+                            <p class="success-empty-note">Loading acquired artwork...</p>
                         </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-6 pb-3">
-                        <div class="footer-menu text-uppercase">
-                            <h5 class="widget-title pb-2">Quick Links</h5>
-                            <ul class="menu-list list-unstyled text-uppercase">
-                                <li class="menu-item pb-2">
-                                    <a href="#billboard">Home</a>
-                                </li>
-                                <li class="menu-item pb-2">
-                                    <a href="#about-us">About</a>
-                                </li>
-                                <!-- <li class="menu-item pb-2">
-                    <a href="#featured-products">Shop</a>
-                  </li> -->
-                                <li class="menu-item pb-2">
-                                    <a href="#contact">Contact</a>
-                                </li>
-                            </ul>
+                    </section>
+
+                    <section class="success-receipt-panel" aria-labelledby="success-receipt-heading">
+                        <div class="success-panel-heading">
+                            <p>Receipt</p>
+                            <h2 id="success-receipt-heading">Order information</h2>
                         </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-6 pb-3">
-                        <div class="footer-menu text-uppercase">
-                            <h5 class="widget-title pb-2">Social</h5>
-                            <div class="social-links">
-                                <ul class="list-unstyled">
-                                    <li class="pb-2">
-                                        <a
-                                            href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg">Facebook</a>
-                                    </li>
-                                    <li class="pb-2">
-                                        <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&s=08">Twitter</a>
-                                    </li>
-                                    <li class="pb-2">
-                                        <a
-                                            href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl">Instagram</a>
-                                    </li>
-                                </ul>
-                            </div>
+                        <div id="order-info" class="success-receipt-body">
+                            <p class="success-empty-note">Loading order details...</p>
                         </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="footer-menu contact-item">
-                            <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
-                            <p><a href="">+ 91-9810238984</a></p>
-                            <p><a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a></p>
-                            <p>Gurgaon, Haryana, India</p>
+
+                        <div class="success-divider"></div>
+
+                        <div class="success-panel-heading success-address-heading">
+                            <p>Delivery</p>
+                            <h2>Shipping address</h2>
                         </div>
-                    </div>
+                        <div id="shipping-info" class="success-shipping-body">
+                            <p class="success-empty-note">Loading shipping details...</p>
+                        </div>
+
+                        <div class="success-next-steps" aria-label="Next steps">
+                            <article>
+                                <span>01</span>
+                                <p>This original is reserved under your order and no longer available for purchase.</p>
+                            </article>
+                            <article>
+                                <span>02</span>
+                                <p>The artist will coordinate packing and delivery details directly.</p>
+                            </article>
+                            <article>
+                                <span>03</span>
+                                <p>Keep this order number for any collector support question.</p>
+                            </article>
+                        </div>
+
+                        <div class="success-action-row">
+                            <a href="gallery.html" class="success-primary-link">View gallery</a>
+                            <a href="contact.html" class="success-secondary-link">Contact artist</a>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
-    </footer>
+    </section>
+  <footer id="footer" class="gallery-footer overflow-hidden">
+    <div class="container-fluid gallery-footer-container">
+      <div class="gallery-footer-grid">
+        <div class="footer-brand-panel">
+          <a class="footer-logo-link" href="index.html" aria-label="Sunil Sawane Art Gallery home">
+            <img src="images/main-logo.png" alt="Sunil A. Sawane" class="footer-logo">
+          </a>
+          <p class="footer-brand-note">Original pen, ink, and color works by Sunil A. Sawane, curated for collectors and art lovers.</p>
+          <a class="footer-primary-link" href="gallery.html">View Gallery</a>
+        </div>
+
+        <nav class="footer-link-column" aria-label="Footer navigation">
+          <h5 class="widget-title">Explore</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="index.html">Home</a></li>
+            <li class="menu-item"><a href="about-us.html">About</a></li>
+            <li class="menu-item"><a href="gallery.html">Gallery</a></li>
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-commerce-links" aria-label="Collector support">
+          <h5 class="widget-title">Collectors</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="cart.html">Cart</a></li>
+            <li class="menu-item"><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+            <li class="menu-item"><a href="returns-damage-policy.html">Returns &amp; Damage</a></li>
+            <li class="menu-item"><a href="authenticity-policy.html">Authenticity</a></li>
+            <li class="menu-item"><a href="privacy-policy.html">Privacy</a></li>
+            <li class="menu-item"><a href="terms.html">Terms</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-social-links" aria-label="Social links">
+          <h5 class="widget-title">Follow</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li class="menu-item"><a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li class="menu-item"><a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&amp;s=08" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </nav>
+
+        <address class="footer-link-column footer-contact-list">
+          <h5 class="widget-title">Contact</h5>
+          <a href="tel:+919810238984">+91 98102 38984</a>
+          <a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a>
+          <span>Gurgaon, Haryana, India</span>
+        </address>
+      </div>
+
+      <div class="footer-legal-bar">
+        <p>&copy; 2026 Sunil A. Sawane. Artwork and content protected.</p>
+        <a href="contact.html">Usage inquiries</a>
+      </div>
+    </div>
+  </footer>
 
     <!-- Scripts -->
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/plugins.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/script.js?v=shared-guard-20260611a"></script>
 
     <!-- Load Components -->
     <script src="js/components.js"></script>
-    <script src="js/order-success.js"></script>
+    <script src="js/config.js?v=local-api-20260610"></script>
+    <script src="js/dom-utils.js"></script>
+    <script src="js/order-success.js?v=premium-order-success-20260611c"></script>
 
     
 

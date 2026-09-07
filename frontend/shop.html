@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css?v=collector-flow-20260611a">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -27,7 +27,7 @@
 
 </head>
 
-<body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
+<body class="shop-page bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
     data-bs-smooth-scroll="true" tabindex="0">
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -157,14 +157,26 @@
                             <li class="nav-item dropdown me-4">
                                 <a class="nav-link" href="contact.html">Contact</a>
                             </li>
-                            <li>
-                                <a href="cart.html" class="position-relative">
+                            <li class="nav-action-item liked-items-nav-item">
+                                <button type="button" class="liked-items-toggle position-relative"
+                                    id="liked-items-toggle" aria-label="View liked artworks"
+                                    aria-controls="liked-items-panel" aria-expanded="false">
+                                    <svg class="liked-items-icon" width="18" height="18">
+                                        <use xlink:href="#wishlist-cart"></use>
+                                    </svg>
+                                    <span
+                                        class="liked-items-count header-action-badge badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                        id="liked-items-count" style="display: none;">0</span>
+                                </button>
+                            </li>
+                            <li class="nav-action-item cart-nav-item">
+                                <a href="cart.html" class="header-action-link position-relative" aria-label="View cart">
                                     <svg class="cart" width="18" height="18">
                                         <use xlink:href="#cart"></use>
                                     </svg>
                                     <span
-                                        class="cart-count badge bg-danger position-absolute top-0 start-100 translate-middle"
-                                        style="display: none; font-size: 10px;">0</span>
+                                        class="cart-count header-action-badge badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                        style="display: none;">0</span>
                                 </a>
                             </li>
 
@@ -176,16 +188,37 @@
     </header>
     <!-- Header part end -->
 
-    <section class="hero-section position-relative bg-gray padding-medium">
+    <div class="liked-items-panel" id="liked-items-panel" aria-hidden="true">
+        <div class="liked-items-backdrop" data-liked-items-close></div>
+        <aside class="liked-items-drawer" role="dialog" aria-modal="true" aria-labelledby="liked-items-title">
+            <div class="liked-items-header">
+                <div>
+                    <span class="liked-items-kicker">Saved works</span>
+                    <h2 id="liked-items-title">Liked Artworks</h2>
+                </div>
+                <button type="button" class="liked-items-close" id="liked-items-close"
+                    aria-label="Close liked artworks">
+                    <svg width="16" height="16">
+                        <use xlink:href="#close"></use>
+                    </svg>
+                </button>
+            </div>
+            <div class="liked-items-list" id="liked-items-list"></div>
+            <p class="liked-items-empty" id="liked-items-empty">No liked artworks yet.</p>
+        </aside>
+    </div>
+
+    <section class="hero-section shop-hero position-relative bg-gray padding-medium">
         <div class="hero-content">
             <div class="container">
                 <div class="row">
                     <div class="text-center">
                         <h1 class="display-2 text-uppercase text-dark">Shop</h1>
-                        <div class="breadcrumbs">
+                        <div class="breadcrumbs" aria-label="Shop path">
                             <span class="item">
-                                <a href="index.html">Home &gt;</a>
+                                <a href="index.html">Home</a>
                             </span>
+                            <span class="item" aria-hidden="true">&gt;</span>
                             <span class="item">Shop</span>
                         </div>
                     </div>
@@ -196,33 +229,32 @@
 
     <!-- Shop Section -->
     <!-- Main Shop Content -->
-    <main class="main-content py-5">
-        <div class="container">
-
-            <!-- Sort and Result Count Row -->
-            <div class="row py-2">
-                <div class="col-md-9">
-                    <span id="result-count">Loading artworks...</span>
-                </div>
-                <div class="col-md-3">
-                    <select class="form-select border-0 bg-transparent" id="sort-select" onchange="sortArtworks()">
-                        <option value="default">Sort By</option>
-                        <option value="price-low">Price: Low to High</option>
-                        <option value="price-high">Price: High to Low</option>
-                        <option value="name">Name: A-Z</option>
-                        <option value="newest">Newest First</option>
-                    </select>
-                </div>
-            </div>
+    <main class="main-content shop-catalogue-panel collector-shop-experience">
+        <div class="container shop-container">
 
             <!-- Category Filters -->
-            <div class="filter-section mb-4">
-                <h5>Filter by Category:</h5>
-                <div class="category-buttons">
-                    <button class="btn active" onclick="filterShop('all')" id="filter-all">
-                        All Artworks
-                    </button>
-                    <span id="category-filter-buttons"></span>
+            <div class="collector-filter-dock">
+                <div class="filter-section shop-filter-rail">
+                    <h5 class="visually-hidden">Filter artworks by category</h5>
+                    <div class="category-buttons">
+                        <button class="btn shop-filter-button active" onclick="filterShop('all')" id="filter-all">
+                            All Artworks
+                        </button>
+                        <span id="category-filter-buttons"></span>
+                    </div>
+                </div>
+                <div class="shop-filter-actions">
+                    <span id="result-count" class="shop-result-count" aria-live="polite">Loading works...</span>
+                    <div class="shop-sort-wrap">
+                        <label for="sort-select" class="visually-hidden">Sort artworks</label>
+                        <select class="form-select shop-sort-select" id="sort-select" onchange="sortArtworks()">
+                            <option value="default">Sort By</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="name">Name: A-Z</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -233,7 +265,7 @@
             </div>
 
             <!-- Products Grid -->
-            <div class="row" id="product-grid">
+            <div class="row premium-product-grid" id="product-grid">
                 <!-- Products will be loaded here dynamically -->
             </div>
 
@@ -247,90 +279,76 @@
         </div>
     </main>
     <!-- footer -->
-    <footer id="footer" class="overflow-hidden">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="row d-flex flex-wrap justify-content-between">
-                    <div class="col-lg-3 col-sm-6 pb-3 pe-4">
-                        <div class="footer-menu">
-                            <img src="images/main-logo.png" alt="logo" class="pb-3">
-                            <p>Welcome to the official website of Sunil A. Sawane. Here, you can explore a diverse
-                                collection of my
-                                artwork, including Pen & Ink. My work is inspired by nature, abstract concepts, and
-                                personal
-                                experiences, and I aim to paint all this on my canvas. Thank you for visiting, and I
-                                hope you enjoy
-                                exploring my creations.</p>
-                        </div>
-                        <div class="copyright">
-                            <p>© 2024, Sunil A. Sawane. All rights to artwork and content reserved. Unauthorized use or
-                                reproduction
-                                of any material from this site is prohibited.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-6 pb-3">
-                        <div class="footer-menu text-uppercase">
-                            <h5 class="widget-title pb-2">Quick Links</h5>
-                            <ul class="menu-list list-unstyled text-uppercase">
-                                <li class="menu-item pb-2">
-                                    <a href="#billboard">Home</a>
-                                </li>
-                                <li class="menu-item pb-2">
-                                    <a href="#about-us">About</a>
-                                </li>
-                                <!-- <li class="menu-item pb-2">
-                    <a href="#featured-products">Shop</a>
-                  </li> -->
-                                <li class="menu-item pb-2">
-                                    <a href="#contact">Contact</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-6 pb-3">
-                        <div class="footer-menu text-uppercase">
-                            <h5 class="widget-title pb-2">Social</h5>
-                            <div class="social-links">
-                                <ul class="list-unstyled">
-                                    <li class="pb-2">
-                                        <a
-                                            href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg">Facebook</a>
-                                    </li>
-                                    <li class="pb-2">
-                                        <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&s=08">Twitter</a>
-                                    </li>
-                                    <li class="pb-2">
-                                        <a
-                                            href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl">Instagram</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="footer-menu contact-item">
-                            <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
-                            <p><a href="">+ 91-9810238984</a></p>
-                            <p><a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a></p>
-                            <p>Gurgaon, Haryana, India</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <footer id="footer" class="gallery-footer overflow-hidden">
+    <div class="container-fluid gallery-footer-container">
+      <div class="gallery-footer-grid">
+        <div class="footer-brand-panel">
+          <a class="footer-logo-link" href="index.html" aria-label="Sunil Sawane Art Gallery home">
+            <img src="images/main-logo.png" alt="Sunil A. Sawane" class="footer-logo">
+          </a>
+          <p class="footer-brand-note">Original pen, ink, and color works by Sunil A. Sawane, curated for collectors and art lovers.</p>
+          <a class="footer-primary-link" href="gallery.html">View Gallery</a>
         </div>
 
-    </footer>
+        <nav class="footer-link-column" aria-label="Footer navigation">
+          <h5 class="widget-title">Explore</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="index.html">Home</a></li>
+            <li class="menu-item"><a href="about-us.html">About</a></li>
+            <li class="menu-item"><a href="gallery.html">Gallery</a></li>
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-commerce-links" aria-label="Collector support">
+          <h5 class="widget-title">Collectors</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="cart.html">Cart</a></li>
+            <li class="menu-item"><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+            <li class="menu-item"><a href="returns-damage-policy.html">Returns &amp; Damage</a></li>
+            <li class="menu-item"><a href="authenticity-policy.html">Authenticity</a></li>
+            <li class="menu-item"><a href="privacy-policy.html">Privacy</a></li>
+            <li class="menu-item"><a href="terms.html">Terms</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-social-links" aria-label="Social links">
+          <h5 class="widget-title">Follow</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li class="menu-item"><a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li class="menu-item"><a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&amp;s=08" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </nav>
+
+        <address class="footer-link-column footer-contact-list">
+          <h5 class="widget-title">Contact</h5>
+          <a href="tel:+919810238984">+91 98102 38984</a>
+          <a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a>
+          <span>Gurgaon, Haryana, India</span>
+        </address>
+      </div>
+
+      <div class="footer-legal-bar">
+        <p>&copy; 2026 Sunil A. Sawane. Artwork and content protected.</p>
+        <a href="contact.html">Usage inquiries</a>
+      </div>
+    </div>
+  </footer>
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/plugins.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
+    <script type="text/javascript" src="js/script.js?v=shared-guard-20260611a"></script>
 
     <!-- Shop Scripts -->
-    <script src="js/api.js"></script>
-    <script src="js/shop.js"></script>
-    <script src="js/cart.js"></script>
-\
+    <script src="js/config.js?v=shop-refine-20260607b"></script>
+    <script src="js/dom-utils.js?v=shop-refine-20260607b"></script>
+    <script src="js/api.js?v=shop-refine-20260607b"></script>
+    <script src="js/shop.js?v=collector-flow-20260611a"></script>
+    <script src="js/cart.js?v=checkout-availability-20260613a"></script>
 
 
 

@@ -1,19 +1,17 @@
-// js/config.js - Configuration file
-const CONFIG = {
-    // Razorpay Configuration
-    razorpay: {
-        keyId: 'rzp_test_RF4D0IMNMK7ce7' // Replace with your actual Razorpay key
-    },
-    
-    // EmailJS Configuration (Free email service)
-    emailjs: {
-        serviceId: 'YOUR_SERVICE_ID',      // Get from EmailJS dashboard
-        templateId: 'YOUR_TEMPLATE_ID',    // Get from EmailJS dashboard
-        publicKey: 'YOUR_PUBLIC_KEY'       // Get from EmailJS dashboard
-    },
-    
-    // API Configuration
-    api: {
-        baseUrl: 'https://growing-approval-51840080fc.strapiapp.com/api'
-    }
-};
+// js/config.js - browser-global configuration for static pages.
+(function (window) {
+    'use strict';
+
+    const localApiBaseUrl = 'http://127.0.0.1:1337/api';
+    const remoteApiBaseUrl = 'https://growing-approval-51840080fc.strapiapp.com/api';
+    const isLocalFrontend = ['localhost', '127.0.0.1', '::1', ''].includes(window.location.hostname);
+
+    window.ART_CONFIG = Object.assign({
+        apiBaseUrl: isLocalFrontend ? localApiBaseUrl : remoteApiBaseUrl,
+        emailjs: {
+            serviceId: 'service_vetp2fb',
+            templateId: 'template_8326uqf',
+            publicKey: 'CH1xkEcNl5g1ENnrb'
+        }
+    }, window.ART_CONFIG || {});
+})(window);

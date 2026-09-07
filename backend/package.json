@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "strapi-provider-email-nodemailer": "^2.0.0"
-  }
-}

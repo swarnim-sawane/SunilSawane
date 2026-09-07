@@ -1,5 +1,7 @@
 // import type { Core } from '@strapi/strapi';
 
+const { assertProductionReady } = require('./utils/production-readiness');
+
 export default {
   /**
    * An asynchronous register function that runs before
@@ -7,7 +9,9 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register(/* { strapi }: { strapi: Core.Strapi } */) {
+    assertProductionReady(process.env);
+  },
 
   /**
    * An asynchronous bootstrap function that runs before

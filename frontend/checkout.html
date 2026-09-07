@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css?v=premium-checkout-20260611a">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +23,7 @@
     <script src="js/modernizr.js"></script>
 </head>
 
-<body class="bg-body" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
+<body class="bg-body checkout-page" data-bs-spy="scroll" data-bs-target="#navbar" data-bs-root-margin="0px 0px -40%"
     data-bs-smooth-scroll="true" tabindex="0">
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
         <symbol id="search" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
@@ -153,14 +153,14 @@
                             <li class="nav-item dropdown me-4">
                                 <a class="nav-link" href="contact.html">Contact</a>
                             </li>
-                            <li>
-                                <a href="cart.html" class="position-relative">
+                            <li class="nav-action-item cart-nav-item">
+                                <a href="cart.html" class="header-action-link position-relative" aria-label="View cart">
                                     <svg class="cart" width="18" height="18">
                                         <use xlink:href="#cart"></use>
                                     </svg>
                                     <span
-                                        class="cart-count badge bg-danger position-absolute top-0 start-100 translate-middle"
-                                        style="display: none; font-size: 10px;">0</span>
+                                        class="cart-count header-action-badge badge bg-danger position-absolute top-0 start-100 translate-middle"
+                                        style="display: none;">0</span>
                                 </a>
                             </li>
 
@@ -172,273 +172,286 @@
     </header>
     <!-- Header part end -->
 
-    <section class="hero-section position-relative bg-gray padding-medium">
-        <div class="hero-content">
-            <div class="container">
-                <div class="row">
-                    <div class="text-center">
-                        <h1 class="display-2 text-uppercase text-dark">Checkout</h1>
-                        <div class="breadcrumbs">
-                            <span class="item">
-                                <a href="cart.html">Cart &gt;</a>
-                            </span>
-                            <span class="item">Checkout</span>
-                        </div>
-                    </div>
-                </div>
+    <section class="hero-section checkout-hero position-relative">
+        <div class="container checkout-hero-inner">
+            <p class="checkout-kicker">Collector checkout</p>
+            <h1 class="display-2 text-uppercase text-dark">Complete your acquisition</h1>
+            <p class="checkout-hero-copy">
+                Confirm delivery details, review the selected original, and continue through a secure Razorpay payment.
+            </p>
+            <div class="checkout-breadcrumbs" aria-label="Checkout path">
+                <a href="cart.html">Cart</a>
+                <span aria-hidden="true">&gt;</span>
+                <span>Checkout</span>
             </div>
         </div>
     </section>
-    <!-- breadcrumb part end-->
 
-    <section class="padding-large">
-        <div class="container">
+    <section class="checkout-collector-section">
+        <div class="container-fluid checkout-container">
+            <div class="checkout-shell">
+                <div class="checkout-progress-row" aria-label="Checkout progress">
+                    <span class="is-complete"><a href="cart.html" class="checkout-step-link">Review</a></span>
+                    <span class="is-current">Collector details</span>
+                    <span>Secure payment</span>
+                </div>
 
-            <div class="row justify-content-center">
+                <div class="checkout-grid">
+                    <div class="checkout-form-panel">
+                        <div class="checkout-panel-heading">
+                            <p>Delivery details</p>
+                            <h2>Where should the artwork arrive?</h2>
+                        </div>
 
-                <!-- Left Column - Billing Form -->
-                <div class="col-lg-7">
-                    <div class="billing-details mb-4">
-                        <h4 class="mb-4">Billing Details</h4>
+                        <form id="billing-form" class="checkout-form">
+                            <fieldset class="checkout-form-section">
+                                <legend>Collector contact</legend>
+                                <div class="checkout-field-grid">
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="fname">First name</label>
+                                        <input type="text" class="form-control" name="fname" id="fname"
+                                            autocomplete="given-name" pattern="[A-Za-z\s]{2,50}" minlength="2"
+                                            maxlength="50" required>
+                                        <small>Letters only</small>
+                                    </div>
 
-                        <form id="billing-form">
-                            <div class="row">
-                                <!-- First Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control" name="fname" id="fname"
-                                        pattern="[A-Za-z\s]{2,50}" minlength="2" maxlength="50" required>
-                                    <small class="text-muted">Letters only</small>
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="lname">Last name</label>
+                                        <input type="text" class="form-control" name="lname" id="lname"
+                                            autocomplete="family-name" pattern="[A-Za-z\s]{2,50}" minlength="2"
+                                            maxlength="50" required>
+                                        <small>Letters only</small>
+                                    </div>
+
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="email">Email address</label>
+                                        <input type="email" class="form-control" name="email" id="email"
+                                            autocomplete="email" placeholder="name@example.com"
+                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+                                    </div>
+
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="phone">Phone number</label>
+                                        <input type="tel" class="form-control" name="phone" id="phone"
+                                            inputmode="tel" autocomplete="tel" placeholder="+91 XXXXXXXXXX"
+                                            pattern="^\+?[0-9]{10,13}$" maxlength="13" required>
+                                        <small>Used only for delivery coordination</small>
+                                    </div>
                                 </div>
+                            </fieldset>
 
-                                <!-- Last Name -->
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" name="lname" id="lname"
-                                        pattern="[A-Za-z\s]{2,50}" minlength="2" maxlength="50" required>
-                                    <small class="text-muted">Letters only</small>
+                            <fieldset class="checkout-form-section">
+                                <legend>Delivery address</legend>
+                                <div class="checkout-field-grid">
+                                    <div class="checkout-field checkout-field-wide">
+                                        <label class="form-label" for="address">Street address</label>
+                                        <input type="text" class="form-control" name="address" id="address"
+                                            autocomplete="street-address" required>
+                                    </div>
+
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="city">City</label>
+                                        <input type="text" class="form-control" name="city" id="city"
+                                            autocomplete="address-level2" pattern="[A-Za-z\s]{2,50}" required>
+                                    </div>
+
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="state">State</label>
+                                        <input type="text" class="form-control" name="state" id="state"
+                                            autocomplete="address-level1" pattern="[A-Za-z\s]{2,50}" required>
+                                    </div>
+
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="zipcode">Pincode</label>
+                                        <input type="text" class="form-control" name="zipcode" id="zipcode"
+                                            inputmode="numeric" autocomplete="postal-code" placeholder="110001" pattern="[0-9]{6}"
+                                            maxlength="6" required>
+                                        <small>6-digit Indian pincode</small>
+                                    </div>
+
+                                    <div class="checkout-field">
+                                        <label class="form-label" for="country">Country</label>
+                                        <select class="form-select" name="country" id="country"
+                                            autocomplete="country-name">
+                                            <option value="India" selected>India</option>
+                                            <option value="USA">USA</option>
+                                            <option value="UK">UK</option>
+                                        </select>
+                                    </div>
                                 </div>
+                            </fieldset>
 
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control" name="email" id="email"
-                                    placeholder="example@gmail.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
-                                    required>
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label class="form-label">Phone Number</label>
-                                <input type="tel" class="form-control" name="phone" id="phone"
-                                    placeholder="+91 XXXXXXXXXX" pattern="^\+?[0-9]{10,13}$" maxlength="13" required>
-                                <small class="text-muted">Format: +91 followed by 10 digits</small>
-                            </div>
-
-
-                            <div class="mb-3">
-                                <label class="form-label">Street Address *</label>
-                                <input type="text" class="form-control" name="address" required>
-                            </div>
-
-                            <div class="row">
-                                <!-- City -->
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">City</label>
-                                    <input type="text" class="form-control" name="city" id="city"
-                                        pattern="[A-Za-z\s]{2,50}" required>
+                            <fieldset class="checkout-form-section">
+                                <legend>Packing note</legend>
+                                <div class="checkout-field">
+                                    <label class="form-label" for="order-notes">Order notes <span>optional</span></label>
+                                    <textarea class="form-control" name="order-notes" id="order-notes" rows="4"
+                                        placeholder="Delivery timing, gifting note, or framing preference"></textarea>
                                 </div>
-
-                                <!-- State -->
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">State</label>
-                                    <input type="text" class="form-control" name="state" id="state"
-                                        pattern="[A-Za-z\s]{2,50}" required>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Pincode</label>
-                                    <input type="text" class="form-control" name="zipcode" id="zipcode"
-                                        placeholder="110001" pattern="[0-9]{6}" maxlength="6" required>
-                                    <small class="text-muted">6-digit pincode</small>
-                                </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Country *</label>
-                                    <select class="form-select" name="country">
-                                        <option value="India" selected>India</option>
-                                        <option value="USA">USA</option>
-                                        <option value="UK">UK</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Order Notes (Optional)</label>
-                                <textarea class="form-control" name="order-notes" rows="3"></textarea>
-                            </div>
+                            </fieldset>
                         </form>
 
                     </div>
-                </div>
 
-                <!-- Right Column - Order Summary -->
-                <div class="col-lg-5">
-                    <div class="cart-totals bg-grey padding-medium">
-                        <h4 class="text-dark pb-4">Your Order</h4>
+                    <aside class="checkout-summary-panel" aria-label="Order summary">
+                        <section class="checkout-order-card">
+                            <div class="checkout-panel-heading">
+                                <p>Your order</p>
+                                <h2>Selected artwork</h2>
+                            </div>
 
-                        <!-- Order Items -->
-                        <div id="checkout-items" class="mb-4">
-                            <p class="text-center text-muted">Loading cart...</p>
-                        </div>
+                            <div id="checkout-items" class="checkout-items-shell">
+                                <p class="checkout-empty-note">Loading cart...</p>
+                            </div>
 
-                        <!-- Totals -->
-                        <div class="total-price pb-5">
-                            <table cellspacing="0" class="table text-uppercase">
-                                <tbody>
-                                    <tr class="subtotal pt-2 pb-2 border-top border-bottom">
-                                        <th>Subtotal</th>
-                                        <td>
-                                            <span class="price-amount amount text-primary ps-5">
-                                                <bdi>
-                                                    <span class="price-currency-symbol">₹</span>
-                                                    <span id="checkout-subtotal">0</span>
-                                                </bdi>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr class="order-shipping pt-2 pb-2 border-bottom">
-                                        <th>Shipping</th>
-                                        <td>
-                                            <span class="ps-5">Free Shipping</span>
-                                        </td>
-                                    </tr>
-                                    <tr class="order-total pt-2 pb-2 border-bottom">
-                                        <th>Total</th>
-                                        <td>
-                                            <span class="price-amount amount text-primary ps-5">
-                                                <bdi>
-                                                    <span class="price-currency-symbol">₹</span>
-                                                    <span id="checkout-total">0</span>
-                                                </bdi>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                            <div class="checkout-total-lines" aria-label="Order totals">
+                                <div class="checkout-total-row">
+                                    <span>Subtotal</span>
+                                    <strong><span class="price-currency-symbol">&#8377;</span><span
+                                            id="checkout-subtotal">0</span></strong>
+                                </div>
+                                <div class="checkout-total-row">
+                                    <span>Shipping</span>
+                                    <strong>Free</strong>
+                                </div>
+                                <div class="checkout-total-row checkout-total-final">
+                                    <span>Total</span>
+                                    <strong><span class="price-currency-symbol">&#8377;</span><span
+                                            id="checkout-total">0</span></strong>
+                                </div>
+                            </div>
+                            <a href="cart.html" class="checkout-review-return"
+                                aria-label="Back to review selected artworks">
+                                <svg aria-hidden="true" width="17" height="17">
+                                    <use xlink:href="#arrow-left"></use>
+                                </svg>
+                                <span>Back to review</span>
+                            </a>
+                        </section>
 
-                        <!-- Payment Method -->
-                        <div class="list-group mt-3 mb-4">
-                            <div class="list-group-item">
-                                <input class="form-check-input me-2" type="radio" name="payment" id="razorpay" checked>
-                                <label class="form-check-label stretched-link" for="razorpay">
-                                    <strong>Razorpay (UPI, Cards, Net Banking)</strong>
-                                    <p class="text-muted mb-0 small">Secure payment powered by Razorpay</p>
+                        <section class="checkout-assurance-panel" aria-label="Collector purchase assurances">
+                            <h5>Collector assurance</h5>
+                            <article class="checkout-assurance-item">
+                                <svg aria-hidden="true" width="22" height="22">
+                                    <use xlink:href="#shipping-fast"></use>
+                                </svg>
+                                <div>
+                                    <h6>Securely packed for shipping</h6>
+                                    <p>Protected packing for framed or unframed delivery after order confirmation.</p>
+                                    <a href="shipping-policy.html" class="checkout-assurance-link">Shipping details</a>
+                                </div>
+                            </article>
+                            <article class="checkout-assurance-item">
+                                <svg aria-hidden="true" width="22" height="22">
+                                    <use xlink:href="#gift"></use>
+                                </svg>
+                                <div>
+                                    <h6>Certificate of authenticity</h6>
+                                    <p>Each original is documented as a work by Sunil A. Sawane.</p>
+                                    <a href="authenticity-policy.html" class="checkout-assurance-link">Authenticity note</a>
+                                </div>
+                            </article>
+                            <article class="checkout-assurance-item">
+                                <svg aria-hidden="true" width="22" height="22">
+                                    <use xlink:href="#return"></use>
+                                </svg>
+                                <div>
+                                    <h6>Return &amp; damage support</h6>
+                                    <p>Any transit issue is handled through direct collector support.</p>
+                                    <a href="returns-damage-policy.html" class="checkout-assurance-link">Damage support</a>
+                                </div>
+                            </article>
+                        </section>
+
+                        <section class="checkout-payment-panel" aria-label="Payment method">
+                            <div class="checkout-payment-option">
+                                <input class="form-check-input" type="radio" name="payment" id="razorpay" checked>
+                                <label class="form-check-label" for="razorpay">
+                                    <strong>Razorpay</strong>
+                                    <span>UPI, cards, net banking</span>
                                 </label>
                             </div>
-                        </div>
 
-                        <button type="button" class="btn btn-dark btn-lg text-uppercase btn-rounded-none w-100"
-                            onclick="proceedToPayment()">
-                            Place Order & Pay
-                        </button>
-                    </div>
+                            <button type="button" id="payment-button" class="checkout-payment-button">
+                                Place Order &amp; Pay
+                            </button>
+                        </section>
+                    </aside>
+
                 </div>
-
             </div>
         </div>
     </section>
-
-
-
-
-    <footer id="footer" class="overflow-hidden">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="row d-flex flex-wrap justify-content-between">
-                    <div class="col-lg-3 col-sm-6 pb-3 pe-4">
-                        <div class="footer-menu">
-                            <img src="images/main-logo.png" alt="logo" class="pb-3">
-                            <p>Welcome to the official website of Sunil A. Sawane. Here, you can explore a diverse
-                                collection of my
-                                artwork, including Pen & Ink. My work is inspired by nature, abstract concepts, and
-                                personal
-                                experiences, and I aim to paint all this on my canvas. Thank you for visiting, and I
-                                hope you enjoy
-                                exploring my creations.</p>
-                        </div>
-                        <div class="copyright">
-                            <p>© 2024, Sunil A. Sawane. All rights to artwork and content reserved. Unauthorized use or
-                                reproduction
-                                of any material from this site is prohibited.</p>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-6 pb-3">
-                        <div class="footer-menu text-uppercase">
-                            <h5 class="widget-title pb-2">Quick Links</h5>
-                            <ul class="menu-list list-unstyled text-uppercase">
-                                <li class="menu-item pb-2">
-                                    <a href="#billboard">Home</a>
-                                </li>
-                                <li class="menu-item pb-2">
-                                    <a href="#about-us">About</a>
-                                </li>
-                                <!-- <li class="menu-item pb-2">
-                    <a href="#featured-products">Shop</a>
-                  </li> -->
-                                <li class="menu-item pb-2">
-                                    <a href="#contact">Contact</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-sm-6 pb-3">
-                        <div class="footer-menu text-uppercase">
-                            <h5 class="widget-title pb-2">Social</h5>
-                            <div class="social-links">
-                                <ul class="list-unstyled">
-                                    <li class="pb-2">
-                                        <a
-                                            href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg">Facebook</a>
-                                    </li>
-                                    <li class="pb-2">
-                                        <a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&s=08">Twitter</a>
-                                    </li>
-                                    <li class="pb-2">
-                                        <a
-                                            href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl">Instagram</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-sm-6">
-                        <div class="footer-menu contact-item">
-                            <h5 class="widget-title text-uppercase pb-2">Contact Us</h5>
-                            <p><a href="">+ 91-9810238984</a></p>
-                            <p><a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a></p>
-                            <p>Gurgaon, Haryana, India</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <footer id="footer" class="gallery-footer overflow-hidden">
+    <div class="container-fluid gallery-footer-container">
+      <div class="gallery-footer-grid">
+        <div class="footer-brand-panel">
+          <a class="footer-logo-link" href="index.html" aria-label="Sunil Sawane Art Gallery home">
+            <img src="images/main-logo.png" alt="Sunil A. Sawane" class="footer-logo">
+          </a>
+          <p class="footer-brand-note">Original pen, ink, and color works by Sunil A. Sawane, curated for collectors and art lovers.</p>
+          <a class="footer-primary-link" href="gallery.html">View Gallery</a>
         </div>
-    </footer>
+
+        <nav class="footer-link-column" aria-label="Footer navigation">
+          <h5 class="widget-title">Explore</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="index.html">Home</a></li>
+            <li class="menu-item"><a href="about-us.html">About</a></li>
+            <li class="menu-item"><a href="gallery.html">Gallery</a></li>
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-commerce-links" aria-label="Collector support">
+          <h5 class="widget-title">Collectors</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="shop.html">Shop</a></li>
+            <li class="menu-item"><a href="cart.html">Cart</a></li>
+            <li class="menu-item"><a href="shipping-policy.html">Shipping &amp; Delivery</a></li>
+            <li class="menu-item"><a href="returns-damage-policy.html">Returns &amp; Damage</a></li>
+            <li class="menu-item"><a href="authenticity-policy.html">Authenticity</a></li>
+            <li class="menu-item"><a href="privacy-policy.html">Privacy</a></li>
+            <li class="menu-item"><a href="terms.html">Terms</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer-link-column footer-social-links" aria-label="Social links">
+          <h5 class="widget-title">Follow</h5>
+          <ul class="menu-list list-unstyled">
+            <li class="menu-item"><a href="https://www.instagram.com/sunil.sawane?igsh=dG9sZXpzbmU4aXFl" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li class="menu-item"><a href="https://www.facebook.com/share/2yBgtxFQiH4UMLbT/?mibextid=qi2Omg" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+            <li class="menu-item"><a href="https://x.com/SawaneB1145?t=xpYprttypuSbuer9z-6N5A&amp;s=08" target="_blank" rel="noopener noreferrer">X</a></li>
+          </ul>
+        </nav>
+
+        <address class="footer-link-column footer-contact-list">
+          <h5 class="widget-title">Contact</h5>
+          <a href="tel:+919810238984">+91 98102 38984</a>
+          <a href="mailto:sunilsawaneart@gmail.com">sunilsawaneart@gmail.com</a>
+          <span>Gurgaon, Haryana, India</span>
+        </address>
+      </div>
+
+      <div class="footer-legal-bar">
+        <p>&copy; 2026 Sunil A. Sawane. Artwork and content protected.</p>
+        <a href="contact.html">Usage inquiries</a>
+      </div>
+    </div>
+  </footer>
 
     <script src="js/jquery-1.11.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/plugins.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
-    <script src="js/cart.js"></script>
+    <script type="text/javascript" src="js/script.js?v=shared-guard-20260611a"></script>
+    <script src="js/config.js?v=local-api-20260610"></script>
+    <script src="js/dom-utils.js"></script>
+    <script src="js/api.js?v=collector-flow-20260611a"></script>
+    <script src="js/cart.js?v=checkout-availability-20260613a"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <script src="js/checkout.js"></script>
+    <script src="js/checkout.js?v=collector-flow-20260611a"></script>
 
 </body>
 
