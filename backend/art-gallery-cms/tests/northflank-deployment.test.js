@@ -31,6 +31,15 @@ test('Northflank deployment uses a reproducible Node 22 container', () => {
   });
 });
 
+test('remote data transfer is explicitly gated by environment configuration', () => {
+  const server = read('config/server.ts');
+  const envExample = read('.env.example');
+
+  assert.match(server, /REMOTE_DATA_TRANSFER_ENABLED/);
+  assert.match(server, /remote:\s*{\s*enabled:/s);
+  assert.match(envExample, /^REMOTE_DATA_TRANSFER_ENABLED=false$/m);
+});
+
 test('production uploads are backed by the local Cloudinary REST provider', () => {
   const plugins = read('config/plugins.ts');
   const middlewares = read('config/middlewares.ts');

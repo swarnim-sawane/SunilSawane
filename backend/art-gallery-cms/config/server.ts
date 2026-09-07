@@ -5,4 +5,9 @@ export default ({ env }) => ({
   app: {
     keys: env.array('APP_KEYS'),
   },
+  transfer: {
+    remote: {
+      enabled: env.bool('REMOTE_DATA_TRANSFER_ENABLED', false),
+    },
+  },
 });
