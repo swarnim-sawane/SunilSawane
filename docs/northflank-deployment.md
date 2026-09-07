@@ -68,6 +68,7 @@ Add these values to the `gallery-production` runtime secret group. Generate inde
 
 ```dotenv
 NODE_ENV=production
+DEPLOYMENT_STAGE=staging
 HOST=0.0.0.0
 PORT=1337
 PUBLIC_URL=https://gallery-cms--sunilsawane-gallery--YOUR_ACCOUNT.code.run
@@ -92,11 +93,13 @@ CLOUDINARY_KEY=YOUR_CLOUDINARY_API_KEY
 CLOUDINARY_SECRET=YOUR_CLOUDINARY_API_SECRET
 CLOUDINARY_FOLDER=sunilsawane-artworks
 
-RAZORPAY_KEY_ID=rzp_live_YOUR_KEY_ID
-RAZORPAY_KEY_SECRET=YOUR_RAZORPAY_SECRET
+RAZORPAY_KEY_ID=rzp_test_YOUR_KEY_ID
+RAZORPAY_KEY_SECRET=YOUR_RAZORPAY_TEST_SECRET
 ORDER_NOTIFICATION_EMAIL=sunilsawaneart@gmail.com
 ORDER_EMAIL_FROM=orders@YOUR_VERIFIED_DOMAIN
 ```
+
+Keep `DEPLOYMENT_STAGE=staging` with `rzp_test_...` credentials on the Northflank Developer Sandbox. Change it to `live` only when moving to production-supported hosting and supplying Razorpay live credentials.
 
 `DATABASE_URL=${POSTGRES_URI}` above describes the alias relationship. In Northflank, link `POSTGRES_URI` from the addon and alias it to `DATABASE_URL`; do not paste the literal `${POSTGRES_URI}` text as a secret value.
 

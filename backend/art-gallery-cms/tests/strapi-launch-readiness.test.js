@@ -88,6 +88,36 @@ test('production guard rejects unsafe live configuration and allows complete lau
     }),
     []
   );
+
+  const stagingIssues = getProductionReadinessIssues({
+    NODE_ENV: 'production',
+    DEPLOYMENT_STAGE: 'staging',
+    PUBLIC_URL: 'https://gallery-cms.example',
+    DATABASE_CLIENT: 'postgres',
+    DATABASE_URL: 'postgres://user:pass@db.example:5432/sunilsawane',
+    RAZORPAY_KEY_ID: 'rzp_test_1234567890',
+    RAZORPAY_KEY_SECRET: 'test_secret_value',
+    APP_KEYS: 'staging-key-one,staging-key-two',
+    API_TOKEN_SALT: 'staging-api-token-salt',
+    ADMIN_JWT_SECRET: 'staging-admin-jwt-secret',
+    TRANSFER_TOKEN_SALT: 'staging-transfer-token-salt',
+    JWT_SECRET: 'staging-jwt-secret',
+    ENCRYPTION_KEY: 'staging-encryption-key',
+    CLOUDINARY_ENABLED: 'true',
+    CLOUDINARY_NAME: 'sunilsawane-cloud',
+    CLOUDINARY_KEY: '123456789012345',
+    CLOUDINARY_SECRET: 'staging-cloudinary-secret',
+    ORDER_NOTIFICATION_EMAIL: 'sunilsawaneart@gmail.com',
+    ORDER_EMAIL_FROM: 'orders@sunilsawane.example',
+  });
+  assert.deepEqual(stagingIssues, []);
+
+  const stagingWithLivePayments = getProductionReadinessIssues({
+    NODE_ENV: 'production',
+    DEPLOYMENT_STAGE: 'staging',
+    RAZORPAY_KEY_ID: 'rzp_live_1234567890',
+  });
+  assert.ok(stagingWithLivePayments.some((issue) => /Razorpay test key id/.test(issue)));
 });
 
 test('order confirmation email utility prepares artist and collector messages', () => {

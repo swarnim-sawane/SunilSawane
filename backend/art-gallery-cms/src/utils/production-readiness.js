@@ -47,6 +47,11 @@ function getProductionReadinessIssues(env = process.env) {
   }
 
   const issues = [];
+  const deploymentStage = clean(env.DEPLOYMENT_STAGE).toLowerCase() || 'live';
+
+  if (!['staging', 'live'].includes(deploymentStage)) {
+    issues.push('Production DEPLOYMENT_STAGE must be either staging or live.');
+  }
 
   if (clean(env.DATABASE_CLIENT) !== 'postgres') {
     issues.push('Production must use DATABASE_CLIENT=postgres.');
@@ -60,7 +65,10 @@ function getProductionReadinessIssues(env = process.env) {
     issues.push('Production PUBLIC_URL must be a deployed HTTPS Strapi URL, not localhost.');
   }
 
-  if (!/^rzp_live_[A-Za-z0-9]+$/.test(clean(env.RAZORPAY_KEY_ID))) {
+  const razorpayKeyId = clean(env.RAZORPAY_KEY_ID);
+  if (deploymentStage === 'staging' && !/^rzp_test_[A-Za-z0-9]+$/.test(razorpayKeyId)) {
+    issues.push('Staging must use a Razorpay test key id in RAZORPAY_KEY_ID.');
+  } else if (deploymentStage === 'live' && !/^rzp_live_[A-Za-z0-9]+$/.test(razorpayKeyId)) {
     issues.push('Production must use a Razorpay live key id in RAZORPAY_KEY_ID.');
   }
 
