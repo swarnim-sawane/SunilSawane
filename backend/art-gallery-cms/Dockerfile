@@ -8,7 +8,8 @@ ENV HOST=0.0.0.0 \
     STRAPI_TELEMETRY_DISABLED=true
 
 COPY package.json package-lock.json ./
-RUN npm ci --no-audit --no-fund
+RUN npm install --global npm@11.6.2 \
+    && npm ci --no-audit --no-fund
 
 COPY . .
 RUN NODE_OPTIONS=--max-old-space-size=1536 npm run build \

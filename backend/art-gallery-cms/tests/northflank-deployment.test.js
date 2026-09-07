@@ -11,6 +11,7 @@ test('Northflank deployment uses a reproducible Node 22 container', () => {
   const dockerignore = read('.dockerignore');
 
   assert.match(dockerfile, /FROM node:22-bookworm-slim/);
+  assert.match(dockerfile, /npm install --global npm@11\.6\.2/);
   assert.match(dockerfile, /npm ci/);
   assert.match(dockerfile, /npm run build/);
   assert.match(dockerfile, /EXPOSE 1337/);
