@@ -37,6 +37,10 @@ function hasProductionSecret(value) {
   return normalized.length >= 8 && !PLACEHOLDER_RE.test(normalized);
 }
 
+function isEnabled(value) {
+  return ['1', 'true', 'yes', 'on'].includes(clean(value).toLowerCase());
+}
+
 function getProductionReadinessIssues(env = process.env) {
   if (!isProduction(env)) {
     return [];
@@ -62,6 +66,16 @@ function getProductionReadinessIssues(env = process.env) {
 
   if (!hasProductionSecret(env.RAZORPAY_KEY_SECRET)) {
     issues.push('Production RAZORPAY_KEY_SECRET must be set in backend env and cannot be a placeholder.');
+  }
+
+  if (!isEnabled(env.CLOUDINARY_ENABLED)) {
+    issues.push('Production must use CLOUDINARY_ENABLED=true so uploaded artwork survives restarts.');
+  }
+
+  for (const key of ['CLOUDINARY_NAME', 'CLOUDINARY_KEY', 'CLOUDINARY_SECRET']) {
+    if (!hasProductionSecret(env[key])) {
+      issues.push(`Production ${key} must be set to a non-placeholder Cloudinary credential.`);
+    }
   }
 
   for (const key of REQUIRED_SECRET_KEYS) {

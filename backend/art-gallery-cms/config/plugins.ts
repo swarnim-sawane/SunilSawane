@@ -1,22 +1,29 @@
-module.exports = ({ env }) => ({
-  // Temporarily disable email plugin
-  /* 
-  email: {
-    config: {
-      provider: 'nodemailer',
-      providerOptions: {
-        host: env('SMTP_HOST', 'smtp.gmail.com'),
-        port: env('SMTP_PORT', 587),
-        auth: {
-          user: env('SMTP_USERNAME'),
-          pass: env('SMTP_PASSWORD'),
+import { resolve } from 'node:path';
+
+export default ({ env }) => {
+  if (!env.bool('CLOUDINARY_ENABLED', false)) {
+    return {};
+  }
+
+  return {
+    upload: {
+      config: {
+        provider: resolve(process.cwd(), 'src', 'providers', 'cloudinary-rest'),
+        providerOptions: {
+          cloud_name: env('CLOUDINARY_NAME'),
+          api_key: env('CLOUDINARY_KEY'),
+          api_secret: env('CLOUDINARY_SECRET'),
+        },
+        actionOptions: {
+          upload: {
+            folder: env('CLOUDINARY_FOLDER', 'sunilsawane-artworks'),
+          },
+          uploadStream: {
+            folder: env('CLOUDINARY_FOLDER', 'sunilsawane-artworks'),
+          },
+          delete: {},
         },
       },
-      settings: {
-        defaultFrom: env('SMTP_DEFAULT_FROM', 'noreply@sunilsawaneart.com'),
-        defaultReplyTo: env('SMTP_DEFAULT_REPLY_TO', 'contact@sunilsawaneart.com'),
-      },
     },
-  },
-  */
-});
+  };
+};

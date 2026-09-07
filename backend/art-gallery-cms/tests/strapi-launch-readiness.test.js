@@ -51,6 +51,7 @@ test('production guard rejects unsafe live configuration and allows complete lau
     TRANSFER_TOKEN_SALT: 'tobemodified',
     JWT_SECRET: 'tobemodified',
     ENCRYPTION_KEY: 'tobemodified',
+    CLOUDINARY_ENABLED: 'false',
   };
 
   const issues = getProductionReadinessIssues(unsafeEnv);
@@ -58,6 +59,10 @@ test('production guard rejects unsafe live configuration and allows complete lau
   assert.ok(issues.some((issue) => /PUBLIC_URL/.test(issue)));
   assert.ok(issues.some((issue) => /Razorpay live key id/.test(issue)));
   assert.ok(issues.some((issue) => /RAZORPAY_KEY_SECRET/.test(issue)));
+  assert.ok(issues.some((issue) => /CLOUDINARY_ENABLED=true/.test(issue)));
+  assert.ok(issues.some((issue) => /CLOUDINARY_NAME/.test(issue)));
+  assert.ok(issues.some((issue) => /CLOUDINARY_KEY/.test(issue)));
+  assert.ok(issues.some((issue) => /CLOUDINARY_SECRET/.test(issue)));
   assert.throws(() => assertProductionReady(unsafeEnv), /Production readiness check failed/);
 
   assert.deepEqual(
@@ -74,6 +79,10 @@ test('production guard rejects unsafe live configuration and allows complete lau
       TRANSFER_TOKEN_SALT: 'prod-transfer-token-salt',
       JWT_SECRET: 'prod-jwt-secret',
       ENCRYPTION_KEY: 'prod-encryption-key',
+      CLOUDINARY_ENABLED: 'true',
+      CLOUDINARY_NAME: 'sunilsawane-cloud',
+      CLOUDINARY_KEY: '123456789012345',
+      CLOUDINARY_SECRET: 'prod-cloudinary-secret',
       ORDER_NOTIFICATION_EMAIL: 'sunilsawaneart@gmail.com',
       ORDER_EMAIL_FROM: 'orders@sunilsawane.example',
     }),
