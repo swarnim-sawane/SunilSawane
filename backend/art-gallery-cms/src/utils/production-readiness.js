@@ -76,6 +76,12 @@ function getProductionReadinessIssues(env = process.env) {
     issues.push('Production RAZORPAY_KEY_SECRET must be set in backend env and cannot be a placeholder.');
   }
 
+  if (!hasProductionSecret(env.RAZORPAY_WEBHOOK_SECRET)) {
+    issues.push('Production RAZORPAY_WEBHOOK_SECRET must be set to a separate non-placeholder secret.');
+  } else if (clean(env.RAZORPAY_WEBHOOK_SECRET) === clean(env.RAZORPAY_KEY_SECRET)) {
+    issues.push('Production RAZORPAY_WEBHOOK_SECRET and RAZORPAY_KEY_SECRET must be different secrets.');
+  }
+
   if (!isEnabled(env.CLOUDINARY_ENABLED)) {
     issues.push('Production must use CLOUDINARY_ENABLED=true so uploaded artwork survives restarts.');
   }
@@ -98,6 +104,14 @@ function getProductionReadinessIssues(env = process.env) {
 
   if (!isEmail(env.ORDER_EMAIL_FROM)) {
     issues.push('Production ORDER_EMAIL_FROM must be set to a verified sender address.');
+  }
+
+  if (!clean(env.SMTP_HOST)) {
+    issues.push('Production SMTP_HOST must be configured for order confirmations.');
+  }
+
+  if (!clean(env.SMTP_USERNAME) || !hasProductionSecret(env.SMTP_PASSWORD)) {
+    issues.push('Production SMTP_USERNAME and SMTP_PASSWORD must be configured for order confirmations.');
   }
 
   return issues;

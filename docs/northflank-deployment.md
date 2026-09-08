@@ -21,7 +21,7 @@ The repository includes `src/providers/cloudinary-rest.js`, a dependency-free St
 node --test tests/cloudinary-rest-provider.test.js
 ```
 
-The container intentionally uses `npm ci`; do not replace it with an unlocked install command.
+The container intentionally uses `npm install --include=optional` with the committed lockfile. This preserves the optional native packages required by the Northflank Linux build; do not remove `--include=optional` without rerunning the deployment contract tests.
 
 ## 3. Create the Northflank project and database
 
@@ -73,6 +73,7 @@ HOST=0.0.0.0
 PORT=1337
 PUBLIC_URL=https://gallery-cms--sunilsawane-gallery--YOUR_ACCOUNT.code.run
 CORS_ORIGINS=https://sunilsawane.vercel.app
+TRUST_PROXY=true
 
 DATABASE_CLIENT=postgres
 DATABASE_URL=${POSTGRES_URI}
@@ -95,8 +96,17 @@ CLOUDINARY_FOLDER=sunilsawane-artworks
 
 RAZORPAY_KEY_ID=rzp_test_YOUR_KEY_ID
 RAZORPAY_KEY_SECRET=YOUR_RAZORPAY_TEST_SECRET
+RAZORPAY_WEBHOOK_SECRET=GENERATED_SEPARATE_WEBHOOK_SECRET
+PAYMENT_RESERVATION_MINUTES=20
+PAYMENT_MAX_RESERVED_ARTWORKS_PER_CLIENT=3
 ORDER_NOTIFICATION_EMAIL=sunilsawaneart@gmail.com
 ORDER_EMAIL_FROM=orders@YOUR_VERIFIED_DOMAIN
+ORDER_REPLY_TO=sunilsawaneart@gmail.com
+SMTP_HOST=YOUR_SMTP_HOST
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USERNAME=YOUR_SMTP_USERNAME
+SMTP_PASSWORD=YOUR_SMTP_PASSWORD
 ```
 
 Keep `DEPLOYMENT_STAGE=staging` with `rzp_test_...` credentials on the Northflank Developer Sandbox. Change it to `live` only when moving to production-supported hosting and supplying Razorpay live credentials.
@@ -111,11 +121,17 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 Run that command separately for every secret.
 
+In the Razorpay dashboard, create a webhook pointing to:
+
+`https://YOUR_SERVICE_DOMAIN/api/orders/razorpay-webhook`
+
+Use the same value for the dashboard webhook secret and `RAZORPAY_WEBHOOK_SECRET`. Subscribe to `payment.captured`, `payment.failed`, `order.paid`, and `refund.processed`. Configure test-mode and live-mode webhooks separately.
+
 ## 6. First deployment
 
 Deploy the service and verify:
 
-1. The build completes `npm ci` and `npm run build`.
+1. The build completes the locked `npm install --include=optional` step and `npm run build`.
 2. The service log contains `Strapi started successfully`.
 3. `https://YOUR_SERVICE_DOMAIN/_health` returns HTTP 204.
 4. `https://YOUR_SERVICE_DOMAIN/admin` loads and allows creation of the first production administrator.

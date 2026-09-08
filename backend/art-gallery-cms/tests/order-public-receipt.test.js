@@ -11,20 +11,26 @@ test('order public receipt route is scoped to confirmed receipt display', () => 
   const controller = read('src/api/order/controllers/order.ts');
   const publicSerializer = controller.slice(
     controller.indexOf('function serializePublicReceipt'),
-    controller.indexOf('async function markPurchasedArtworksUnavailable')
+    controller.indexOf('async function reserveArtworks')
   );
 
   assert.match(routes, /method:\s*'GET'[\s\S]*path:\s*'\/orders\/receipt\/:orderNumber'/);
   assert.match(routes, /handler:\s*'order\.publicReceipt'/);
   assert.match(routes, /auth:\s*false/);
+  assert.match(routes, /path:\s*'\/orders\/receipt\/:orderNumber'[\s\S]*global::payment-rate-limit/);
 
   assert.match(controller, /async publicReceipt\(ctx\)/);
+  assert.match(controller, /Cache-Control',\s*'no-store'/);
   assert.match(controller, /\^ORD-\\d\{10,20\}\$/);
-  assert.match(controller, /orderStatus:\s*'confirmed'/);
+  assert.match(controller, /orderStatus:\s*\{\s*\$in:\s*\['confirmed', 'processing', 'shipped', 'delivered'\]\s*\}/);
   assert.match(controller, /publishedAt:\s*\{[\s\S]*\$notNull:\s*true/s);
   assert.match(controller, /serializePublicReceipt\(order\)/);
   assert.match(publicSerializer, /publicReceipt:\s*true/);
+  assert.doesNotMatch(publicSerializer, /customerName/);
   assert.doesNotMatch(publicSerializer, /customerEmail/);
+  assert.doesNotMatch(publicSerializer, /\bcity\b/);
+  assert.doesNotMatch(publicSerializer, /\bstate\b/);
+  assert.doesNotMatch(publicSerializer, /\bpincode\b/);
   assert.doesNotMatch(publicSerializer, /shippingAddress/);
   assert.doesNotMatch(publicSerializer, /paymentSignature/);
 });

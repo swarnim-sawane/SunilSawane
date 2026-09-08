@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "payment_events",
+  "info": {
+    "singularName": "payment-event",
+    "pluralName": "payment-events",
+    "displayName": "Payment Event"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "eventId": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "eventType": {
+      "type": "string",
+      "required": true
+    },
+    "razorpayOrderId": {
+      "type": "string"
+    },
+    "paymentId": {
+      "type": "string"
+    },
+    "processingStatus": {
+      "type": "enumeration",
+      "enum": ["received", "processing", "processed", "ignored", "failed"],
+      "default": "received"
+    },
+    "processedAt": {
+      "type": "datetime"
+    },
+    "errorMessage": {
+      "type": "text",
+      "private": true
+    }
+  }
+}
