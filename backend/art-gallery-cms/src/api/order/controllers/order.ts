@@ -270,6 +270,11 @@ async function updateEmailDelivery(strapi, order) {
   });
 }
 
+async function publishOrderDocument(strapi, order) {
+  if (!order?.documentId) throw httpError('Order document cannot be published', 500);
+  await strapi.documents(STRAPI_ORDER_UID).publish({ documentId: order.documentId });
+}
+
 async function finalizeCapturedPayment(strapi, order, payment, paymentSignature = '') {
   validateCapturedPayment(payment, {
     paymentId: payment.id,
@@ -281,6 +286,7 @@ async function finalizeCapturedPayment(strapi, order, payment, paymentSignature 
   let current = await strapi.db.query(STRAPI_ORDER_UID).findOne({ where: { id: order.id } });
   if (['confirmed', 'processing', 'shipped', 'delivered', 'refunded'].includes(current.orderStatus)) {
     if (current.paymentId !== payment.id) throw httpError('Order was confirmed with a different payment', 409);
+    await publishOrderDocument(strapi, current);
     return current;
   }
 
@@ -341,7 +347,9 @@ async function finalizeCapturedPayment(strapi, order, payment, paymentSignature 
   await updateEmailDelivery(strapi, confirmed).catch((error) => {
     strapi.log.error(`[order-email] Confirmation remains queued for ${confirmed.orderNumber}: ${error.message}`);
   });
-  return strapi.db.query(STRAPI_ORDER_UID).findOne({ where: { id: current.id } });
+  const finalized = await strapi.db.query(STRAPI_ORDER_UID).findOne({ where: { id: current.id } });
+  await publishOrderDocument(strapi, finalized);
+  return finalized;
 }
 
 async function failAndReleaseReservation(strapi, order, status = 'failed') {
