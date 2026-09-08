@@ -41,12 +41,11 @@ test('shop page keeps the catalogue controls seamless and restrained', () => {
   assert.match(shopJs, /View Artwork/);
   assert.match(shopJs, /function isProductAvailable/);
   assert.match(shopJs, /function isProductSold/);
-  assert.match(shopJs, /premium-product-card collector-plinth-card is-sold/);
-  assert.match(shopJs, /premium-sold-ribbon/);
-  assert.match(shopJs, /Collected/);
-  assert.match(shopJs, /Private collection/);
-  assert.match(shopJs, /This original is no longer available/);
-  assert.match(shopJs, /if \(isProductSold\(product\)\)/);
+  assert.match(shopJs, /premium-product-card collector-plinth-card is-unavailable/);
+  assert.match(shopJs, /premium-availability-tag/);
+  assert.match(shopJs, /artworkAvailability\.getStatusLabel/);
+  assert.match(shopJs, /artworkAvailability\.getUnavailableMessage/);
+  assert.match(shopJs, /if \(!isProductAvailable\(product\)\)/);
   assert.match(shopJs, /formatShopResultCount/);
   assert.match(shopJs, /`\$\{total\} works`/);
   assert.doesNotMatch(shopJs, /works available/);
@@ -105,8 +104,8 @@ test('shop page keeps the catalogue controls seamless and restrained', () => {
   assert.match(css, /\.collector-shop-experience\s+\.premium-add-button\s*{[^}]*background:\s*transparent;/s);
   assert.match(css, /\.collector-shop-experience\s+\.premium-add-button\s*{[^}]*width:\s*auto;/s);
   assert.match(css, /\.collector-shop-experience\s+\.premium-add-button:hover,\s*\.collector-shop-experience\s+\.premium-add-button:focus-visible\s*{[^}]*background:\s*transparent;/s);
-  assert.match(css, /\.collector-shop-experience\s+\.premium-product-card\.is-sold/s);
-  assert.match(css, /\.premium-sold-ribbon/s);
+  assert.match(css, /\.collector-shop-experience\s+\.premium-product-card\.is-unavailable/s);
+  assert.match(css, /\.premium-availability-tag/s);
   assert.match(css, /\.collector-shop-experience\s+\.premium-add-button:disabled/s);
   assert.doesNotMatch(css, /0\s+24px\s+48px\s+rgba\(30,\s*26,\s*20,\s*0\.12\)/);
   assert.doesNotMatch(css, /\.premium-card-scrim/);
@@ -165,7 +164,8 @@ test('product detail page uses artwork-led purchase layout', () => {
   assert.match(detailJs, /trust-availability/);
   assert.match(detailJs, /Original one-of-one work/);
   assert.match(detailJs, /if \(!isArtworkAvailable\(currentArtwork\)\)/);
-  assert.match(detailJs, /This artwork is no longer available/);
+  assert.match(detailJs, /artworkAvailability\.getUnavailableMessage/);
+  assert.match(detailJs, /artworkAvailability\.getEnquiryLabel/);
   assert.doesNotMatch(detailJs, /function renderMetaInfo/);
   assert.doesNotMatch(detailJs, /product-meta/);
 

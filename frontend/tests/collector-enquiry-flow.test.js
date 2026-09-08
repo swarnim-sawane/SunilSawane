@@ -36,8 +36,9 @@ test('artwork detail offers a premium collector enquiry drawer', () => {
   assert.match(detailJs, /collector-enquiry-form/);
   assert.match(detailJs, /collector-enquiry-status/);
   assert.match(detailJs, /Enquiry received/);
-  assert.match(detailJs, /No longer available/);
-  assert.match(detailJs, /Ask About Similar Work/);
+  assert.match(detailJs, /artworkAvailability\.getUnavailableMessage/);
+  assert.match(detailJs, /artworkAvailability\.getEnquiryLabel/);
+  assert.match(detailJs, /artworkAvailability\.getEnquiryPrompt/);
   assert.match(detailJs, /body\.classList\.add\('collector-enquiry-active'\)/);
   assert.match(detailJs, /body\.classList\.remove\('collector-enquiry-active'\)/);
   assert.doesNotMatch(detailJs, /innerHTML\s*=\s*`/);
@@ -52,31 +53,32 @@ test('artwork detail offers a premium collector enquiry drawer', () => {
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*\.collector-enquiry-panel/s);
 });
 
-test('browsing surfaces communicate collected works without purchase affordances', () => {
+test('browsing surfaces communicate unavailable works without purchase affordances', () => {
+  const shopHtml = read('shop.html');
+  const galleryHtml = read('gallery.html');
   const shopJs = read('js/shop.js');
   const galleryJs = read('js/gallery.js');
   const css = read('style.css');
 
-  assert.match(shopJs, /function getProductAvailabilityLabel/);
-  assert.match(shopJs, /Collected/);
-  assert.match(shopJs, /Private collection/);
-  assert.match(shopJs, /No longer available/);
-  assert.match(shopJs, /premium-product-card collector-plinth-card is-sold/);
-  assert.match(shopJs, /premium-sold-ribbon/);
-  assert.match(shopJs, /This original is no longer available/);
+  assert.match(shopHtml, /js\/artwork-availability\.js/);
+  assert.match(galleryHtml, /js\/artwork-availability\.js/);
+  assert.match(shopJs, /artworkAvailability\.getStatus/);
+  assert.match(shopJs, /artworkAvailability\.getStatusLabel/);
+  assert.match(shopJs, /premium-availability-tag/);
+  assert.match(shopJs, /is-unavailable/);
 
-  assert.match(galleryJs, /function isArtworkCollected/);
+  assert.match(galleryJs, /artworkAvailability\.getStatus/);
   assert.match(galleryJs, /function createGalleryStatusPill/);
   assert.match(galleryJs, /gallery-status-pill/);
-  assert.match(galleryJs, /Collected/);
-  assert.match(galleryJs, /is-collected/);
+  assert.match(galleryJs, /is-unavailable/);
 
   assert.match(css, /\.gallery-status-pill/);
-  assert.match(css, /\.gallery-artwork-card\.is-collected/);
-  assert.match(css, /\.collector-shop-experience\s+\.premium-product-card\.is-sold/s);
+  assert.match(css, /\.gallery-artwork-card\.is-unavailable/);
+  assert.match(css, /\.premium-availability-tag/);
+  assert.match(css, /\.collector-shop-experience\s+\.premium-product-card\.is-unavailable/s);
 });
 
-test('cart refreshes artwork availability and blocks checkout for collected works', () => {
+test('cart refreshes artwork availability and blocks checkout for unavailable works', () => {
   const cartHtml = read('cart.html');
   const cartJs = read('js/cart.js');
   const checkoutJs = read('js/checkout.js');
@@ -89,15 +91,15 @@ test('cart refreshes artwork availability and blocks checkout for collected work
   assert.match(cartJs, /function cartHasUnavailableItems/);
   assert.match(cartJs, /function updateCheckoutAvailabilityState/);
   assert.match(cartJs, /cart-item-unavailable/);
-  assert.match(cartJs, /No longer available/);
-  assert.match(cartJs, /Remove collected work before checkout/);
+  assert.match(cartJs, /artworkAvailability\.getUnavailableMessage/);
+  assert.match(cartJs, /Remove unavailable work before checkout/);
   assert.match(cartJs, /artAPI\.fetchArtworks/);
   assert.match(cartJs, /availabilityStatus/);
   assert.match(cartJs, /id:\s*match\.id\s*\|\|\s*item\.id/);
 
   assert.match(checkoutJs, /cart\.refreshAvailability/);
   assert.match(checkoutJs, /cartHasUnavailableItems/);
-  assert.match(checkoutJs, /Please return to cart and remove collected works/);
+  assert.match(checkoutJs, /Please return to cart and remove unavailable works/);
 
   assert.match(css, /\.premium-cart-item\.cart-item-unavailable/);
   assert.match(css, /\.cart-item-status/);

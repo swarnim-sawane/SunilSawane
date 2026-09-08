@@ -2,6 +2,8 @@
 
 const { assertProductionReady } = require('./utils/production-readiness');
 
+const STRAPI_ARTWORK_UID = 'api::artwork.artwork';
+
 let paymentMaintenanceTimer: ReturnType<typeof setInterval> | undefined;
 let paymentMaintenanceStartup: ReturnType<typeof setTimeout> | undefined;
 
@@ -23,7 +25,26 @@ export default {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap({ strapi } /*: { strapi: Core.Strapi } */) {
+  async bootstrap({ strapi } /*: { strapi: Core.Strapi } */) {
+    await strapi.db.query(STRAPI_ARTWORK_UID).updateMany({
+      where: {
+        isAvailable: false,
+        $or: [
+          { availabilityStatus: { $null: true } },
+          { availabilityStatus: 'available' },
+        ],
+      },
+      data: { availabilityStatus: 'sold', isAvailable: false },
+    });
+
+    await strapi.db.query(STRAPI_ARTWORK_UID).updateMany({
+      where: {
+        isAvailable: { $ne: false },
+        availabilityStatus: { $null: true },
+      },
+      data: { availabilityStatus: 'available', isAvailable: true },
+    });
+
     const runMaintenance = async () => {
       try {
         await strapi.controller('api::order.order').runPaymentMaintenance();

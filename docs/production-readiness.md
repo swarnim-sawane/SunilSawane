@@ -79,6 +79,14 @@ Recommended Public permissions:
 - Confirm order success pages do not reveal private collector details to anyone without the receipt lookup token or order context.
 - Confirm email notifications before relying on them operationally. Artist and collector deliveries are tracked separately and retried in the background; email failure never reverses a confirmed payment.
 
+### Artwork availability in Strapi
+
+- Keep every artwork that should remain visible in the Gallery or Shop **published**. Unpublishing removes it from the public API entirely.
+- Use `Availability status` as the sale-state control: `Available`, `Reserved`, `Sold`, or `Not for sale`.
+- `Available` enables purchasing. The other states keep the artwork visible, show a collector-facing status tag, disable purchase, and preserve an appropriate enquiry action.
+- Razorpay checkout controls `Reserved`, returns an unpaid reservation to `Available`, and changes a confirmed purchase to `Sold`. Avoid manually changing these states while a payment is in progress.
+- `isAvailable` is retained only for compatibility and is synchronized with the status automatically.
+
 ## Final live-mode smoke test
 
 Run one final live-mode smoke test before announcing sales publicly:

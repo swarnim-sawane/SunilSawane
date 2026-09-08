@@ -4008,6 +4008,24 @@ h5 {
   cursor: not-allowed;
 }
 
+.artwork-purchase-panel[data-availability="sold"] .btn-add-cart:disabled {
+  border: 1px solid rgba(148, 55, 43, 0.3);
+  background: rgba(148, 55, 43, 0.08);
+  color: #94372b;
+}
+
+.artwork-purchase-panel[data-availability="reserved"] .btn-add-cart:disabled {
+  border: 1px solid rgba(120, 125, 98, 0.34);
+  background: rgba(120, 125, 98, 0.1);
+  color: #62674f;
+}
+
+.artwork-purchase-panel[data-availability="not_for_sale"] .btn-add-cart:disabled {
+  border: 1px solid rgba(63, 54, 44, 0.24);
+  background: rgba(63, 54, 44, 0.07);
+  color: #3f362c;
+}
+
 .collector-enquiry-active {
   overflow: hidden;
 }
@@ -6102,23 +6120,44 @@ body {
 }
 
 .gallery-status-pill {
+  position: absolute;
+  top: clamp(14px, 2vw, 22px);
+  right: clamp(14px, 2vw, 22px);
+  z-index: 3;
   display: inline-flex;
   align-items: center;
-  min-height: 24px;
-  padding: 0 9px;
+  min-height: 28px;
+  padding: 0 11px;
   border: 1px solid rgba(148, 55, 43, 0.2);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.5);
+  border-radius: 3px;
+  background: rgba(255, 253, 249, 0.88);
   color: #94372b;
+  box-shadow: 0 8px 24px rgba(33, 31, 28, 0.08);
   font-size: 0.62rem;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.12em;
   line-height: 1;
+  text-transform: uppercase;
+  backdrop-filter: blur(12px) saturate(1.08);
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
 }
 
-.gallery-artwork-card.is-collected .gallery-art-image {
-  filter: saturate(0.68) contrast(0.98);
-  opacity: 0.82;
+.gallery-status-pill.is-reserved {
+  border-color: rgba(120, 125, 98, 0.34);
+  color: #62674f;
+}
+
+.gallery-status-pill.is-not-for-sale {
+  border-color: rgba(63, 54, 44, 0.24);
+  color: #3f362c;
+}
+
+.gallery-artwork-card.is-unavailable .gallery-card-surface {
+  border-color: rgba(120, 125, 98, 0.18);
+}
+
+.gallery-artwork-card.is-sold .gallery-art-image {
+  filter: saturate(0.82) contrast(0.99);
 }
 
 .gallery-card-title {
@@ -8032,49 +8071,50 @@ body {
   }
 }
 
-/* Sold artwork state for the collector shop */
-.collector-shop-experience .premium-product-card.is-sold .premium-art-frame {
+/* Artwork availability states */
+.collector-shop-experience .premium-product-card.is-unavailable .premium-art-frame {
   background:
     linear-gradient(180deg, rgba(246, 244, 239, 0.96), rgba(255, 255, 255, 0.86)),
     #f6f3ed;
 }
 
 .collector-shop-experience .premium-product-card.is-sold .premium-product-image {
-  filter: saturate(0.52) contrast(0.98);
-  opacity: 0.68;
+  filter: saturate(0.78) contrast(0.99);
 }
 
-.collector-shop-experience .premium-product-card.is-sold .premium-card-price {
-  color: rgba(33, 31, 28, 0.5);
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-}
-
-.collector-shop-experience .premium-product-card.is-sold .premium-card-caption span:last-child {
-  color: #94372b;
-  font-weight: 500;
-}
-
-.premium-sold-ribbon {
+.premium-availability-tag {
   position: absolute;
-  top: 18px;
-  left: 18px;
+  top: 16px;
+  right: 16px;
   z-index: 3;
   display: inline-flex;
   align-items: center;
-  min-height: 30px;
-  padding: 0 13px;
+  min-height: 28px;
+  max-width: calc(100% - 32px);
+  padding: 0 11px;
   border: 1px solid rgba(148, 55, 43, 0.28);
-  background: rgba(255, 255, 255, 0.86);
+  border-radius: 3px;
+  background: rgba(255, 253, 249, 0.9);
   color: #94372b;
+  box-shadow: 0 8px 24px rgba(33, 31, 28, 0.08);
   font-family: 'Poppins', sans-serif;
-  font-size: 0.66rem;
+  font-size: 0.62rem;
+  font-weight: 600;
   letter-spacing: 0.12em;
   line-height: 1;
   text-transform: uppercase;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px) saturate(1.08);
+  -webkit-backdrop-filter: blur(12px) saturate(1.08);
+}
+
+.premium-availability-tag.is-reserved {
+  border-color: rgba(120, 125, 98, 0.38);
+  color: #62674f;
+}
+
+.premium-availability-tag.is-not-for-sale {
+  border-color: rgba(63, 54, 44, 0.26);
+  color: #3f362c;
 }
 
 .collector-shop-experience .premium-add-button:disabled {

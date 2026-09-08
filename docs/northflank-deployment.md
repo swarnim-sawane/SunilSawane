@@ -166,6 +166,8 @@ In the production admin:
 4. Configure Public role permissions exactly as documented in `docs/production-readiness.md`.
 5. Run `npm run content:audit` against the production API with a read-only `STRAPI_API_TOKEN`.
 
+Keep unavailable artwork published and set its `Availability status` instead of unpublishing it. This preserves it in the public Gallery and Shop while disabling purchase.
+
 ## 9. Cut over the frontend
 
 Update `frontend/js/config.js` so `remoteApiBaseUrl` points to:

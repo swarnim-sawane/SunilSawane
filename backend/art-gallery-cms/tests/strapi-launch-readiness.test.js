@@ -19,6 +19,15 @@ test('artwork schema captures final collector data before sale', () => {
   assert.equal(attributes.price.type, 'decimal');
   assert.equal(attributes.isAvailable.type, 'boolean');
   assert.equal(attributes.isAvailable.default, true);
+  assert.equal(attributes.availabilityStatus.type, 'enumeration');
+  assert.deepEqual(attributes.availabilityStatus.enum, [
+    'available',
+    'reserved',
+    'sold',
+    'not_for_sale',
+  ]);
+  assert.equal(attributes.availabilityStatus.default, 'available');
+  assert.equal(attributes.availabilityStatus.required, true);
   assert.equal(attributes.isFeatured.default, false);
 
   assert.equal(attributes.framingStatus.type, 'enumeration');

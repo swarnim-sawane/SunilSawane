@@ -91,7 +91,7 @@ const cart = {
                     artworkMap.get(String(item.id || ''));
 
                 if (!match) {
-                    return item;
+                    return { ...item, availabilityStatus: 'not_for_sale' };
                 }
 
                 return {
@@ -152,6 +152,7 @@ const cartDom = window.domUtils || {
     safeUrl: (value, fallback) => value || fallback || '#',
     formatINR: (value) => '\u20b9' + (Number(value) || 0).toLocaleString('en-IN')
 };
+const artworkAvailability = window.artworkAvailability;
 const cartApiBaseUrl = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const cartAssetBaseUrl = cartApiBaseUrl.replace(/\/api\/?$/, '');
 const checkoutFlowTransitionKey = 'sunilsawaneCheckoutFlowTransition';
@@ -243,6 +244,7 @@ function displayCart() {
         const price = Number(item.price) || 0;
         const detailHref = item.slug ? `artwork-detail.html?id=${encodeURIComponent(item.slug)}` : 'shop.html';
         const unavailable = isCartItemUnavailable(item);
+        const availabilityStatus = getCartArtworkAvailabilityStatus(item);
         const $remove = $('<button>')
             .addClass('cart-remove-action')
             .attr('type', 'button')
@@ -276,9 +278,11 @@ function displayCart() {
                         $('<a>').attr('href', detailHref).text(item.title || 'Untitled')
                     ),
                     $('<p>').addClass('cart-item-meta').text(unavailable
-                        ? 'This work is now in a private collection.'
+                        ? artworkAvailability.getUnavailableMessage(availabilityStatus)
                         : 'One-of-one work reserved for checkout review'),
-                    unavailable ? $('<p>').addClass('cart-item-status').text('No longer available') : null
+                    unavailable
+                        ? $('<p>').addClass('cart-item-status').text(artworkAvailability.getStatusLabel(availabilityStatus))
+                        : null
                 ),
                 $('<div>').addClass('cart-item-purchase').append(
                     $('<strong>').addClass('cart-item-price').text(cartDom.formatINR(price)),
@@ -296,23 +300,18 @@ function displayCart() {
 function updateCartSummary() {
     const total = cart.getTotal();
     $('#cart-summary-note').text(cartHasUnavailableItems()
-        ? 'Remove collected work before checkout. Available works can still be acquired securely.'
+        ? 'Remove unavailable work before checkout. Available works can still be acquired securely.'
         : 'Shipping, authenticity and damage support are confirmed at checkout.');
     $('#cart-subtotal').text(cartDom.formatINR(total));
     $('#cart-total').text(cartDom.formatINR(total));
 }
 
 function getCartArtworkAvailabilityStatus(artwork) {
-    const available = artwork?.isAvailable !== false &&
-        artwork?.IsAvailable !== false &&
-        artwork?.inStock !== false &&
-        artwork?.InStock !== false;
-
-    return available ? 'available' : 'unavailable';
+    return artworkAvailability.getStatus(artwork);
 }
 
 function isCartItemUnavailable(item) {
-    return item?.availabilityStatus === 'unavailable';
+    return getCartArtworkAvailabilityStatus(item) !== 'available';
 }
 
 function cartHasUnavailableItems() {
@@ -325,7 +324,7 @@ function updateCheckoutAvailabilityState() {
 
     const blocked = cartHasUnavailableItems();
     checkoutButton.disabled = blocked;
-    checkoutButton.textContent = blocked ? 'Remove collected work before checkout' : 'Proceed to Checkout';
+    checkoutButton.textContent = blocked ? 'Remove unavailable work before checkout' : 'Proceed to Checkout';
 }
 
 async function refreshCartAvailabilityForPage() {
@@ -357,7 +356,7 @@ function proceedToCheckout() {
     }
 
     if (cartHasUnavailableItems()) {
-        alert('Please remove collected works before checkout.');
+        alert('Please remove unavailable works before checkout.');
         updateCheckoutAvailabilityState();
         return;
     }

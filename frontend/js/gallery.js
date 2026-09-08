@@ -1,6 +1,7 @@
 let allArtworks = [];
 let currentCategory = 'all';
 const galleryDom = window.domUtils || {};
+const artworkAvailability = window.artworkAvailability;
 const galleryApiBaseUrl = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const galleryAssetBaseUrl = galleryApiBaseUrl.replace(/\/api\/?$/, '');
 
@@ -122,11 +123,14 @@ function createArtworkCard(artwork, index = 0) {
   const accent = getArtworkAccent(artwork);
   const imageLoading = index < 2 ? 'eager' : 'lazy';
   const imagePriority = index < 2 ? 'high' : 'auto';
-  const collected = isArtworkCollected(artwork);
+  const status = artworkAvailability.getStatus(artwork);
+  const unavailable = status !== 'available';
 
   const $card = $('<div>').addClass('col-12 col-xl-6 gallery-artwork-item');
   const $article = $('<article>')
-    .addClass(collected ? 'gallery-artwork-card gallery-artwork-record is-collected' : 'gallery-artwork-card gallery-artwork-record')
+    .addClass(unavailable
+      ? `gallery-artwork-card gallery-artwork-record is-unavailable ${artworkAvailability.getStatusClass(status)}`
+      : 'gallery-artwork-card gallery-artwork-record is-available')
     .attr({
       'data-accent': accent
     })
@@ -152,14 +156,17 @@ function createArtworkCard(artwork, index = 0) {
     .attr({ href: detailUrl, 'aria-label': `View ${title}` })
     .append($image);
 
+  if (unavailable) {
+    $imageLink.append(createGalleryStatusPill(
+      artworkAvailability.getStatusLabel(status),
+      status
+    ));
+  }
+
   const $meta = $('<div>').addClass('gallery-card-kicker gallery-record-meta').append(
     $('<span>').text(categoryName),
     $('<span>').text(year ? year : 'Selected work')
   );
-
-  if (collected) {
-    $meta.append(createGalleryStatusPill('Collected'));
-  }
 
   const $caption = $('<div>').addClass('gallery-card-caption gallery-record-body').append(
     $meta,
@@ -193,19 +200,18 @@ function createGalleryCardNote(description) {
     .text(description || 'A selected work from Sunil Sawane\'s collection.');
 }
 
-function createGalleryStatusPill(label) {
-  return $('<span>').addClass('gallery-status-pill').text(label);
+function createGalleryStatusPill(label, status) {
+  return $('<span>')
+    .addClass(`gallery-status-pill ${artworkAvailability.getStatusClass(status)}`)
+    .text(label);
 }
 
 function isArtworkAvailable(artwork) {
-  return artwork?.isAvailable !== false &&
-    artwork?.IsAvailable !== false &&
-    artwork?.inStock !== false &&
-    artwork?.InStock !== false;
+  return artworkAvailability.isPurchasable(artwork);
 }
 
 function isArtworkCollected(artwork) {
-  return !isArtworkAvailable(artwork);
+  return artworkAvailability.getStatus(artwork) === 'sold';
 }
 
 function extractDescription(description) {

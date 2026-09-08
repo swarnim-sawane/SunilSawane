@@ -8,6 +8,7 @@ const REQUIRED_TEXT_FIELDS = [
   'shippingNote',
   'certificateNote',
 ];
+const { ARTWORK_AVAILABILITY_STATUSES } = require('../src/api/artwork/utils/availability');
 
 function getStrapiUrl() {
   return String(process.env.STRAPI_URL || process.env.PUBLIC_URL || DEFAULT_STRAPI_URL).replace(/\/+$/, '');
@@ -32,6 +33,7 @@ function hasPositivePrice(value) {
 
 function getMissingFields(artwork) {
   const missing = [];
+  const availabilityStatus = String(artwork.availabilityStatus || '').trim().toLowerCase();
 
   for (const field of REQUIRED_TEXT_FIELDS) {
     if (!hasText(artwork[field])) {
@@ -39,7 +41,7 @@ function getMissingFields(artwork) {
     }
   }
 
-  if (!hasPositivePrice(artwork.price)) {
+  if (availabilityStatus !== 'not_for_sale' && !hasPositivePrice(artwork.price)) {
     missing.push('price');
   }
 
@@ -49,6 +51,12 @@ function getMissingFields(artwork) {
 
   if (typeof artwork.isAvailable !== 'boolean') {
     missing.push('isAvailable');
+  }
+
+  if (!ARTWORK_AVAILABILITY_STATUSES.includes(availabilityStatus)) {
+    missing.push('availabilityStatus');
+  } else if (artwork.isAvailable !== (availabilityStatus === 'available')) {
+    missing.push('availabilityConsistency');
   }
 
   if (!hasText(artwork.framingStatus) || artwork.framingStatus === 'to_be_confirmed') {

@@ -1,6 +1,7 @@
 
 const DETAIL_API_BASE_URL = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const STRAPI_URL = DETAIL_API_BASE_URL.replace(/\/api\/?$/, '');
+const artworkAvailability = window.artworkAvailability;
 let currentArtwork = null;
 let previousCollectorEnquiryFocus = null;
 const detailDom = window.domUtils || {
@@ -235,14 +236,13 @@ function getArtworkYear(data) {
 }
 
 function isArtworkAvailable(data) {
-    return data.isAvailable !== false &&
-        data.IsAvailable !== false &&
-        data.inStock !== false &&
-        data.InStock !== false;
+    return artworkAvailability.isPurchasable(data);
 }
 
 function getArtworkAvailabilityLabel(data) {
-    return isArtworkAvailable(data) ? 'Available for acquisition' : 'Collected';
+    return artworkAvailability.getStatus(data) === 'available'
+        ? 'Available for acquisition'
+        : artworkAvailability.getStatusLabel(data);
 }
 
 function setDetailText(id, value) {
@@ -262,18 +262,30 @@ function updatePurchaseState(data) {
     const addButton = document.querySelector('.artwork-purchase-panel .btn-add-cart');
     const enquiryButton = document.getElementById('collector-enquiry-open');
     const available = isArtworkAvailable(data);
+    const status = artworkAvailability.getStatus(data);
+    const panel = document.querySelector('.artwork-purchase-panel');
+
+    if (panel) {
+        panel.classList.toggle('is-unavailable', !available);
+        panel.setAttribute('data-availability', status);
+    }
 
     if (addButton) {
         addButton.disabled = !available;
         addButton.classList.toggle('is-disabled', !available);
-        addButton.replaceChildren(
-            detailDom.el('i', { className: 'fas fa-shopping-cart', attrs: { 'aria-hidden': 'true' } }),
-            document.createTextNode(available ? ' Add Artwork to Cart' : ' No longer available')
-        );
+        addButton.replaceChildren(document.createTextNode(
+            available ? 'Add Artwork to Cart' : artworkAvailability.getPurchaseLabel(status)
+        ));
+        if (available) {
+            addButton.prepend(
+                detailDom.el('i', { className: 'fas fa-shopping-cart', attrs: { 'aria-hidden': 'true' } }),
+                document.createTextNode(' ')
+            );
+        }
     }
 
     if (enquiryButton) {
-        enquiryButton.textContent = available ? 'Enquire / Reserve' : 'Ask About Similar Work';
+        enquiryButton.textContent = artworkAvailability.getEnquiryLabel(status);
     }
 }
 
@@ -292,7 +304,7 @@ function populateCollectorEnquiry(data) {
     if (urlInput) urlInput.value = window.location.href;
     if (subjectInput) subjectInput.value = `Collector enquiry: ${title}`;
     if (messageInput && !messageInput.value.trim()) {
-        messageInput.value = `I am interested in ${title}. Please share availability and delivery details.`;
+        messageInput.value = artworkAvailability.getEnquiryPrompt(data);
     }
 }
 
@@ -489,7 +501,7 @@ function addToCart() {
     if (!currentArtwork) return;
 
     if (!isArtworkAvailable(currentArtwork)) {
-        showNotification('This artwork is no longer available');
+        showNotification(artworkAvailability.getUnavailableMessage(currentArtwork));
         return;
     }
 
@@ -510,7 +522,8 @@ function addToCart() {
         price: currentArtwork.price,
         image: imageUrl.startsWith('http') ? imageUrl : `${STRAPI_URL}${imageUrl}`,
         slug: currentArtwork.slug,
-        quantity: quantity
+        quantity: quantity,
+        availabilityStatus: artworkAvailability.getStatus(currentArtwork)
     };
 
     console.log('📦 Adding to cart:', cartItem);

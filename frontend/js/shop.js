@@ -6,6 +6,7 @@ let likedArtworks = [];
 const WISHLIST_STORAGE_KEY = 'sunilSawaneLikedArtworks';
 const savedWishlistProductIds = new Set();
 const shopDom = window.domUtils;
+const artworkAvailability = window.artworkAvailability;
 const shopApiBaseUrl = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const shopAssetBaseUrl = shopApiBaseUrl.replace(/\/api\/?$/, '');
 
@@ -27,10 +28,9 @@ async function initShop() {
         console.log('Fetched products:', artworks);
 
         // Keep sold works visible as catalogue records, but remove purchase affordances.
-        allProducts = artworks.filter(artwork => {
-            const price = artwork.price || artwork.Price || 0;
-            return price > 0;
-        });
+        allProducts = artworks
+            .filter(artworkAvailability.shouldShowInShop)
+            .sort(artworkAvailability.compareAvailability);
 
         filteredProducts = [...allProducts];
 
@@ -236,12 +236,15 @@ function createProductCard(product, index = 0) {
     const medium = product.medium || product.Medium || 'Artwork';
     const year = product.yearCreated || product.YearCreated || product.year || product.Year || '';
     const accent = getProductAccent(product);
-    const sold = isProductSold(product);
-    const availabilityLabel = getProductAvailabilityLabel(product);
+    const status = artworkAvailability.getStatus(product);
+    const available = artworkAvailability.isPurchasable(product);
+    const statusClass = artworkAvailability.getStatusClass(status);
 
     const $card = $('<div>').addClass('col-12 col-xl-4 col-lg-4 col-md-6 premium-product-item');
     const $article = $('<article>')
-        .addClass(sold ? 'premium-product-card collector-plinth-card is-sold' : 'premium-product-card collector-plinth-card')
+        .addClass(available
+            ? 'premium-product-card collector-plinth-card is-available'
+            : `premium-product-card collector-plinth-card is-unavailable ${statusClass}`)
         .attr('data-accent', accent)
         .css('--card-accent', accent);
     const $surface = $('<div>').addClass('premium-card-surface');
@@ -261,6 +264,14 @@ function createProductCard(product, index = 0) {
         .addClass('premium-art-frame premium-art-matte')
         .attr({ href: detailUrl, 'aria-label': `View ${title}` })
         .append($image);
+
+    if (!available) {
+        $imageLink.append(
+            $('<span>')
+                .addClass(`premium-availability-tag ${statusClass}`)
+                .text(artworkAvailability.getStatusLabel(status))
+        );
+    }
 
     const isWishlisted = savedWishlistProductIds.has(String(product.id));
     const $wishlist = $('<button>')
@@ -285,11 +296,11 @@ function createProductCard(product, index = 0) {
     const $cartButton = $('<button>')
         .attr({
             type: 'button',
-            disabled: sold,
-            'aria-disabled': sold ? 'true' : 'false'
+            disabled: !available,
+            'aria-disabled': available ? 'false' : 'true'
         })
         .addClass('premium-add-button')
-        .text(sold ? 'No longer available' : 'Add to Cart')
+        .text(artworkAvailability.getPurchaseLabel(status))
         .on('click', function (event) {
             addToCartFromShop(event, product.id);
         });
@@ -303,18 +314,13 @@ function createProductCard(product, index = 0) {
             $('<a>').attr('href', detailUrl).text(title)
         ),
         $('<div>').addClass('premium-card-caption').append(
-            $('<span>').text(year ? `Created ${year}` : 'Collector catalogue'),
-            $('<span>').text(availabilityLabel)
+            $('<span>').text(year ? `Created ${year}` : 'Collector catalogue')
         ),
         $('<div>').addClass('premium-card-actions').append(
             $('<a>').addClass('premium-view-link').attr('href', detailUrl).text('View Artwork'),
             $cartButton
         )
     );
-
-    if (sold) {
-        $surface.append($('<span>').addClass('premium-sold-ribbon').text('Collected'));
-    }
 
     $surface.append($imageLink, $wishlist, $content);
     $article.append($surface);
@@ -331,18 +337,11 @@ function createProductCard(product, index = 0) {
 }
 
 function isProductAvailable(product) {
-    return product?.isAvailable !== false &&
-        product?.IsAvailable !== false &&
-        product?.inStock !== false &&
-        product?.InStock !== false;
+    return artworkAvailability.isPurchasable(product);
 }
 
 function isProductSold(product) {
-    return !isProductAvailable(product);
-}
-
-function getProductAvailabilityLabel(product) {
-    return isProductSold(product) ? 'Private collection' : 'Available';
+    return artworkAvailability.getStatus(product) === 'sold';
 }
 
 function getProductCategorySlug(product) {
@@ -472,15 +471,15 @@ function sortArtworks() {
             break;
     }
 
-    displayProducts(sorted);
+    displayProducts(sorted.sort(artworkAvailability.compareAvailability));
 }
 
 function addToCartFromShop(event, productId) {
     event.preventDefault();
     const product = allProducts.find(p => p.id == productId);
 
-    if (isProductSold(product)) {
-        showNotification('This original is no longer available');
+    if (!isProductAvailable(product)) {
+        showNotification(artworkAvailability.getUnavailableMessage(product));
         return;
     }
 

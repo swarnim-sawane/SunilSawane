@@ -26,7 +26,7 @@ async function initCheckoutPage() {
         if (typeof cartHasUnavailableItems === 'function' && cartHasUnavailableItems()) {
             const unavailableMessage = $('<p>')
                 .addClass('checkout-empty-note checkout-availability-note')
-                .text('Please return to cart and remove collected works before payment.');
+                .text('Please return to cart and remove unavailable works before payment.');
             $('#checkout-items').append(unavailableMessage);
             $(paymentButtonSelector).prop('disabled', true).text('Review cart availability');
         }
@@ -133,7 +133,7 @@ function proceedToPayment() {
     }
 
     if (typeof cartHasUnavailableItems === 'function' && cartHasUnavailableItems()) {
-        alert('Please return to cart and remove collected works before payment.');
+        alert('Please return to cart and remove unavailable works before payment.');
         return;
     }
 

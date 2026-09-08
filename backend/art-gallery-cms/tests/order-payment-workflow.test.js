@@ -41,6 +41,10 @@ test('controller reserves stock before opening Razorpay and verifies gateway pay
 
   assert.match(controller, /reserveArtworks/);
   assert.match(controller, /releaseReservedArtworks/);
+  assert.match(controller, /markArtworksSold/);
+  assert.match(controller, /availabilityStatus:\s*'reserved'/);
+  assert.match(controller, /availabilityStatus:\s*'available'/);
+  assert.match(controller, /availabilityStatus:\s*'sold'/);
   assert.match(controller, /fetchRazorpayPayment/);
   assert.match(controller, /validateCapturedPayment/);
   assert.match(controller, /verifyRazorpayWebhookSignature/);
