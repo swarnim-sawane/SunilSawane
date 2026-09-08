@@ -945,7 +945,7 @@ h5 {
   line-height: 1;
   letter-spacing: 0;
   text-align: center;
-  transform: translate(-72%, -18%) !important;
+  transform: translate(-88%, 0) !important;
 }
 
 .gallery-footer {
@@ -6860,6 +6860,9 @@ body {
 .cart-artwork-frame {
   position: relative;
   display: block;
+  align-self: start;
+  width: 100%;
+  max-width: 100%;
   aspect-ratio: 1 / 1.08;
   min-width: 0;
   padding: clamp(14px, 2.2vw, 24px);

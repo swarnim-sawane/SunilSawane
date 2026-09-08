@@ -99,6 +99,7 @@ const cart = {
                     id: match.id || item.id,
                     documentId: match.documentId || item.documentId,
                     slug: match.slug || match.documentId || item.slug,
+                    image: this.getImageUrl(match),
                     availabilityStatus: getCartArtworkAvailabilityStatus(match)
                 };
             });
@@ -122,33 +123,21 @@ const cart = {
     },
 
     getImageUrl(product) {
-        // Try multiple possible image structures
+        const image = product.images?.data?.[0]?.attributes ||
+            product.images?.data?.[0] ||
+            (Array.isArray(product.images) ? product.images[0] : null) ||
+            product.Image?.data?.attributes ||
+            product.Image?.data ||
+            product.Image ||
+            null;
+        const formats = image?.formats || {};
+        const preferredImage = formats?.small?.url || formats?.medium?.url || formats?.large?.url || image?.url;
 
-        // Structure 1: images.data[0].attributes.url
-        if (product.images?.data?.[0]?.attributes?.url) {
-            const url = product.images.data[0].attributes.url;
+        if (preferredImage) {
+            const url = preferredImage;
             return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
         }
 
-        // Structure 2: images.data[0].url
-        if (product.images?.data?.[0]?.url) {
-            const url = product.images.data[0].url;
-            return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
-        }
-
-        // Structure 3: images[0].url (array)
-        if (Array.isArray(product.images) && product.images[0]?.url) {
-            const url = product.images[0].url;
-            return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
-        }
-
-        // Structure 4: Image.url (single image field)
-        if (product.Image?.url) {
-            const url = product.Image.url;
-            return url.startsWith('http') ? url : `${cartAssetBaseUrl}${url}`;
-        }
-
-        // Structure 5: image (direct URL string)
         if (product.image && typeof product.image === 'string') {
             return product.image.startsWith('http') ? product.image : `${cartAssetBaseUrl}${product.image}`;
         }
@@ -276,7 +265,8 @@ function displayCart() {
                         $('<img>')
                             .attr({
                                 src: cartDom.safeUrl(item.image, cartDom.PLACEHOLDER_IMAGE),
-                                alt: item.title || 'Artwork'
+                                alt: item.title || 'Artwork',
+                                decoding: 'async'
                             })
                             .addClass('cart-item-image')
                     ),

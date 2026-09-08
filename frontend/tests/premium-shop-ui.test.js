@@ -350,6 +350,9 @@ test('cart page reads as a premium collector review instead of generic cart', ()
   assert.match(cartJs, /Opening checkout/);
   assert.match(cartJs, /setTimeout/);
   assert.match(cartJs, /quantity:\s*1/);
+  assert.match(cartJs, /image:\s*this\.getImageUrl\(match\)/);
+  assert.match(cartJs, /formats\?\.small\?\.url\s*\|\|\s*formats\?\.medium\?\.url/);
+  assert.match(cartJs, /decoding:\s*'async'/);
   assert.doesNotMatch(cartJs, /input-group/);
   assert.doesNotMatch(cartJs, /btn-danger/);
   assert.doesNotMatch(cartJs, /updateItemQuantity/);
@@ -368,6 +371,9 @@ test('cart page reads as a premium collector review instead of generic cart', ()
   assert.match(css, /\.cart-review-grid/);
   assert.match(css, /\.premium-cart-item/);
   assert.match(css, /\.cart-artwork-frame/);
+  assert.match(css, /\.cart-artwork-frame\s*{[^}]*width:\s*100%;/s);
+  assert.match(css, /\.cart-artwork-frame\s*{[^}]*max-width:\s*100%;/s);
+  assert.match(css, /\.cart-artwork-frame\s*{[^}]*align-self:\s*start;/s);
   assert.match(css, /\.cart-item-edition/);
   assert.match(css, /\.cart-remove-action/);
   assert.match(css, /\.cart-summary-panel/);
@@ -411,6 +417,6 @@ test('commerce header action icons and count badges stay consistent', () => {
   assert.match(css, /\.header-action-badge\s*\{[^}]*border-radius:\s*5px;/s);
   assert.match(css, /\.header-action-badge\s*\{[^}]*background-color:\s*#de3348\s*!important;/s);
   assert.match(css, /\.header-action-badge\s*\{[^}]*font-size:\s*0\.6rem\s*!important;/s);
-  assert.match(css, /\.header-action-badge\s*\{[^}]*transform:\s*translate\(-72%,\s*-18%\)\s*!important;/s);
+  assert.match(css, /\.header-action-badge\s*\{[^}]*transform:\s*translate\(-88%,\s*0\)\s*!important;/s);
   assert.doesNotMatch(shopHtml + cartHtml, /font-size:\s*10px/);
 });
