@@ -164,7 +164,13 @@ test('order confirmation email utility prepares artist and collector messages', 
     customerPhone: '+919999999999',
     shippingAddress: 'Gurgaon, Haryana',
     orderItems: [
-      { title: 'Floral Exchange', quantity: 1, price: 5000 },
+      {
+        title: 'Floral Exchange <script>alert("x")</script>',
+        quantity: 1,
+        price: 5000,
+        medium: 'Pen & ink',
+        dimensions: '18 x 24 in',
+      },
     ],
     totalAmount: 5000,
   }, {
@@ -181,6 +187,14 @@ test('order confirmation email utility prepares artist and collector messages', 
   assert.match(messages[0].text, /Floral Exchange/);
   assert.match(messages[1].text, /certificate/i);
   assert.doesNotMatch(messages[1].text, /paymentSignature/i);
+  assert.match(messages[0].html, /NEW PAID ORDER/);
+  assert.match(messages[1].html, /YOUR ACQUISITION IS CONFIRMED/);
+  assert.match(messages[1].html, /#787d62/i);
+  assert.match(messages[1].html, /#94372b/i);
+  assert.match(messages[1].html, /VIEW ORDER RECEIPT/);
+  assert.match(messages[1].html, /18 x 24 in/);
+  assert.match(messages[1].html, /Floral Exchange &lt;script&gt;/);
+  assert.doesNotMatch(messages[1].html, /<script>/i);
 });
 
 test('order confirmation retries only recipients that have not already received email', async () => {

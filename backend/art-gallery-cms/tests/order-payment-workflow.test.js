@@ -58,6 +58,19 @@ test('controller reserves stock before opening Razorpay and verifies gateway pay
   assert.match(index, /runPaymentMaintenance/);
 });
 
+test('confirmed payment state is synchronized to the published order document', () => {
+  const controller = read('src/api/order/controllers/order.ts');
+  const finalizer = controller.slice(
+    controller.indexOf('async function finalizeCapturedPayment'),
+    controller.indexOf('async function failAndReleaseReservation')
+  );
+
+  assert.match(controller, /async function publishOrderDocument\(strapi, order\)/);
+  assert.match(controller, /\.publish\(\{\s*documentId:\s*order\.documentId\s*\}\)/);
+  assert.match(finalizer, /await publishOrderDocument\(strapi, current\)/);
+  assert.match(finalizer, /await publishOrderDocument\(strapi, finalized\)/);
+});
+
 test('webhook event model uses a unique gateway event id for durable idempotency', () => {
   const schema = readJson('src/api/payment-event/content-types/payment-event/schema.json');
 
