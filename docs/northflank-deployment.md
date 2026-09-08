@@ -72,6 +72,7 @@ DEPLOYMENT_STAGE=staging
 HOST=0.0.0.0
 PORT=1337
 PUBLIC_URL=https://gallery-cms--sunilsawane-gallery--YOUR_ACCOUNT.code.run
+FRONTEND_URL=https://sunilsawane.vercel.app
 CORS_ORIGINS=https://sunilsawane.vercel.app
 TRUST_PROXY=true
 

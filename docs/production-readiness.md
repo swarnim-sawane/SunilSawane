@@ -22,6 +22,7 @@ Use this checklist before switching the shop from local testing to real collecto
 - Set `TRUST_PROXY=true` on Northflank so checkout limits use the client IP supplied by its load balancer rather than one shared proxy address. Do not expose Strapi directly while this is enabled.
 - Set the frontend API base URL to the deployed Strapi domain before publishing the static site.
 - Set `PUBLIC_URL` on Strapi to the deployed backend URL so emails, admin links, and generated URLs resolve correctly.
+- Set `FRONTEND_URL` to the deployed gallery origin. Order-email receipt buttons use this URL to open the themed `order-success.html` view instead of exposing the JSON API response.
 - Set `CORS_ORIGINS` to the final frontend domain, for example the Vercel site URL.
 - Set `ORDER_NOTIFICATION_EMAIL` to the artist/order inbox.
 - Set `ORDER_EMAIL_FROM` to a verified sender address from the email provider.

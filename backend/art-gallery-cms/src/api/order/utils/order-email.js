@@ -111,12 +111,12 @@ function listOrderItems(order) {
 }
 
 function getReceiptUrl(order, env = process.env) {
-  const publicUrl = clean(env.PUBLIC_URL).replace(/\/+$/, '');
-  if (!publicUrl || !order.orderNumber) {
+  const frontendUrl = clean(env.FRONTEND_URL).replace(/\/+$/, '');
+  if (!frontendUrl || !order.orderNumber) {
     return '';
   }
 
-  return `${publicUrl}/api/orders/receipt/${encodeURIComponent(order.orderNumber)}`;
+  return `${frontendUrl}/order-success.html?order=${encodeURIComponent(order.orderNumber)}`;
 }
 
 function buildOrderEmailMessages(order, env = process.env) {

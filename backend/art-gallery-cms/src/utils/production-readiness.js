@@ -65,6 +65,10 @@ function getProductionReadinessIssues(env = process.env) {
     issues.push('Production PUBLIC_URL must be a deployed HTTPS Strapi URL, not localhost.');
   }
 
+  if (!isHttpsUrl(env.FRONTEND_URL)) {
+    issues.push('Production FRONTEND_URL must be the deployed HTTPS gallery URL, not localhost.');
+  }
+
   const razorpayKeyId = clean(env.RAZORPAY_KEY_ID);
   if (deploymentStage === 'staging' && !/^rzp_test_[A-Za-z0-9]+$/.test(razorpayKeyId)) {
     issues.push('Staging must use a Razorpay test key id in RAZORPAY_KEY_ID.');
