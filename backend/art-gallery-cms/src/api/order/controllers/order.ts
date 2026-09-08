@@ -178,6 +178,12 @@ function serializePublicReceipt(order) {
   };
 }
 
+function getFrontendReceiptUrl(orderNumber) {
+  const frontendUrl = String(process.env.FRONTEND_URL || '').trim().replace(/\/+$/, '');
+  return frontendUrl
+    ? `${frontendUrl}/order-success.html?order=${encodeURIComponent(orderNumber)}`
+    : '';
+}
 async function reserveArtworks(strapi, orderItems) {
   const artworkIds = getOrderArtworkIds(orderItems);
   if (artworkIds.length !== orderItems.length) throw httpError('Order contains invalid artwork records');
@@ -491,6 +497,12 @@ module.exports = createCoreController(STRAPI_ORDER_UID, ({ strapi }) => ({
         },
       });
       if (!order) ctx.throw(404, 'Order receipt not found');
+      const acceptsHtml = String(ctx.get('accept') || '').toLowerCase().includes('text/html');
+      const frontendReceiptUrl = getFrontendReceiptUrl(orderNumber);
+      if (acceptsHtml && frontendReceiptUrl) {
+        ctx.redirect(frontendReceiptUrl);
+        return;
+      }
       ctx.send(serializePublicReceipt(order));
     } catch (error) {
       ctx.status = error.status || 400;
