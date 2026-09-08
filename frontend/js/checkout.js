@@ -141,10 +141,13 @@ function proceedToPayment() {
 }
 
 async function initiateRazorpay(customer) {
+    let checkoutOrder;
+    let paymentCompletionStarted = false;
+
     try {
         setPaymentButtonLoading(true);
 
-        const checkoutOrder = await postCheckout('/orders/create-razorpay-order', {
+        checkoutOrder = await postCheckout('/orders/create-razorpay-order', {
             customer,
             items: cart.items,
         });
@@ -157,6 +160,7 @@ async function initiateRazorpay(customer) {
             name: 'Sunil Sawane Art',
             description: 'Artwork Purchase',
             handler: async function (response) {
+                paymentCompletionStarted = true;
                 await verifyPayment(checkoutOrder.localOrder, response);
             },
             prefill: {
@@ -165,18 +169,43 @@ async function initiateRazorpay(customer) {
                 contact: customer.phone
             },
             modal: {
-                ondismiss: function () {
+                ondismiss: async function () {
+                    if (!paymentCompletionStarted) {
+                        await releaseCheckoutReservation(checkoutOrder.localOrder);
+                    }
                     setPaymentButtonLoading(false);
                 }
             },
             theme: { color: '#333333' }
         };
 
-        new Razorpay(options).open();
+        const razorpay = new Razorpay(options);
+        razorpay.on('payment.failed', function () {
+            setPaymentButtonLoading(false, 'Payment attempt failed. Try again');
+        });
+        razorpay.open();
     } catch (error) {
+        if (checkoutOrder?.localOrder && !paymentCompletionStarted) {
+            await releaseCheckoutReservation(checkoutOrder.localOrder);
+        }
         console.error('Checkout initialization failed:', error);
         alert(`Unable to start payment: ${error.message}`);
         setPaymentButtonLoading(false);
+    }
+}
+
+async function releaseCheckoutReservation(localOrder) {
+    if (!localOrder?.documentId || !localOrder?.reservationToken) {
+        return;
+    }
+
+    try {
+        await postCheckout('/orders/release-reservation', {
+            localOrderDocumentId: localOrder.documentId,
+            reservationToken: localOrder.reservationToken,
+        });
+    } catch (error) {
+        console.warn('Reservation release will be reconciled by the server:', error);
     }
 }
 

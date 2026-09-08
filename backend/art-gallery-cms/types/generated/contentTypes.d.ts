@@ -535,24 +535,91 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     customerEmail: Schema.Attribute.String & Schema.Attribute.Required;
     customerName: Schema.Attribute.String & Schema.Attribute.Required;
     customerPhone: Schema.Attribute.String;
+    emailAttemptedAt: Schema.Attribute.DateTime;
+    emailDelivery: Schema.Attribute.JSON;
+    emailStatus: Schema.Attribute.Enumeration<
+      ['pending', 'sending', 'sent', 'partial', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'pending'>;
+    expectedAmountPaise: Schema.Attribute.Integer;
+    gatewayStatus: Schema.Attribute.String;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
     orderDate: Schema.Attribute.DateTime;
     orderItems: Schema.Attribute.JSON;
     orderNotes: Schema.Attribute.Text;
-    orderNumber: Schema.Attribute.String & Schema.Attribute.Required;
+    orderNumber: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     orderStatus: Schema.Attribute.Enumeration<
-      ['pending', 'confirmed', 'processing', 'shipped', 'delivered']
+      [
+        'pending',
+        'confirmed',
+        'payment_review',
+        'failed',
+        'expired',
+        'refunded',
+        'processing',
+        'shipped',
+        'delivered',
+      ]
     >;
-    paymentId: Schema.Attribute.String;
+    paymentCurrency: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'INR'>;
+    paymentId: Schema.Attribute.String & Schema.Attribute.Unique;
+    paymentMethod: Schema.Attribute.String;
     paymentSignature: Schema.Attribute.String & Schema.Attribute.Private;
+    paymentVerifiedAt: Schema.Attribute.DateTime;
     pincode: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
-    razorpayOrderId: Schema.Attribute.String;
+    razorpayOrderId: Schema.Attribute.String & Schema.Attribute.Unique;
+    reservationExpiresAt: Schema.Attribute.DateTime;
+    reservationOwnerHash: Schema.Attribute.String & Schema.Attribute.Private;
+    reservationTokenHash: Schema.Attribute.String & Schema.Attribute.Private;
     shippingAddress: Schema.Attribute.Text & Schema.Attribute.Required;
     state: Schema.Attribute.String;
     totalAmount: Schema.Attribute.Decimal;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiPaymentEventPaymentEvent
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'payment_events';
+  info: {
+    displayName: 'Payment Event';
+    pluralName: 'payment-events';
+    singularName: 'payment-event';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    errorMessage: Schema.Attribute.Text & Schema.Attribute.Private;
+    eventId: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    eventType: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment-event.payment-event'
+    > &
+      Schema.Attribute.Private;
+    paymentId: Schema.Attribute.String;
+    processedAt: Schema.Attribute.DateTime;
+    processingStatus: Schema.Attribute.Enumeration<
+      ['received', 'processing', 'processed', 'ignored', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'received'>;
+    publishedAt: Schema.Attribute.DateTime;
+    razorpayOrderId: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1073,6 +1140,7 @@ declare module '@strapi/strapi' {
       'api::artwork.artwork': ApiArtworkArtwork;
       'api::category.category': ApiCategoryCategory;
       'api::order.order': ApiOrderOrder;
+      'api::payment-event.payment-event': ApiPaymentEventPaymentEvent;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

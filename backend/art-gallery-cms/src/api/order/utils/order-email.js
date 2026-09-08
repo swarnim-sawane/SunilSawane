@@ -1,5 +1,7 @@
 'use strict';
 
+const nodemailer = require('nodemailer');
+
 function clean(value) {
   return String(value || '').trim();
 }
@@ -84,12 +86,14 @@ function buildOrderEmailMessages(order, env = process.env) {
 
   return [
     {
+      recipientType: 'artist',
       to: artistEmail,
       from,
       subject: `New paid artwork order ${orderNumber}`,
       text: artistText,
     },
     {
+      recipientType: 'collector',
       to: clean(order.customerEmail),
       from,
       subject: `Order confirmed ${orderNumber}`,
@@ -99,18 +103,72 @@ function buildOrderEmailMessages(order, env = process.env) {
 }
 
 async function notifyOrderConfirmed(strapi, order, env = process.env) {
-  const emailService = strapi?.plugin?.('email')?.service?.('email');
-
-  if (!emailService?.send) {
-    throw new Error('Strapi email service is not available');
-  }
-
+  const smtpConfigured = Boolean(clean(env.SMTP_HOST));
+  const smtpSecure = ['1', 'true', 'yes'].includes(clean(env.SMTP_SECURE).toLowerCase());
+  const emailService = smtpConfigured
+    ? nodemailer.createTransport({
+      host: clean(env.SMTP_HOST),
+      port: Number(env.SMTP_PORT || 587),
+      secure: smtpSecure,
+      requireTLS: !smtpSecure,
+      tls: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: true,
+      },
+      disableFileAccess: true,
+      disableUrlAccess: true,
+      auth: {
+        user: clean(env.SMTP_USERNAME),
+        pass: clean(env.SMTP_PASSWORD),
+      },
+    })
+    : strapi?.plugin?.('email')?.service?.('email');
   const messages = buildOrderEmailMessages(order, env);
+  const previous = order.emailDelivery && typeof order.emailDelivery === 'object'
+    ? order.emailDelivery
+    : {};
+  const delivery = { ...previous };
+
   for (const message of messages) {
-    await emailService.send(message);
+    const recipientType = message.recipientType;
+    if (delivery[recipientType]?.status === 'sent') {
+      continue;
+    }
+
+    const attempts = Number(delivery[recipientType]?.attempts || 0) + 1;
+    try {
+      const send = smtpConfigured ? emailService?.sendMail?.bind(emailService) : emailService?.send?.bind(emailService);
+      if (!send) {
+        throw new Error('Strapi email service is not available');
+      }
+
+      const { recipientType: _recipientType, ...email } = message;
+      if (env.ORDER_REPLY_TO) email.replyTo = clean(env.ORDER_REPLY_TO);
+      await send(email);
+      delivery[recipientType] = {
+        status: 'sent',
+        attempts,
+        sentAt: new Date().toISOString(),
+      };
+    } catch (error) {
+      delivery[recipientType] = {
+        status: 'failed',
+        attempts,
+        lastError: String(error?.message || error).slice(0, 500),
+      };
+    }
   }
 
-  return messages.length;
+  const states = ['artist', 'collector']
+    .filter((recipientType) => messages.some((message) => message.recipientType === recipientType))
+    .map((recipientType) => delivery[recipientType]?.status);
+  const status = states.length > 0 && states.every((state) => state === 'sent')
+    ? 'sent'
+    : states.some((state) => state === 'sent')
+      ? 'partial'
+      : 'failed';
+
+  return { status, delivery };
 }
 
 module.exports = {

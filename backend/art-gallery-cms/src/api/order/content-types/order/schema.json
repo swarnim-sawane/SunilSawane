@@ -13,7 +13,8 @@
   "attributes": {
     "orderNumber": {
       "type": "string",
-      "required": true
+      "required": true,
+      "unique": true
     },
     "customerName": {
       "type": "string",
@@ -40,16 +41,66 @@
       "enum": [
         "pending",
         "confirmed",
+        "payment_review",
+        "failed",
+        "expired",
+        "refunded",
         "processing",
         "shipped",
         "delivered"
       ]
     },
     "paymentId": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
     "razorpayOrderId": {
+      "type": "string",
+      "unique": true
+    },
+    "expectedAmountPaise": {
+      "type": "integer"
+    },
+    "paymentCurrency": {
+      "type": "string",
+      "default": "INR"
+    },
+    "gatewayStatus": {
       "type": "string"
+    },
+    "paymentMethod": {
+      "type": "string"
+    },
+    "paymentVerifiedAt": {
+      "type": "datetime"
+    },
+    "reservationExpiresAt": {
+      "type": "datetime"
+    },
+    "reservationTokenHash": {
+      "type": "string",
+      "private": true
+    },
+    "reservationOwnerHash": {
+      "type": "string",
+      "private": true
+    },
+    "emailStatus": {
+      "type": "enumeration",
+      "enum": [
+        "pending",
+        "sending",
+        "sent",
+        "partial",
+        "failed"
+      ],
+      "default": "pending"
+    },
+    "emailDelivery": {
+      "type": "json"
+    },
+    "emailAttemptedAt": {
+      "type": "datetime"
     },
     "paymentSignature": {
       "type": "string",

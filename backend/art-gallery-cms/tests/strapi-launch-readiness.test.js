@@ -73,6 +73,7 @@ test('production guard rejects unsafe live configuration and allows complete lau
       DATABASE_URL: 'postgres://user:pass@db.example:5432/sunilsawane',
       RAZORPAY_KEY_ID: 'rzp_live_1234567890',
       RAZORPAY_KEY_SECRET: 'live_secret_value',
+      RAZORPAY_WEBHOOK_SECRET: 'live_webhook_secret_value',
       APP_KEYS: 'prod-key-one,prod-key-two',
       API_TOKEN_SALT: 'prod-api-token-salt',
       ADMIN_JWT_SECRET: 'prod-admin-jwt-secret',
@@ -85,6 +86,9 @@ test('production guard rejects unsafe live configuration and allows complete lau
       CLOUDINARY_SECRET: 'prod-cloudinary-secret',
       ORDER_NOTIFICATION_EMAIL: 'sunilsawaneart@gmail.com',
       ORDER_EMAIL_FROM: 'orders@sunilsawane.example',
+      SMTP_HOST: 'smtp.sunilsawane.example',
+      SMTP_USERNAME: 'orders-user',
+      SMTP_PASSWORD: 'smtp-secret-value',
     }),
     []
   );
@@ -97,6 +101,7 @@ test('production guard rejects unsafe live configuration and allows complete lau
     DATABASE_URL: 'postgres://user:pass@db.example:5432/sunilsawane',
     RAZORPAY_KEY_ID: 'rzp_test_1234567890',
     RAZORPAY_KEY_SECRET: 'test_secret_value',
+    RAZORPAY_WEBHOOK_SECRET: 'test_webhook_secret_value',
     APP_KEYS: 'staging-key-one,staging-key-two',
     API_TOKEN_SALT: 'staging-api-token-salt',
     ADMIN_JWT_SECRET: 'staging-admin-jwt-secret',
@@ -109,6 +114,9 @@ test('production guard rejects unsafe live configuration and allows complete lau
     CLOUDINARY_SECRET: 'staging-cloudinary-secret',
     ORDER_NOTIFICATION_EMAIL: 'sunilsawaneart@gmail.com',
     ORDER_EMAIL_FROM: 'orders@sunilsawane.example',
+    SMTP_HOST: 'smtp.sunilsawane.example',
+    SMTP_USERNAME: 'orders-user',
+    SMTP_PASSWORD: 'smtp-secret-value',
   });
   assert.deepEqual(stagingIssues, []);
 
@@ -118,6 +126,33 @@ test('production guard rejects unsafe live configuration and allows complete lau
     RAZORPAY_KEY_ID: 'rzp_live_1234567890',
   });
   assert.ok(stagingWithLivePayments.some((issue) => /Razorpay test key id/.test(issue)));
+
+  const reusedPaymentSecretIssues = getProductionReadinessIssues({
+    NODE_ENV: 'production',
+    DEPLOYMENT_STAGE: 'live',
+    PUBLIC_URL: 'https://cms.sunilsawane.example',
+    DATABASE_CLIENT: 'postgres',
+    DATABASE_URL: 'postgres://user:pass@db.example:5432/sunilsawane',
+    RAZORPAY_KEY_ID: 'rzp_live_1234567890',
+    RAZORPAY_KEY_SECRET: 'same-production-secret',
+    RAZORPAY_WEBHOOK_SECRET: 'same-production-secret',
+    APP_KEYS: 'prod-key-one,prod-key-two',
+    API_TOKEN_SALT: 'prod-api-token-salt',
+    ADMIN_JWT_SECRET: 'prod-admin-jwt-secret',
+    TRANSFER_TOKEN_SALT: 'prod-transfer-token-salt',
+    JWT_SECRET: 'prod-jwt-secret',
+    ENCRYPTION_KEY: 'prod-encryption-key',
+    CLOUDINARY_ENABLED: 'true',
+    CLOUDINARY_NAME: 'sunilsawane-cloud',
+    CLOUDINARY_KEY: '123456789012345',
+    CLOUDINARY_SECRET: 'prod-cloudinary-secret',
+    ORDER_NOTIFICATION_EMAIL: 'sunilsawaneart@gmail.com',
+    ORDER_EMAIL_FROM: 'orders@sunilsawane.example',
+    SMTP_HOST: 'smtp.sunilsawane.example',
+    SMTP_USERNAME: 'orders-user',
+    SMTP_PASSWORD: 'smtp-secret-value',
+  });
+  assert.ok(reusedPaymentSecretIssues.some((issue) => /must be different/i.test(issue)));
 });
 
 test('order confirmation email utility prepares artist and collector messages', () => {
@@ -149,6 +184,47 @@ test('order confirmation email utility prepares artist and collector messages', 
   assert.match(messages[0].text, /Floral Exchange/);
   assert.match(messages[1].text, /certificate/i);
   assert.doesNotMatch(messages[1].text, /paymentSignature/i);
+});
+
+test('order confirmation retries only recipients that have not already received email', async () => {
+  const { notifyOrderConfirmed } = require('../src/api/order/utils/order-email');
+  const sent = [];
+  const strapi = {
+    plugin() {
+      return {
+        service() {
+          return {
+            async send(message) {
+              sent.push(message.to);
+              if (message.to === 'collector@example.com' && sent.length === 2) {
+                throw new Error('temporary delivery failure');
+              }
+            },
+          };
+        },
+      };
+    },
+  };
+  const env = {
+    ORDER_NOTIFICATION_EMAIL: 'artist@example.com',
+    ORDER_EMAIL_FROM: 'orders@example.com',
+  };
+  const order = {
+    orderNumber: 'ORD-1234567890',
+    customerName: 'Collector',
+    customerEmail: 'collector@example.com',
+    orderItems: [{ title: 'Artwork', quantity: 1, price: 5000 }],
+    totalAmount: 5000,
+  };
+
+  const first = await notifyOrderConfirmed(strapi, order, env);
+  assert.equal(first.status, 'partial');
+  assert.equal(first.delivery.artist.status, 'sent');
+  assert.equal(first.delivery.collector.status, 'failed');
+
+  const second = await notifyOrderConfirmed(strapi, { ...order, emailDelivery: first.delivery }, env);
+  assert.equal(second.status, 'sent');
+  assert.deepEqual(sent, ['artist@example.com', 'collector@example.com', 'collector@example.com']);
 });
 
 test('launch scripts and docs expose content and production checks', () => {

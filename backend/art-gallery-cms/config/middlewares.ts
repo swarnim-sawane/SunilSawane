@@ -40,7 +40,13 @@ export default ({ env }) => [
   },
   'strapi::poweredBy',
   'strapi::query',
-  'strapi::body',
+  {
+    name: 'strapi::body',
+    config: {
+      includeUnparsed: true,
+      jsonLimit: '1mb',
+    },
+  },
   'strapi::session',
   'strapi::favicon',
   'strapi::public',

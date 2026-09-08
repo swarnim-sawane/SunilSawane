@@ -26,26 +26,31 @@ function requireTypeScriptModule(relativePath) {
 const utils = requireTypeScriptModule('../src/api/order/utils/payment-utils.ts');
 const {
   buildShippingAddress,
+  getReservationExpiry,
+  getRazorpayPaymentState,
+  isOrderTransitionAllowed,
   normalizeCartItems,
+  validateCapturedPayment,
   validateCustomer,
   verifyRazorpaySignature,
+  verifyRazorpayWebhookSignature,
 } = utils;
 
 test('normalizes cart items and rejects invalid quantities', () => {
   assert.deepEqual(
     normalizeCartItems([
-      { documentId: 'abc123', quantity: '2' },
+      { documentId: 'abc123', quantity: '1' },
       { id: 4, quantity: 1 },
     ]),
     [
-      { documentId: 'abc123', quantity: 2 },
+      { documentId: 'abc123', quantity: 1 },
       { id: 4, quantity: 1 },
     ]
   );
 
   assert.throws(
     () => normalizeCartItems([{ documentId: 'abc123', quantity: 0 }]),
-    /Invalid quantity/
+    /one-of-one/
   );
   assert.throws(
     () => normalizeCartItems([
@@ -98,4 +103,99 @@ test('verifies Razorpay payment signatures', () => {
 
   assert.equal(verifyRazorpaySignature(orderId, paymentId, signature, secret), true);
   assert.equal(verifyRazorpaySignature(orderId, paymentId, 'bad', secret), false);
+});
+
+test('verifies Razorpay webhooks against the untouched request body', () => {
+  const rawBody = '{"event":"payment.captured","payload":{"amount":500000}}';
+  const secret = 'webhook_secret';
+  const signature = crypto.createHmac('sha256', secret).update(rawBody).digest('hex');
+
+  assert.equal(verifyRazorpayWebhookSignature(rawBody, signature, secret), true);
+  assert.equal(verifyRazorpayWebhookSignature(`${rawBody} `, signature, secret), false);
+  assert.equal(verifyRazorpayWebhookSignature(rawBody, 'invalid', secret), false);
+});
+
+test('accepts only a captured Razorpay payment for the expected order and total', () => {
+  const payment = {
+    id: 'pay_456',
+    order_id: 'order_123',
+    amount: 500000,
+    currency: 'INR',
+    status: 'captured',
+    captured: true,
+  };
+
+  assert.equal(validateCapturedPayment(payment, {
+    paymentId: 'pay_456',
+    orderId: 'order_123',
+    amount: 500000,
+    currency: 'INR',
+  }), true);
+
+  assert.throws(
+    () => validateCapturedPayment({ ...payment, amount: 499900 }, {
+      paymentId: 'pay_456', orderId: 'order_123', amount: 500000, currency: 'INR',
+    }),
+    /amount/i
+  );
+  assert.throws(
+    () => validateCapturedPayment({ ...payment, status: 'authorized', captured: false }, {
+      paymentId: 'pay_456', orderId: 'order_123', amount: 500000, currency: 'INR',
+    }),
+    /captured/i
+  );
+  assert.throws(
+    () => validateCapturedPayment({ ...payment, order_id: 'order_other' }, {
+      paymentId: 'pay_456', orderId: 'order_123', amount: 500000, currency: 'INR',
+    }),
+    /order/i
+  );
+});
+
+test('enforces one-of-one quantities and a bounded cart', () => {
+  assert.throws(
+    () => normalizeCartItems([{ documentId: 'abc123', quantity: 2 }]),
+    /one-of-one/i
+  );
+  assert.throws(
+    () => normalizeCartItems(Array.from({ length: 11 }, (_, index) => ({
+      documentId: `artwork-${index}`,
+      quantity: 1,
+    }))),
+    /too many/i
+  );
+});
+
+test('allows only deliberate order lifecycle transitions', () => {
+  assert.equal(isOrderTransitionAllowed('pending', 'confirmed'), true);
+  assert.equal(isOrderTransitionAllowed('pending', 'expired'), true);
+  assert.equal(isOrderTransitionAllowed('confirmed', 'processing'), true);
+  assert.equal(isOrderTransitionAllowed('confirmed', 'pending'), false);
+  assert.equal(isOrderTransitionAllowed('delivered', 'pending'), false);
+  assert.equal(isOrderTransitionAllowed('confirmed', 'confirmed'), true);
+});
+
+test('creates a bounded reservation expiry timestamp', () => {
+  const now = new Date('2026-09-08T10:00:00.000Z');
+  assert.equal(
+    getReservationExpiry(now, 15).toISOString(),
+    '2026-09-08T10:15:00.000Z'
+  );
+  assert.throws(() => getReservationExpiry(now, 0), /reservation/i);
+  assert.throws(() => getReservationExpiry(now, 61), /reservation/i);
+});
+
+test('keeps an authorized gateway payment reserved until capture settles', () => {
+  assert.equal(getRazorpayPaymentState([
+    { id: 'pay_authorized', status: 'authorized', captured: false },
+  ]).active.id, 'pay_authorized');
+
+  assert.equal(getRazorpayPaymentState([
+    { id: 'pay_authorized', status: 'authorized', captured: false },
+    { id: 'pay_captured', status: 'captured', captured: true },
+  ]).captured.id, 'pay_captured');
+
+  assert.deepEqual(getRazorpayPaymentState([
+    { id: 'pay_failed', status: 'failed', captured: false },
+  ]), { captured: null, active: null });
 });
