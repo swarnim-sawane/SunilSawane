@@ -216,8 +216,8 @@ function displayProducts(products) {
         return;
     }
 
-    products.forEach(product => {
-        const card = createProductCard(product);
+    products.forEach((product, index) => {
+        const card = createProductCard(product, index);
         grid.append(card);
     });
 
@@ -225,11 +225,14 @@ function displayProducts(products) {
     initPremiumCatalogueInteractions();
 }
 
-function createProductCard(product) {
+function createProductCard(product, index = 0) {
     const title = product.title || product.Title || 'Untitled';
     const price = product.price || product.Price || 0;
     const detailUrl = `artwork-detail.html?id=${encodeURIComponent(shopDom.text(product.documentId || ''))}`;
-    const imageUrl = shopDom.safeUrl(getProductImageUrl(product), shopDom.PLACEHOLDER_IMAGE);
+    const imageSources = getProductImageSources(product);
+    const imageUrl = shopDom.safeUrl(imageSources.src, shopDom.PLACEHOLDER_IMAGE);
+    const imageLoading = index < 3 ? 'eager' : 'lazy';
+    const imagePriority = index < 3 ? 'high' : 'auto';
     const medium = product.medium || product.Medium || 'Artwork';
     const year = product.yearCreated || product.YearCreated || product.year || product.Year || '';
     const accent = getProductAccent(product);
@@ -243,7 +246,15 @@ function createProductCard(product) {
         .css('--card-accent', accent);
     const $surface = $('<div>').addClass('premium-card-surface');
     const $image = $('<img>')
-        .attr({ src: imageUrl, alt: title })
+        .attr({
+            src: imageUrl,
+            srcset: imageSources.srcset || undefined,
+            sizes: '(max-width: 767px) 92vw, (max-width: 1199px) 46vw, 31vw',
+            alt: title,
+            loading: imageLoading,
+            decoding: 'async',
+            fetchpriority: imagePriority
+        })
         .addClass('premium-product-image')
         .data('product-id', product.id);
     const $imageLink = $('<a>')
@@ -311,7 +322,9 @@ function createProductCard(product) {
 
     // Add ONE-TIME error handler for images
     $image.one('error', function () {
-        $(this).attr('src', 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E');
+        $(this)
+            .removeAttr('srcset')
+            .attr('src', 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23ddd" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E');
     });
 
     return $card;
@@ -382,30 +395,37 @@ function initPremiumCatalogueInteractions() {
     });
 }
 
+function getProductImageAsset(product) {
+    return product.images?.data?.[0]?.attributes ||
+        product.images?.data?.[0] ||
+        (Array.isArray(product.images) ? product.images[0] : null) ||
+        product.Image?.data?.attributes ||
+        product.Image?.data ||
+        product.Image ||
+        null;
+}
+
+function resolveProductImageUrl(url) {
+    if (!url) return '';
+    return url.startsWith('http') ? url : `${shopAssetBaseUrl}${url}`;
+}
+
+function getProductImageSources(product) {
+    const image = getProductImageAsset(product);
+    const formats = image?.formats || {};
+    const variants = [formats?.small, formats?.medium, formats?.large]
+        .filter(format => format?.url && format?.width)
+        .map(format => `${resolveProductImageUrl(format.url)} ${format.width}w`);
+    const preferredUrl = formats?.large?.url || formats?.medium?.url || formats?.small?.url || image?.url;
+
+    return {
+        src: resolveProductImageUrl(preferredUrl) || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e0e0e0" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" font-size="18"%3ENo Image%3C/text%3E%3C/svg%3E',
+        srcset: variants.join(', ')
+    };
+}
+
 function getProductImageUrl(product) {
-    // Try multiple possible structures
-    if (product.images?.data?.[0]?.attributes?.url) {
-        const url = product.images.data[0].attributes.url;
-        return url.startsWith('http') ? url : `${shopAssetBaseUrl}${url}`;
-    }
-
-    if (product.images?.data?.[0]?.url) {
-        const url = product.images.data[0].url;
-        return url.startsWith('http') ? url : `${shopAssetBaseUrl}${url}`;
-    }
-
-    if (Array.isArray(product.images) && product.images[0]?.url) {
-        const url = product.images[0].url;
-        return url.startsWith('http') ? url : `${shopAssetBaseUrl}${url}`;
-    }
-
-    if (product.Image?.url) {
-        const url = product.Image.url;
-        return url.startsWith('http') ? url : `${shopAssetBaseUrl}${url}`;
-    }
-
-    // Return gray placeholder
-    return 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23e0e0e0" width="400" height="300"/%3E%3Ctext fill="%23999" x="50%25" y="50%25" text-anchor="middle" font-size="18"%3ENo Image%3C/text%3E%3C/svg%3E';
+    return getProductImageSources(product).src;
 }
 
 function filterShop(categorySlug) {

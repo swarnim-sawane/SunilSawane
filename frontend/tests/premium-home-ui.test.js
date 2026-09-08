@@ -13,7 +13,7 @@ test('homepage opens with a creative premium artist arrival', () => {
   assert.match(html, /<body class="home-page bg-body"/);
   assert.match(html, /<section id="billboard" class="home-hero overflow-hidden"/);
   assert.match(html, /home-hero-media/);
-  assert.match(html, /<img src="images\/Hero-image\.jpg" alt="Sunil Sawane artwork"/);
+  assert.match(html, /<img src="images\/Hero-image-1200\.webp"/);
   assert.match(html, /<h1 class="home-hero-title">Sunil A\. Sawane<\/h1>/);
   assert.match(html, /Original pen, ink, and color works shaped by nature, movement, and 45 years of disciplined observation\./);
   assert.match(html, /class="home-primary-action" href="gallery\.html">View Gallery<\/a>/);
@@ -22,6 +22,7 @@ test('homepage opens with a creative premium artist arrival', () => {
   assert.doesNotMatch(html, /swiper-button-next/);
   assert.doesNotMatch(html, /swiper-button-prev/);
   assert.doesNotMatch(html, /swiper-pagination position-absolute/);
+  assert.doesNotMatch(html, /swiper-bundle(?:\.min)?\.(?:css|js)/);
   assert.doesNotMatch(html, /Crafting timeless beauty through every brushstroke/);
 
   assert.match(html, /<section id="company-services" class="home-proof-strip"/);
@@ -51,6 +52,32 @@ test('homepage opens with a creative premium artist arrival', () => {
   assert.match(css, /\.home-proof-grid\s*\{/s);
   assert.doesNotMatch(css, /\.home-scroll-cue\s*\{/);
   assert.match(css, /@media \(max-width:\s*767px\)[\s\S]*\.home-hero/s);
+});
+
+test('homepage serves right-sized images and defers content below the fold', () => {
+  const html = read('index.html');
+  const optimizedImages = [
+    'images/Hero-image-800.webp',
+    'images/Hero-image-1200.webp',
+    'images/Hero-image-1600.webp',
+    'images/Artist-img-600.webp',
+    'images/Artist-img-1000.webp',
+    'images/gallery-1-600.webp',
+    'images/gallery-1-1000.webp',
+    'images/gallery-2-600.webp',
+    'images/gallery-2-1000.webp'
+  ];
+
+  optimizedImages.forEach((image) => {
+    assert.ok(fs.existsSync(path.join(frontendRoot, image)), `${image} exists`);
+  });
+
+  assert.match(html, /Hero-image-800\.webp 800w,[\s\S]{0,80}Hero-image-1200\.webp 1200w,[\s\S]{0,80}Hero-image-1600\.webp 1600w/);
+  assert.match(html, /class="home-hero-image"[\s\S]{0,100}decoding="async"[\s\S]{0,100}fetchpriority="high"/);
+  assert.match(html, /Artist-img-600\.webp 600w,[\s\S]{0,80}Artist-img-1000\.webp 1000w/);
+  assert.match(html, /class="artist-portrait-image"[\s\S]{0,100}loading="lazy"[\s\S]{0,100}decoding="async"/);
+  assert.match(html, /gallery-1-600\.webp 600w,[\s\S]{0,80}gallery-1-1000\.webp 1000w/);
+  assert.match(html, /gallery-2-600\.webp 600w,[\s\S]{0,80}gallery-2-1000\.webp 1000w/);
 });
 
 test('homepage lower sections feel attached, editorial, and collector-ready', () => {

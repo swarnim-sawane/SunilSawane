@@ -9,7 +9,7 @@ const read = (file) => fs.readFileSync(path.join(frontendRoot, file), 'utf8');
 test('inner page heroes use real artwork texture while home remains image-led', () => {
   const css = read('style.css');
 
-  assert.match(css, /--inner-hero-artwork:\s*url\("images\/gallery-1\.jpg"\);/);
+  assert.match(css, /--inner-hero-artwork:\s*url\("images\/gallery-1-1000\.webp"\);/);
   assert.match(css, /\.about-hero\.hero-section,[\s\S]*\.artwork-detail-hero\s*\{[\s\S]*isolation:\s*isolate;[\s\S]*overflow:\s*hidden;/);
   assert.match(css, /\.about-hero\.hero-section::before,[\s\S]*\.artwork-detail-hero::before\s*\{[\s\S]*background-image:\s*var\(--inner-hero-artwork\);/);
   assert.match(css, /background-position:\s*calc\(50% \+ 390px\)\s+47%;/);

@@ -117,7 +117,8 @@ function createArtworkCard(artwork, index = 0) {
   const year = artwork.yearCreated || artwork.YearCreated || artwork.year || artwork.Year || '';
   const note = description || 'A selected work from Sunil Sawane\'s collection.';
   const detailUrl = getArtworkDetailUrl(artwork);
-  const imageUrl = safeGalleryUrl(getImageUrl(artwork), galleryDom.PLACEHOLDER_IMAGE);
+  const imageSources = getArtworkImageSources(artwork);
+  const imageUrl = safeGalleryUrl(imageSources.src, galleryDom.PLACEHOLDER_IMAGE);
   const accent = getArtworkAccent(artwork);
   const imageLoading = index < 2 ? 'eager' : 'lazy';
   const imagePriority = index < 2 ? 'high' : 'auto';
@@ -136,6 +137,8 @@ function createArtworkCard(artwork, index = 0) {
   const $image = $('<img>')
     .attr({
       src: imageUrl,
+      srcset: imageSources.srcset || undefined,
+      sizes: '(max-width: 767px) 92vw, (max-width: 1199px) 44vw, 24vw',
       alt: title,
       loading: imageLoading,
       decoding: 'async',
@@ -176,7 +179,9 @@ function createArtworkCard(artwork, index = 0) {
   $card.append($article);
 
   $image.one('error', function () {
-    $(this).attr('src', galleryDom.PLACEHOLDER_IMAGE || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="420"%3E%3Crect fill="%23f5f2ec" width="600" height="420"/%3E%3Ctext fill="%239b9488" x="50%25" y="50%25" text-anchor="middle" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E');
+    $(this)
+      .removeAttr('srcset')
+      .attr('src', galleryDom.PLACEHOLDER_IMAGE || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="420"%3E%3Crect fill="%23f5f2ec" width="600" height="420"/%3E%3Ctext fill="%239b9488" x="50%25" y="50%25" text-anchor="middle" font-size="20"%3ENo Image%3C/text%3E%3C/svg%3E');
   });
 
   return $card;
@@ -314,6 +319,35 @@ function safeGalleryUrl(url, fallback) {
   }
 
   return url || fallback || '';
+}
+
+function getArtworkImageAsset(artwork) {
+  return artwork.images?.data?.[0]?.attributes ||
+    artwork.images?.data?.[0] ||
+    (Array.isArray(artwork.images) ? artwork.images[0] : null) ||
+    artwork.Image?.data?.attributes ||
+    artwork.Image?.data ||
+    artwork.Image ||
+    null;
+}
+
+function resolveArtworkImageUrl(url) {
+  if (!url) return '';
+  return url.startsWith('http') ? url : galleryAssetBaseUrl + url;
+}
+
+function getArtworkImageSources(artwork) {
+  const image = getArtworkImageAsset(artwork);
+  const formats = image?.formats || {};
+  const variants = [formats?.small, formats?.medium, formats?.large]
+    .filter(format => format?.url && format?.width)
+    .map(format => resolveArtworkImageUrl(format.url) + ' ' + format.width + 'w');
+  const preferredUrl = formats?.large?.url || formats?.medium?.url || formats?.small?.url || image?.url;
+
+  return {
+    src: resolveArtworkImageUrl(preferredUrl) || galleryDom.PLACEHOLDER_IMAGE || '',
+    srcset: variants.join(', ')
+  };
 }
 
 function getImageUrl(artwork) {

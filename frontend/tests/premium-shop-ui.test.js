@@ -112,6 +112,23 @@ test('shop page keeps the catalogue controls seamless and restrained', () => {
   assert.doesNotMatch(css, /\.premium-card-scrim/);
 });
 
+test('shop cards use responsive artwork variants without eagerly decoding the full catalogue', () => {
+  const shopJs = read('js/shop.js');
+
+  assert.match(shopJs, /products\.forEach\(\(product, index\)\s*=>/);
+  assert.match(shopJs, /createProductCard\(product, index\)/);
+  assert.match(shopJs, /function createProductCard\(product, index = 0\)/);
+  assert.match(shopJs, /index < 3 \? 'eager' : 'lazy'/);
+  assert.match(shopJs, /decoding:\s*'async'/);
+  assert.match(shopJs, /fetchpriority:\s*imagePriority/);
+  assert.match(shopJs, /srcset:\s*imageSources\.srcset/);
+  assert.match(shopJs, /sizes:\s*'\(max-width: 767px\) 92vw, \(max-width: 1199px\) 46vw, 31vw'/);
+  assert.match(shopJs, /function getProductImageSources\(product\)/);
+  assert.match(shopJs, /formats\?\.large/);
+  assert.match(shopJs, /formats\?\.medium/);
+  assert.match(shopJs, /formats\?\.small/);
+});
+
 test('product detail page uses artwork-led purchase layout', () => {
   const detailHtml = read('artwork-detail.html');
   const detailJs = read('js/artwork-detail.js');

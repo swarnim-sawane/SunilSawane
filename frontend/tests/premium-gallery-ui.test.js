@@ -41,6 +41,12 @@ test('gallery page renders as a premium curated viewing experience', () => {
   assert.match(galleryJs, /createGalleryCardNote/);
   assert.match(galleryJs, /index < 2 \? 'eager' : 'lazy'/);
   assert.match(galleryJs, /fetchpriority/);
+  assert.match(galleryJs, /srcset:\s*imageSources\.srcset/);
+  assert.match(galleryJs, /sizes:\s*'\(max-width: 767px\) 92vw, \(max-width: 1199px\) 44vw, 24vw'/);
+  assert.match(galleryJs, /function getArtworkImageSources\(artwork\)/);
+  assert.match(galleryJs, /formats\?\.large/);
+  assert.match(galleryJs, /formats\?\.medium/);
+  assert.match(galleryJs, /formats\?\.small/);
   assert.match(galleryJs, /col-12 col-xl-6/);
   assert.match(galleryJs, /formatGalleryResultCount/);
   assert.match(galleryJs, /getCategoryArtworkCount/);

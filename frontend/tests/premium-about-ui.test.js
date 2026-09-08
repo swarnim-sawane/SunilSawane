@@ -25,6 +25,10 @@ test('about page reads as a premium collector-facing artist profile', () => {
   assert.match(html, /about-profile-grid/);
   assert.match(html, /about-portrait-card/);
   assert.match(html, /about-portrait-frame/);
+  assert.match(html, /About-me-800\.webp 800w,[\s\S]{0,80}About-me-1200\.webp 1200w/);
+  assert.match(html, /class="about-portrait-image"[\s\S]{0,100}loading="lazy"[\s\S]{0,100}decoding="async"/);
+  assert.ok(fs.existsSync(path.join(frontendRoot, 'images/About-me-800.webp')));
+  assert.ok(fs.existsSync(path.join(frontendRoot, 'images/About-me-1200.webp')));
   assert.match(html, /about-quote-card/);
   assert.match(html, /about-quote-mark/);
   assert.match(html, /All creativity is a gift from God/);
