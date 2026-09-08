@@ -25,7 +25,7 @@ Use this checklist before switching the shop from local testing to real collecto
 - Set `CORS_ORIGINS` to the final frontend domain, for example the Vercel site URL.
 - Set `ORDER_NOTIFICATION_EMAIL` to the artist/order inbox.
 - Set `ORDER_EMAIL_FROM` to a verified sender address from the email provider.
-- Set `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USERNAME`, and `SMTP_PASSWORD`; order email is sent directly through this authenticated SMTP connection.
+- Before setting `DEPLOYMENT_STAGE=live`, configure `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USERNAME`, and `SMTP_PASSWORD`; order email is sent directly through this authenticated SMTP connection. Test-mode staging may run without SMTP while email delivery is being configured.
 - Set `CLOUDINARY_ENABLED=true` and provide `CLOUDINARY_NAME`, `CLOUDINARY_KEY`, and `CLOUDINARY_SECRET` so uploaded artwork is durable outside the service container.
 - Before deploy, run:
   `cd backend/art-gallery-cms && npm run production:check`
