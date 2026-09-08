@@ -7,7 +7,7 @@ export default ({ env }) => ({
   },
   transfer: {
     remote: {
-      enabled: env.bool('REMOTE_DATA_TRANSFER_ENABLED', true),
+      enabled: env.bool('REMOTE_DATA_TRANSFER_ENABLED', false),
     },
   },
 });

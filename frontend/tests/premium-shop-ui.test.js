@@ -237,6 +237,8 @@ test('checkout page carries collector assurance details before payment', () => {
   assert.match(checkoutHtml, /checkout-payment-panel/);
   assert.match(checkoutHtml, /checkout-assurance-panel/);
   assert.match(checkoutHtml, /Collector assurance/);
+  assert.match(configJs, /https:\/\/p01--gallery-cms--j8lsdfx9pj57\.code\.run\/api/);
+  assert.doesNotMatch(configJs, /growing-approval-51840080fc\.strapiapp\.com/);
   assert.match(checkoutHtml, /Securely packed for shipping/);
   assert.match(checkoutHtml, /Certificate of authenticity/);
   assert.match(checkoutHtml, /Return &amp; damage support/);

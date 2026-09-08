@@ -3,7 +3,7 @@
     'use strict';
 
     const localApiBaseUrl = 'http://127.0.0.1:1337/api';
-    const remoteApiBaseUrl = 'https://growing-approval-51840080fc.strapiapp.com/api';
+    const remoteApiBaseUrl = 'https://p01--gallery-cms--j8lsdfx9pj57.code.run/api';
     const isLocalFrontend = ['localhost', '127.0.0.1', '::1', ''].includes(window.location.hostname);
 
     window.ART_CONFIG = Object.assign({

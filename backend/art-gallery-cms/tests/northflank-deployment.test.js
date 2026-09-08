@@ -37,6 +37,7 @@ test('remote data transfer is explicitly gated by environment configuration', ()
 
   assert.match(server, /REMOTE_DATA_TRANSFER_ENABLED/);
   assert.match(server, /remote:\s*{\s*enabled:/s);
+  assert.match(server, /env\.bool\('REMOTE_DATA_TRANSFER_ENABLED', false\)/);
   assert.match(envExample, /^REMOTE_DATA_TRANSFER_ENABLED=false$/m);
 });
 
@@ -69,6 +70,6 @@ test('Northflank runbook defines service, database, health, secrets, and migrati
   assert.match(runbook, /\/_health/);
   assert.match(runbook, /CLOUDINARY_NAME/);
   assert.match(runbook, /RAZORPAY_KEY_SECRET/);
-  assert.match(runbook, /strapi transfer/);
+  assert.match(runbook, /strapi transfer[\s\S]*--to https:\/\/YOUR_SERVICE_DOMAIN\/admin/);
   assert.match(runbook, /rollback/i);
 });
