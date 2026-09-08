@@ -4,6 +4,7 @@ const path = require('node:path');
 const test = require('node:test');
 
 const frontendRoot = path.resolve(__dirname, '..');
+const repoRoot = path.resolve(frontendRoot, '..');
 const htmlFiles = fs.readdirSync(frontendRoot)
   .filter((file) => file.endsWith('.html'))
   .sort();
@@ -47,4 +48,14 @@ test('all static html routes have document identity and no broken local page lin
       assert.ok(htmlSet.has(localPath), `${file} links to missing local route ${localPath}`);
     }
   }
+});
+
+test('Vercel publishes the static frontend directory', () => {
+  const vercelConfigPath = path.join(repoRoot, 'vercel.json');
+
+  assert.ok(fs.existsSync(vercelConfigPath), 'root vercel.json should exist');
+
+  const vercelConfig = JSON.parse(fs.readFileSync(vercelConfigPath, 'utf8'));
+  assert.equal(vercelConfig.outputDirectory, 'frontend');
+  assert.equal(vercelConfig.framework, null);
 });
