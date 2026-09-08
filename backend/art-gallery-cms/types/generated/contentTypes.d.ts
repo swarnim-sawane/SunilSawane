@@ -451,6 +451,11 @@ export interface ApiArtworkArtwork extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    availabilityStatus: Schema.Attribute.Enumeration<
+      ['available', 'reserved', 'sold', 'not_for_sale']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'available'>;
     category: Schema.Attribute.Relation<'manyToOne', 'api::category.category'>;
     certificateNote: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;

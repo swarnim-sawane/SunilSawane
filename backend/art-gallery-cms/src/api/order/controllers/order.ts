@@ -13,6 +13,7 @@ const {
   verifyRazorpayWebhookSignature,
 } = require('../utils/payment-utils');
 const { notifyOrderConfirmed } = require('../utils/order-email');
+const { isArtworkPurchasable } = require('../../artwork/utils/availability');
 
 const STRAPI_ARTWORK_UID = 'api::artwork.artwork';
 const STRAPI_ORDER_UID = 'api::order.order';
@@ -103,7 +104,7 @@ async function fetchArtwork(strapi, item) {
     populate: { images: true, category: true },
   });
 
-  if (!artwork || artwork.isAvailable === false) throw httpError('Artwork is not available', 409);
+  if (!artwork || !isArtworkPurchasable(artwork)) throw httpError('Artwork is not available', 409);
   return artwork;
 }
 
@@ -184,14 +185,19 @@ function getFrontendReceiptUrl(orderNumber) {
     ? `${frontendUrl}/order-success.html?order=${encodeURIComponent(orderNumber)}`
     : '';
 }
+
 async function reserveArtworks(strapi, orderItems) {
   const artworkIds = getOrderArtworkIds(orderItems);
   if (artworkIds.length !== orderItems.length) throw httpError('Order contains invalid artwork records');
 
   for (const artworkId of artworkIds) {
     const updated = await strapi.db.query(STRAPI_ARTWORK_UID).updateMany({
-      where: { id: artworkId, isAvailable: { $ne: false } },
-      data: { isAvailable: false },
+      where: {
+        id: artworkId,
+        isAvailable: { $ne: false },
+        availabilityStatus: 'available',
+      },
+      data: { availabilityStatus: 'reserved', isAvailable: false },
     });
     if (updated.count !== 1) throw httpError('One or more artworks are no longer available', 409);
   }
@@ -201,8 +207,17 @@ async function reserveArtworks(strapi, orderItems) {
 async function releaseReservedArtworks(strapi, orderItems) {
   for (const artworkId of getOrderArtworkIds(orderItems)) {
     await strapi.db.query(STRAPI_ARTWORK_UID).updateMany({
-      where: { id: artworkId, isAvailable: false },
-      data: { isAvailable: true },
+      where: { id: artworkId, availabilityStatus: 'reserved' },
+      data: { availabilityStatus: 'available', isAvailable: true },
+    });
+  }
+}
+
+async function markArtworksSold(strapi, orderItems) {
+  for (const artworkId of getOrderArtworkIds(orderItems)) {
+    await strapi.db.query(STRAPI_ARTWORK_UID).updateMany({
+      where: { id: artworkId, availabilityStatus: 'reserved' },
+      data: { availabilityStatus: 'sold', isAvailable: false },
     });
   }
 }
@@ -292,6 +307,7 @@ async function finalizeCapturedPayment(strapi, order, payment, paymentSignature 
   let current = await strapi.db.query(STRAPI_ORDER_UID).findOne({ where: { id: order.id } });
   if (['confirmed', 'processing', 'shipped', 'delivered', 'refunded'].includes(current.orderStatus)) {
     if (current.paymentId !== payment.id) throw httpError('Order was confirmed with a different payment', 409);
+    await markArtworksSold(strapi, current.orderItems);
     await publishOrderDocument(strapi, current);
     return current;
   }
@@ -349,6 +365,8 @@ async function finalizeCapturedPayment(strapi, order, payment, paymentSignature 
     if (confirmed.orderStatus === 'confirmed' && confirmed.paymentId === payment.id) return confirmed;
     throw httpError('Order state changed while confirming payment', 409);
   }
+
+  await markArtworksSold(strapi, confirmed.orderItems);
 
   await updateEmailDelivery(strapi, confirmed).catch((error) => {
     strapi.log.error(`[order-email] Confirmation remains queued for ${confirmed.orderNumber}: ${error.message}`);

@@ -19,6 +19,15 @@ test('artwork schema captures final collector data before sale', () => {
   assert.equal(attributes.price.type, 'decimal');
   assert.equal(attributes.isAvailable.type, 'boolean');
   assert.equal(attributes.isAvailable.default, true);
+  assert.equal(attributes.availabilityStatus.type, 'enumeration');
+  assert.deepEqual(attributes.availabilityStatus.enum, [
+    'available',
+    'reserved',
+    'sold',
+    'not_for_sale',
+  ]);
+  assert.equal(attributes.availabilityStatus.default, 'available');
+  assert.equal(attributes.availabilityStatus.required, true);
   assert.equal(attributes.isFeatured.default, false);
 
   assert.equal(attributes.framingStatus.type, 'enumeration');
@@ -68,6 +77,7 @@ test('production guard rejects unsafe live configuration and allows complete lau
   assert.deepEqual(
     getProductionReadinessIssues({
       NODE_ENV: 'production',
+      FRONTEND_URL: 'https://sunilsawane.example',
       PUBLIC_URL: 'https://cms.sunilsawane.example',
       DATABASE_CLIENT: 'postgres',
       DATABASE_URL: 'postgres://user:pass@db.example:5432/sunilsawane',
@@ -96,6 +106,7 @@ test('production guard rejects unsafe live configuration and allows complete lau
   const stagingIssues = getProductionReadinessIssues({
     NODE_ENV: 'production',
     DEPLOYMENT_STAGE: 'staging',
+    FRONTEND_URL: 'https://sunilsawane.example',
     PUBLIC_URL: 'https://gallery-cms.example',
     DATABASE_CLIENT: 'postgres',
     DATABASE_URL: 'postgres://user:pass@db.example:5432/sunilsawane',
@@ -127,6 +138,7 @@ test('production guard rejects unsafe live configuration and allows complete lau
   const reusedPaymentSecretIssues = getProductionReadinessIssues({
     NODE_ENV: 'production',
     DEPLOYMENT_STAGE: 'live',
+    FRONTEND_URL: 'https://sunilsawane.example',
     PUBLIC_URL: 'https://cms.sunilsawane.example',
     DATABASE_CLIENT: 'postgres',
     DATABASE_URL: 'postgres://user:pass@db.example:5432/sunilsawane',
@@ -176,6 +188,7 @@ test('order confirmation email utility prepares artist and collector messages', 
   }, {
     ORDER_NOTIFICATION_EMAIL: 'sunilsawaneart@gmail.com',
     ORDER_EMAIL_FROM: 'orders@sunilsawane.example',
+    FRONTEND_URL: 'https://sunilsawane.vercel.app',
     PUBLIC_URL: 'https://cms.sunilsawane.example',
   });
 
@@ -192,6 +205,9 @@ test('order confirmation email utility prepares artist and collector messages', 
   assert.match(messages[1].html, /#787d62/i);
   assert.match(messages[1].html, /#94372b/i);
   assert.match(messages[1].html, /VIEW ORDER RECEIPT/);
+  assert.match(messages[1].html, /https:\/\/sunilsawane\.vercel\.app\/order-success\.html\?order=ORD-1234567890/);
+  assert.match(messages[1].text, /https:\/\/sunilsawane\.vercel\.app\/order-success\.html\?order=ORD-1234567890/);
+  assert.doesNotMatch(messages[1].html, /cms\.sunilsawane\.example\/api\/orders\/receipt/);
   assert.match(messages[1].html, /18 x 24 in/);
   assert.match(messages[1].html, /Floral Exchange &lt;script&gt;/);
   assert.doesNotMatch(messages[1].html, /<script>/i);

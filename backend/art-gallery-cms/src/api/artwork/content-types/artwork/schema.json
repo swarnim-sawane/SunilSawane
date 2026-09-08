@@ -48,6 +48,17 @@
       "type": "boolean",
       "default": true
     },
+    "availabilityStatus": {
+      "type": "enumeration",
+      "enum": [
+        "available",
+        "reserved",
+        "sold",
+        "not_for_sale"
+      ],
+      "required": true,
+      "default": "available"
+    },
     "slug": {
       "type": "uid",
       "targetField": "title"

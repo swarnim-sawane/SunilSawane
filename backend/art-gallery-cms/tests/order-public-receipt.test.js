@@ -24,6 +24,9 @@ test('order public receipt route is scoped to confirmed receipt display', () => 
   assert.match(controller, /\^ORD-\\d\{10,20\}\$/);
   assert.match(controller, /orderStatus:\s*\{\s*\$in:\s*\['confirmed', 'processing', 'shipped', 'delivered'\]\s*\}/);
   assert.match(controller, /publishedAt:\s*\{[\s\S]*\$notNull:\s*true/s);
+  assert.match(controller, /ctx\.get\('accept'\)[\s\S]*text\/html/);
+  assert.match(controller, /FRONTEND_URL[\s\S]*order-success\.html\?order=/);
+  assert.match(controller, /ctx\.redirect\(frontendReceiptUrl\)/);
   assert.match(controller, /serializePublicReceipt\(order\)/);
   assert.match(publicSerializer, /publicReceipt:\s*true/);
   assert.doesNotMatch(publicSerializer, /customerName/);

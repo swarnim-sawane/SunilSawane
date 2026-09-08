@@ -29,6 +29,7 @@ test('environment example captures required production settings without real sec
 
   assert.match(envExample, /NODE_ENV=development/);
   assert.match(envExample, /PUBLIC_URL=/);
+  assert.match(envExample, /FRONTEND_URL=/);
   assert.match(envExample, /DATABASE_CLIENT=sqlite/);
   assert.match(envExample, /# Production database/);
   assert.match(envExample, /DATABASE_URL=/);
