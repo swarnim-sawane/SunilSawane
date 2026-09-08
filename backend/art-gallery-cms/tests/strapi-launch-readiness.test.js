@@ -114,9 +114,6 @@ test('production guard rejects unsafe live configuration and allows complete lau
     CLOUDINARY_SECRET: 'staging-cloudinary-secret',
     ORDER_NOTIFICATION_EMAIL: 'sunilsawaneart@gmail.com',
     ORDER_EMAIL_FROM: 'orders@sunilsawane.example',
-    SMTP_HOST: 'smtp.sunilsawane.example',
-    SMTP_USERNAME: 'orders-user',
-    SMTP_PASSWORD: 'smtp-secret-value',
   });
   assert.deepEqual(stagingIssues, []);
 

@@ -106,12 +106,14 @@ function getProductionReadinessIssues(env = process.env) {
     issues.push('Production ORDER_EMAIL_FROM must be set to a verified sender address.');
   }
 
-  if (!clean(env.SMTP_HOST)) {
-    issues.push('Production SMTP_HOST must be configured for order confirmations.');
-  }
+  if (deploymentStage === 'live') {
+    if (!clean(env.SMTP_HOST)) {
+      issues.push('Production SMTP_HOST must be configured for order confirmations.');
+    }
 
-  if (!clean(env.SMTP_USERNAME) || !hasProductionSecret(env.SMTP_PASSWORD)) {
-    issues.push('Production SMTP_USERNAME and SMTP_PASSWORD must be configured for order confirmations.');
+    if (!clean(env.SMTP_USERNAME) || !hasProductionSecret(env.SMTP_PASSWORD)) {
+      issues.push('Production SMTP_USERNAME and SMTP_PASSWORD must be configured for order confirmations.');
+    }
   }
 
   return issues;

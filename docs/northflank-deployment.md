@@ -111,6 +111,8 @@ SMTP_PASSWORD=YOUR_SMTP_PASSWORD
 
 Keep `DEPLOYMENT_STAGE=staging` with `rzp_test_...` credentials on the Northflank Developer Sandbox. Change it to `live` only when moving to production-supported hosting and supplying Razorpay live credentials.
 
+SMTP may be omitted while the service remains in test-mode staging. It is mandatory before switching `DEPLOYMENT_STAGE` to `live`; do not reuse a normal Gmail account password as an SMTP credential.
+
 `DATABASE_URL=${POSTGRES_URI}` above describes the alias relationship. In Northflank, link `POSTGRES_URI` from the addon and alias it to `DATABASE_URL`; do not paste the literal `${POSTGRES_URI}` text as a secret value.
 
 Generate each secret locally with Node 22:
