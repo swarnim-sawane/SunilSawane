@@ -29,6 +29,8 @@ test('artwork schema captures final collector data before sale', () => {
   assert.equal(attributes.availabilityStatus.default, 'available');
   assert.equal(attributes.availabilityStatus.required, true);
   assert.equal(attributes.isFeatured.default, false);
+  assert.equal(attributes.seriesName.type, 'string');
+  assert.equal(attributes.seriesName.required, false);
 
   assert.equal(attributes.framingStatus.type, 'enumeration');
   assert.deepEqual(attributes.framingStatus.enum, [
