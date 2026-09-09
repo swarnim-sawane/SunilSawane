@@ -2,6 +2,7 @@
 const DETAIL_API_BASE_URL = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const STRAPI_URL = DETAIL_API_BASE_URL.replace(/\/api\/?$/, '');
 const artworkAvailability = window.artworkAvailability;
+const detailArtworkDiscovery = window.artworkDiscovery;
 let currentArtwork = null;
 let previousCollectorEnquiryFocus = null;
 const detailDom = window.domUtils || {
@@ -195,6 +196,7 @@ function renderArtwork(artwork) {
         // Render thumbnails
         renderThumbnails(data);
 
+        renderSeriesContext(data);
         renderTrustSummary(data);
         updatePurchaseState(data);
         populateCollectorEnquiry(data);
@@ -248,6 +250,18 @@ function getArtworkAvailabilityLabel(data) {
 function setDetailText(id, value) {
     const element = document.getElementById(id);
     if (element) element.textContent = detailDom.text(value);
+}
+
+function renderSeriesContext(data) {
+    const element = document.getElementById('artwork-series-context');
+    if (!element) return;
+
+    const seriesName = detailArtworkDiscovery?.getArtworkSeriesName(data) || '';
+    element.hidden = !seriesName;
+    element.textContent = seriesName ? `From the ${seriesName} series` : '';
+
+    const panel = document.querySelector('.artwork-purchase-panel');
+    panel?.classList.toggle('is-series', Boolean(seriesName));
 }
 
 function renderTrustSummary(data) {

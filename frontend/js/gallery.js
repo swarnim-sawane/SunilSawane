@@ -153,6 +153,7 @@ function createArtworkCard(artwork, index = 0) {
   const status = galleryArtworkAvailability.getStatus(artwork);
   const unavailable = status !== 'available';
   const featured = galleryDiscovery.isFeaturedArtwork(artwork);
+  const seriesName = galleryDiscovery.getArtworkSeriesName(artwork);
 
   const $card = $('<div>').addClass(featured
     ? 'col-12 gallery-artwork-item gallery-featured-item'
@@ -162,6 +163,7 @@ function createArtworkCard(artwork, index = 0) {
       ? `gallery-artwork-card gallery-artwork-record is-unavailable ${galleryArtworkAvailability.getStatusClass(status)}`
       : 'gallery-artwork-card gallery-artwork-record is-available')
     .toggleClass('is-featured', featured)
+    .toggleClass('is-series', Boolean(seriesName))
     .attr({
       'data-accent': accent
     })
@@ -221,6 +223,14 @@ function createArtworkCard(artwork, index = 0) {
       .attr('href', detailUrl)
       .text('View artwork')
   );
+
+  if (seriesName) {
+    $caption.append(
+      $('<p>')
+        .addClass('gallery-series-label')
+        .text(`Series · ${seriesName}`)
+    );
+  }
 
   $media.append($imageLink);
   $surface.append($media, $caption);

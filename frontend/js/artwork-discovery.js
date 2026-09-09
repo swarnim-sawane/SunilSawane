@@ -46,6 +46,15 @@
     return artwork?.isFeatured === true || artwork?.isFeatured === 'true';
   }
 
+  function getArtworkSeriesName(artwork) {
+    const value = artwork?.seriesName || artwork?.SeriesName || '';
+    return typeof value === 'string' ? value.trim() : '';
+  }
+
+  function isSeriesArtwork(artwork) {
+    return getArtworkSeriesName(artwork).length > 0;
+  }
+
   function getPopulatedCategories(categories, artworks) {
     const populatedSlugs = new Set((artworks || []).map(getArtworkCategorySlug).filter(Boolean));
     return (categories || []).filter((category) => populatedSlugs.has(getCategorySlug(category)));
@@ -67,6 +76,7 @@
       artwork?.medium || artwork?.Medium,
       artwork?.yearCreated || artwork?.YearCreated || artwork?.year || artwork?.Year,
       getArtworkCategoryName(artwork),
+      getArtworkSeriesName(artwork),
     ].filter(Boolean).join(' '));
   }
 
@@ -86,9 +96,11 @@
     filterArtworks,
     getArtworkCategoryName,
     getArtworkCategorySlug,
+    getArtworkSeriesName,
     getCategorySlug,
     getPopulatedCategories,
     isFeaturedArtwork,
+    isSeriesArtwork,
     normalizeSearchValue,
   };
 }));

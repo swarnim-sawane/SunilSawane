@@ -138,3 +138,20 @@ test('gallery discovery controls and featured works use an accessible editorial 
   assert.match(css, /\.gallery-featured-mark/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
 });
+
+test('series artworks keep the gallery layout while receiving restrained series context', () => {
+  const detailHtml = read('artwork-detail.html');
+  const detailJs = read('js/artwork-detail.js');
+  const galleryJs = read('js/gallery.js');
+  const css = read('style.css');
+
+  assert.match(galleryJs, /galleryDiscovery\.getArtworkSeriesName\(artwork\)/);
+  assert.match(galleryJs, /\.toggleClass\('is-series', Boolean\(seriesName\)\)/);
+  assert.match(galleryJs, /gallery-series-label/);
+  assert.match(detailHtml, /id="artwork-series-context"/);
+  assert.match(detailHtml, /js\/artwork-discovery\.js/);
+  assert.match(detailJs, /renderSeriesContext\(data\)/);
+  assert.match(css, /\.gallery-artwork-card\.is-series\s+\.gallery-card-surface/);
+  assert.match(css, /\.gallery-series-label/);
+  assert.match(css, /\.artwork-series-context/);
+});

@@ -11,6 +11,7 @@ const artworks = [
     medium: 'Pen and ink',
     yearCreated: 2024,
     isFeatured: true,
+    seriesName: 'Garden of Kinship',
     category: { slug: 'pen-ink', Name: 'Pen & Ink' },
   },
   {
@@ -42,6 +43,15 @@ test('searches title, description, medium, category, and year case-insensitively
   assert.deepEqual(discovery.filterArtworks(artworks, { query: 'quiet doorway' }).map((art) => art.id), [1]);
   assert.deepEqual(discovery.filterArtworks(artworks, { query: 'mixed media' }).map((art) => art.id), [2]);
   assert.deepEqual(discovery.filterArtworks(artworks, { query: '2023' }).map((art) => art.id), [2]);
+  assert.deepEqual(discovery.filterArtworks(artworks, { query: 'garden of kinship' }).map((art) => art.id), [1]);
+});
+
+test('normalizes optional series names without assigning a series to ordinary artworks', () => {
+  assert.equal(discovery.getArtworkSeriesName(artworks[0]), 'Garden of Kinship');
+  assert.equal(discovery.getArtworkSeriesName({ seriesName: '  Quiet Forms  ' }), 'Quiet Forms');
+  assert.equal(discovery.getArtworkSeriesName(artworks[1]), '');
+  assert.equal(discovery.isSeriesArtwork(artworks[0]), true);
+  assert.equal(discovery.isSeriesArtwork(artworks[1]), false);
 });
 
 test('combines category and search filters without mutating the catalogue', () => {

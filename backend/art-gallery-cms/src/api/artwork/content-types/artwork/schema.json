@@ -67,6 +67,11 @@
       "type": "boolean",
       "default": false
     },
+    "seriesName": {
+      "type": "string",
+      "required": false,
+      "maxLength": 80
+    },
     "framingStatus": {
       "type": "enumeration",
       "enum": [
