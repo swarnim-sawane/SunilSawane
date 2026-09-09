@@ -1,7 +1,7 @@
 // import type { Core } from '@strapi/strapi';
 
 const { assertProductionReady } = require('./utils/production-readiness');
-const { migrateArtworkPrices } = require('./utils/artwork-price-migration');
+const { migrateArtworkPrices, migrateArtworkTierPrices } = require('./utils/artwork-price-migration');
 
 const STRAPI_ARTWORK_UID = 'api::artwork.artwork';
 
@@ -28,6 +28,7 @@ export default {
    */
   async bootstrap({ strapi } /*: { strapi: Core.Strapi } */) {
     await migrateArtworkPrices(strapi);
+    await migrateArtworkTierPrices(strapi);
 
     await strapi.db.query(STRAPI_ARTWORK_UID).updateMany({
       where: {
