@@ -152,7 +152,7 @@ const cartDom = window.domUtils || {
     safeUrl: (value, fallback) => value || fallback || '#',
     formatINR: (value) => '\u20b9' + (Number(value) || 0).toLocaleString('en-IN')
 };
-const artworkAvailability = window.artworkAvailability;
+const cartArtworkAvailability = window.artworkAvailability;
 const cartApiBaseUrl = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const cartAssetBaseUrl = cartApiBaseUrl.replace(/\/api\/?$/, '');
 const checkoutFlowTransitionKey = 'sunilsawaneCheckoutFlowTransition';
@@ -278,10 +278,10 @@ function displayCart() {
                         $('<a>').attr('href', detailHref).text(item.title || 'Untitled')
                     ),
                     $('<p>').addClass('cart-item-meta').text(unavailable
-                        ? artworkAvailability.getUnavailableMessage(availabilityStatus)
+                        ? cartArtworkAvailability.getUnavailableMessage(availabilityStatus)
                         : 'One-of-one work reserved for checkout review'),
                     unavailable
-                        ? $('<p>').addClass('cart-item-status').text(artworkAvailability.getStatusLabel(availabilityStatus))
+                        ? $('<p>').addClass('cart-item-status').text(cartArtworkAvailability.getStatusLabel(availabilityStatus))
                         : null
                 ),
                 $('<div>').addClass('cart-item-purchase').append(
@@ -307,7 +307,7 @@ function updateCartSummary() {
 }
 
 function getCartArtworkAvailabilityStatus(artwork) {
-    return artworkAvailability.getStatus(artwork);
+    return cartArtworkAvailability.getStatus(artwork);
 }
 
 function isCartItemUnavailable(item) {

@@ -120,3 +120,21 @@ test('gallery page renders as a premium curated viewing experience', () => {
   assert.doesNotMatch(css, /\.gallery-description-teaser\s*{[\s\S]*max-height:\s*0/);
   assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)[\s\S]*\.gallery-artwork-card/);
 });
+
+test('gallery discovery controls and featured works use an accessible editorial treatment', () => {
+  const galleryHtml = read('gallery.html');
+  const galleryJs = read('js/gallery.js');
+  const css = read('style.css');
+
+  assert.match(galleryHtml, /id="gallery-search"/);
+  assert.match(galleryHtml, /aria-label="Search artworks"/);
+  assert.match(galleryHtml, /js\/artwork-discovery\.js/);
+  assert.match(galleryJs, /getPopulatedCategories/);
+  assert.match(galleryJs, /filterArtworks/);
+  assert.match(galleryJs, /currentCategory === 'all' && !currentGallerySearch\.trim\(\)/);
+  assert.match(galleryJs, /gallery-featured-mark/);
+  assert.match(galleryJs, /is-featured/);
+  assert.match(css, /\.gallery-artwork-card\.is-featured/);
+  assert.match(css, /\.gallery-featured-mark/);
+  assert.match(css, /@media \(prefers-reduced-motion:\s*reduce\)/);
+});

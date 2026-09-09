@@ -343,3 +343,77 @@ test('artwork price migration updates every record once and preserves rollback v
   assert.equal(second.skipped, true);
   assert.equal(updateCalls, 1);
 });
+
+test('artwork tier migration prices featured works at 10000 and all others at 7999 once', async () => {
+  const {
+    FEATURED_PRICE,
+    STANDARD_PRICE,
+    TIER_MIGRATION_KEY,
+    migrateArtworkTierPrices,
+  } = require('../src/utils/artwork-price-migration');
+  const records = [
+    { id: 1, documentId: 'featured-one', price: 7999, isFeatured: true },
+    { id: 2, documentId: 'standard-one', price: 5000, isFeatured: false },
+    { id: 3, documentId: 'standard-two', price: 6500, isFeatured: null },
+  ];
+  let migrationState = null;
+  let updateCalls = 0;
+  const strapi = {
+    store(options) {
+      assert.equal(options.key, TIER_MIGRATION_KEY);
+      return {
+        async get() { return migrationState; },
+        async set({ value }) { migrationState = value; },
+      };
+    },
+    db: {
+      query(uid) {
+        assert.equal(uid, 'api::artwork.artwork');
+        return {
+          async findMany() { return records.map((record) => ({ ...record })); },
+          async update({ where, data }) {
+            updateCalls += 1;
+            const record = records.find((item) => item.id === where.id);
+            record.price = data.price;
+            return { ...record };
+          },
+        };
+      },
+    },
+    log: { info() {} },
+  };
+
+  const first = await migrateArtworkTierPrices(strapi);
+  assert.equal(first.status, 'completed');
+  assert.equal(first.updatedCount, 3);
+  assert.deepEqual(records.map((record) => record.price), [FEATURED_PRICE, STANDARD_PRICE, STANDARD_PRICE]);
+  assert.deepEqual(first.previousPrices, [
+    { id: 1, documentId: 'featured-one', price: 7999, isFeatured: true },
+    { id: 2, documentId: 'standard-one', price: 5000, isFeatured: false },
+    { id: 3, documentId: 'standard-two', price: 6500, isFeatured: null },
+  ]);
+
+  const second = await migrateArtworkTierPrices(strapi);
+  assert.equal(second.skipped, true);
+  assert.equal(updateCalls, 3);
+});
+
+test('artwork lifecycle keeps prices aligned when the featured flag changes', () => {
+  const lifecycle = require('../src/api/artwork/content-types/artwork/lifecycles');
+
+  const featuredCreate = { params: { data: { title: 'Featured', isFeatured: true, price: 7999 } } };
+  lifecycle.beforeCreate(featuredCreate);
+  assert.equal(featuredCreate.params.data.price, 10000);
+
+  const standardCreate = { params: { data: { title: 'Standard' } } };
+  lifecycle.beforeCreate(standardCreate);
+  assert.equal(standardCreate.params.data.price, 7999);
+
+  const featureToggle = { params: { data: { isFeatured: true } } };
+  lifecycle.beforeUpdate(featureToggle);
+  assert.equal(featureToggle.params.data.price, 10000);
+
+  const unrelatedUpdate = { params: { data: { title: 'Renamed' } } };
+  lifecycle.beforeUpdate(unrelatedUpdate);
+  assert.equal(Object.hasOwn(unrelatedUpdate.params.data, 'price'), false);
+});

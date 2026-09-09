@@ -195,6 +195,18 @@
 
       <!-- Filters -->
       <div class="gallery-filter-dock">
+        <div class="artwork-search-control gallery-search-control">
+          <svg width="20" height="20" aria-hidden="true">
+            <use xlink:href="#search"></use>
+          </svg>
+          <label for="gallery-search" class="visually-hidden">Search artworks</label>
+          <input id="gallery-search" type="search" autocomplete="off" aria-label="Search artworks"
+            placeholder="Search title, medium or subject">
+          <button type="button" class="artwork-search-clear" id="gallery-search-clear"
+            aria-label="Clear artwork search" hidden>
+            <svg width="14" height="14" aria-hidden="true"><use xlink:href="#close"></use></svg>
+          </button>
+        </div>
         <div class="filter-section gallery-filter-rail">
           <h5 class="visually-hidden">Filter artworks by category</h5>
           <div class="category-buttons">
@@ -223,7 +235,7 @@
       <!-- No Results Message -->
       <div id="no-results" class="text-center py-5" style="display: none;">
         <h3>No artworks found</h3>
-        <p>Try selecting a different category</p>
+        <p>Try another title, medium, subject, or category.</p>
       </div>
 
     </div>
@@ -301,7 +313,8 @@
   <script src="js/dom-utils.js?v=gallery-editorial-20260608a"></script>
   <script src="js/api.js?v=gallery-editorial-20260608a"></script>
   <script src="js/artwork-availability.js?v=availability-20260908a"></script>
-  <script src="js/gallery.js?v=collector-flow-20260611a"></script>
+  <script src="js/artwork-discovery.js?v=discovery-20260909a"></script>
+  <script src="js/gallery.js?v=discovery-20260909a"></script>
 
 </body>
 

@@ -2,17 +2,21 @@
 let allProducts = [];
 let filteredProducts = [];
 let currentFilter = 'all';
+let currentShopSearch = '';
 let likedArtworks = [];
 const WISHLIST_STORAGE_KEY = 'sunilSawaneLikedArtworks';
 const savedWishlistProductIds = new Set();
 const shopDom = window.domUtils;
-const artworkAvailability = window.artworkAvailability;
+const shopArtworkAvailability = window.artworkAvailability;
+const shopDiscovery = window.artworkDiscovery;
 const shopApiBaseUrl = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const shopAssetBaseUrl = shopApiBaseUrl.replace(/\/api\/?$/, '');
 
 $(document).ready(function () {
     console.log('Shop page loaded');
     initWishlistControls();
+    initShopSearch();
+    initShopSortMenu();
     initShop();
 });
 
@@ -29,13 +33,13 @@ async function initShop() {
 
         // Keep sold works visible as catalogue records, but remove purchase affordances.
         allProducts = artworks
-            .filter(artworkAvailability.shouldShowInShop)
-            .sort(artworkAvailability.compareAvailability);
+            .filter(shopArtworkAvailability.shouldShowInShop)
+            .sort(shopArtworkAvailability.compareAvailability);
 
         filteredProducts = [...allProducts];
 
-        loadCategoryFilters(categories);
-        displayProducts(filteredProducts);
+        loadCategoryFilters(shopDiscovery.getPopulatedCategories(categories, allProducts));
+        applyShopFilters();
         updateResultCount();
         hideLoading();
 
@@ -205,12 +209,13 @@ function loadCategoryFilters(categories) {
 function displayProducts(products) {
     const grid = $('#product-grid');
     grid.empty();
+    updateResultCount();
 
     if (!products || products.length === 0) {
         grid.append(
             $('<div>').addClass('col-12 text-center py-5').append(
-                $('<h4>').text('No artworks found in this category'),
-                $('<p>').text('Try selecting a different category')
+                $('<h4>').text('No artworks match your selection'),
+                $('<p>').text('Try another title, medium, subject, or category.')
             )
         );
         return;
@@ -221,7 +226,6 @@ function displayProducts(products) {
         grid.append(card);
     });
 
-    updateResultCount();
     initPremiumCatalogueInteractions();
 }
 
@@ -236,9 +240,9 @@ function createProductCard(product, index = 0) {
     const medium = product.medium || product.Medium || 'Artwork';
     const year = product.yearCreated || product.YearCreated || product.year || product.Year || '';
     const accent = getProductAccent(product);
-    const status = artworkAvailability.getStatus(product);
-    const available = artworkAvailability.isPurchasable(product);
-    const statusClass = artworkAvailability.getStatusClass(status);
+    const status = shopArtworkAvailability.getStatus(product);
+    const available = shopArtworkAvailability.isPurchasable(product);
+    const statusClass = shopArtworkAvailability.getStatusClass(status);
 
     const $card = $('<div>').addClass('col-12 col-xl-4 col-lg-4 col-md-6 premium-product-item');
     const $article = $('<article>')
@@ -269,7 +273,7 @@ function createProductCard(product, index = 0) {
         $imageLink.append(
             $('<span>')
                 .addClass(`premium-availability-tag ${statusClass}`)
-                .text(artworkAvailability.getStatusLabel(status))
+                    .text(shopArtworkAvailability.getStatusLabel(status))
         );
     }
 
@@ -300,7 +304,7 @@ function createProductCard(product, index = 0) {
             'aria-disabled': available ? 'false' : 'true'
         })
         .addClass('premium-add-button')
-        .text(artworkAvailability.getPurchaseLabel(status))
+        .text(shopArtworkAvailability.getPurchaseLabel(status))
         .on('click', function (event) {
             addToCartFromShop(event, product.id);
         });
@@ -337,11 +341,11 @@ function createProductCard(product, index = 0) {
 }
 
 function isProductAvailable(product) {
-    return artworkAvailability.isPurchasable(product);
+    return shopArtworkAvailability.isPurchasable(product);
 }
 
 function isProductSold(product) {
-    return artworkAvailability.getStatus(product) === 'sold';
+    return shopArtworkAvailability.getStatus(product) === 'sold';
 }
 
 function getProductCategorySlug(product) {
@@ -435,14 +439,97 @@ function filterShop(categorySlug) {
     const activeButton = document.getElementById(`filter-${categorySlug}`);
     if (activeButton) activeButton.classList.add('active');
 
-    // Filter products
-    if (categorySlug === 'all') {
-        filteredProducts = [...allProducts];
-    } else {
-        filteredProducts = allProducts.filter(product => getProductCategorySlug(product) === categorySlug);
-    }
+    applyShopFilters();
+}
 
-    displayProducts(filteredProducts);
+function initShopSearch() {
+    const searchInput = document.getElementById('shop-search');
+    const clearButton = document.getElementById('shop-search-clear');
+    if (!searchInput || !clearButton) return;
+
+    searchInput.addEventListener('input', () => {
+        currentShopSearch = searchInput.value;
+        clearButton.hidden = currentShopSearch.length === 0;
+        applyShopFilters();
+    });
+
+    clearButton.addEventListener('click', () => {
+        searchInput.value = '';
+        currentShopSearch = '';
+        clearButton.hidden = true;
+        searchInput.focus();
+        applyShopFilters();
+    });
+}
+
+function initShopSortMenu() {
+    const wrap = document.getElementById('shop-sort-wrap');
+    const select = document.getElementById('sort-select');
+    const button = document.getElementById('shop-sort-button');
+    const menu = document.getElementById('shop-sort-menu');
+    const value = document.getElementById('shop-sort-value');
+    if (!wrap || !select || !button || !menu || !value) return;
+
+    const options = Array.from(menu.querySelectorAll('.shop-sort-option'));
+    const closeMenu = (restoreFocus = false) => {
+        menu.hidden = true;
+        button.setAttribute('aria-expanded', 'false');
+        wrap.classList.remove('is-open');
+        if (restoreFocus) button.focus();
+    };
+    const openMenu = () => {
+        menu.hidden = false;
+        button.setAttribute('aria-expanded', 'true');
+        wrap.classList.add('is-open');
+        const selected = options.find((option) => option.getAttribute('aria-selected') === 'true') || options[0];
+        selected?.focus();
+    };
+    const chooseOption = (option) => {
+        const nextValue = option.dataset.sortValue;
+        options.forEach((item) => item.setAttribute('aria-selected', item === option ? 'true' : 'false'));
+        select.value = nextValue;
+        value.textContent = option.textContent.trim();
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        closeMenu(true);
+    };
+
+    wrap.classList.add('is-enhanced');
+    button.addEventListener('click', () => {
+        if (menu.hidden) openMenu();
+        else closeMenu();
+    });
+    button.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openMenu();
+        }
+    });
+    options.forEach((option) => option.addEventListener('click', () => chooseOption(option)));
+    menu.addEventListener('keydown', (event) => {
+        const activeIndex = options.indexOf(document.activeElement);
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeMenu(true);
+        } else if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+            event.preventDefault();
+            const direction = event.key === 'ArrowDown' ? 1 : -1;
+            options[(activeIndex + direction + options.length) % options.length].focus();
+        } else if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            if (activeIndex >= 0) chooseOption(options[activeIndex]);
+        }
+    });
+    document.addEventListener('click', (event) => {
+        if (!wrap.contains(event.target)) closeMenu();
+    });
+}
+
+function applyShopFilters() {
+    filteredProducts = shopDiscovery.filterArtworks(allProducts, {
+        categorySlug: currentFilter,
+        query: currentShopSearch,
+    });
+    sortArtworks();
 }
 
 function sortArtworks() {
@@ -471,7 +558,7 @@ function sortArtworks() {
             break;
     }
 
-    displayProducts(sorted.sort(artworkAvailability.compareAvailability));
+    displayProducts(sorted.sort(shopArtworkAvailability.compareAvailability));
 }
 
 function addToCartFromShop(event, productId) {
@@ -479,7 +566,7 @@ function addToCartFromShop(event, productId) {
     const product = allProducts.find(p => p.id == productId);
 
     if (!isProductAvailable(product)) {
-        showNotification(artworkAvailability.getUnavailableMessage(product));
+        showNotification(shopArtworkAvailability.getUnavailableMessage(product));
         return;
     }
 

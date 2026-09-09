@@ -1,11 +1,14 @@
 let allArtworks = [];
 let currentCategory = 'all';
+let currentGallerySearch = '';
 const galleryDom = window.domUtils || {};
-const artworkAvailability = window.artworkAvailability;
+const galleryArtworkAvailability = window.artworkAvailability;
+const galleryDiscovery = window.artworkDiscovery;
 const galleryApiBaseUrl = window.ART_CONFIG?.apiBaseUrl || 'https://growing-approval-51840080fc.strapiapp.com/api';
 const galleryAssetBaseUrl = galleryApiBaseUrl.replace(/\/api\/?$/, '');
 
 $(document).ready(function () {
+  initGallerySearch();
   initGallery();
 });
 
@@ -19,8 +22,8 @@ async function initGallery() {
     ]);
 
     allArtworks = artworks;
-    loadCategoryFilters(categories);
-    displayArtworks(allArtworks);
+    loadCategoryFilters(galleryDiscovery.getPopulatedCategories(categories, allArtworks));
+    applyGalleryFilters();
     hideLoading();
   } catch (error) {
     console.error('Error initializing gallery:', error);
@@ -82,10 +85,34 @@ function filterByCategory(categorySlug) {
     activeButton.setAttribute('aria-pressed', 'true');
   }
 
-  const filtered = categorySlug === 'all'
-    ? allArtworks
-    : allArtworks.filter(artwork => getArtworkCategorySlug(artwork) === categorySlug);
+  applyGalleryFilters();
+}
 
+function initGallerySearch() {
+  const searchInput = document.getElementById('gallery-search');
+  const clearButton = document.getElementById('gallery-search-clear');
+  if (!searchInput || !clearButton) return;
+
+  searchInput.addEventListener('input', () => {
+    currentGallerySearch = searchInput.value;
+    clearButton.hidden = currentGallerySearch.length === 0;
+    applyGalleryFilters();
+  });
+
+  clearButton.addEventListener('click', () => {
+    searchInput.value = '';
+    currentGallerySearch = '';
+    clearButton.hidden = true;
+    searchInput.focus();
+    applyGalleryFilters();
+  });
+}
+
+function applyGalleryFilters() {
+  const filtered = galleryDiscovery.filterArtworks(allArtworks, {
+    categorySlug: currentCategory,
+    query: currentGallerySearch,
+  });
   displayArtworks(filtered);
 }
 
@@ -123,14 +150,18 @@ function createArtworkCard(artwork, index = 0) {
   const accent = getArtworkAccent(artwork);
   const imageLoading = index < 2 ? 'eager' : 'lazy';
   const imagePriority = index < 2 ? 'high' : 'auto';
-  const status = artworkAvailability.getStatus(artwork);
+  const status = galleryArtworkAvailability.getStatus(artwork);
   const unavailable = status !== 'available';
+  const featured = galleryDiscovery.isFeaturedArtwork(artwork);
 
-  const $card = $('<div>').addClass('col-12 col-xl-6 gallery-artwork-item');
+  const $card = $('<div>').addClass(featured
+    ? 'col-12 gallery-artwork-item gallery-featured-item'
+    : 'col-12 col-xl-6 gallery-artwork-item');
   const $article = $('<article>')
     .addClass(unavailable
-      ? `gallery-artwork-card gallery-artwork-record is-unavailable ${artworkAvailability.getStatusClass(status)}`
+      ? `gallery-artwork-card gallery-artwork-record is-unavailable ${galleryArtworkAvailability.getStatusClass(status)}`
       : 'gallery-artwork-card gallery-artwork-record is-available')
+    .toggleClass('is-featured', featured)
     .attr({
       'data-accent': accent
     })
@@ -158,7 +189,7 @@ function createArtworkCard(artwork, index = 0) {
 
   if (unavailable) {
     $imageLink.append(createGalleryStatusPill(
-      artworkAvailability.getStatusLabel(status),
+      galleryArtworkAvailability.getStatusLabel(status),
       status
     ));
   }
@@ -168,7 +199,18 @@ function createArtworkCard(artwork, index = 0) {
     $('<span>').text(year ? year : 'Selected work')
   );
 
-  const $caption = $('<div>').addClass('gallery-card-caption gallery-record-body').append(
+  const $caption = $('<div>').addClass('gallery-card-caption gallery-record-body');
+
+  if (featured) {
+    $caption.append(
+      $('<div>').addClass('gallery-featured-mark').append(
+        $('<span>').addClass('gallery-featured-mark-line').attr('aria-hidden', 'true'),
+        $('<span>').text('Featured Work')
+      )
+    );
+  }
+
+  $caption.append(
     $meta,
     $('<h3>').addClass('gallery-card-title').append(
       $('<a>').attr('href', detailUrl).text(title)
@@ -202,16 +244,16 @@ function createGalleryCardNote(description) {
 
 function createGalleryStatusPill(label, status) {
   return $('<span>')
-    .addClass(`gallery-status-pill ${artworkAvailability.getStatusClass(status)}`)
+    .addClass(`gallery-status-pill ${galleryArtworkAvailability.getStatusClass(status)}`)
     .text(label);
 }
 
 function isArtworkAvailable(artwork) {
-  return artworkAvailability.isPurchasable(artwork);
+  return galleryArtworkAvailability.isPurchasable(artwork);
 }
 
 function isArtworkCollected(artwork) {
-  return artworkAvailability.getStatus(artwork) === 'sold';
+  return galleryArtworkAvailability.getStatus(artwork) === 'sold';
 }
 
 function extractDescription(description) {
@@ -268,7 +310,8 @@ function getCategoryArtworkCount(categorySlug) {
 
 function formatGalleryResultCount(count, total) {
   if (total === 0) return 'No works';
-  if (currentCategory === 'all') return `${total} works`;
+  if (currentCategory === 'all' && !currentGallerySearch.trim()) return `${total} works`;
+  if (count === 0) return 'No works shown';
   return `${count} of ${total}`;
 }
 

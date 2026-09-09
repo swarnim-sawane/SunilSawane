@@ -4008,6 +4008,300 @@ h5 {
   cursor: not-allowed;
 }
 
+/* Artwork discovery: shared search rhythm, accessible sort, and featured gallery records. */
+.gallery-filter-dock,
+.collector-filter-dock {
+  flex-wrap: wrap;
+}
+
+.artwork-search-control {
+  position: relative;
+  display: flex;
+  flex: 0 1 310px;
+  align-items: center;
+  min-width: 250px;
+  height: 44px;
+  border-bottom: 1px solid rgba(33, 31, 28, 0.26);
+  color: #787d62;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.artwork-search-control:focus-within {
+  border-color: #787d62;
+  background: rgba(120, 125, 98, 0.035);
+}
+
+.artwork-search-control > svg {
+  flex: 0 0 auto;
+  margin-left: 2px;
+}
+
+.artwork-search-control input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: 0;
+  padding: 0 40px 0 12px;
+  background: transparent;
+  color: #211f1c;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 300;
+  letter-spacing: 0;
+}
+
+.artwork-search-control input::placeholder {
+  color: #8f887f;
+  opacity: 1;
+}
+
+.artwork-search-clear {
+  position: absolute;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  background: transparent;
+  color: #5f574e;
+  cursor: pointer;
+}
+
+.artwork-search-clear:focus-visible,
+.shop-sort-button:focus-visible,
+.shop-sort-option:focus-visible {
+  outline: 2px solid rgba(120, 125, 98, 0.34);
+  outline-offset: 3px;
+}
+
+.gallery-filter-dock .gallery-filter-rail,
+.collector-filter-dock .shop-filter-rail {
+  flex: 1 1 520px;
+}
+
+.shop-sort-wrap {
+  position: relative;
+}
+
+.shop-sort-custom {
+  display: none;
+  position: relative;
+  min-width: 220px;
+}
+
+.shop-sort-wrap.is-enhanced .shop-sort-select {
+  display: none;
+}
+
+.shop-sort-wrap.is-enhanced .shop-sort-custom {
+  display: block;
+}
+
+.shop-sort-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  border-bottom: 1px solid rgba(33, 31, 28, 0.26);
+  padding: 0 28px 0 0;
+  background: transparent;
+  color: #211f1c;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0;
+  text-align: left;
+}
+
+.shop-sort-button::after {
+  content: "";
+  position: absolute;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 180ms ease;
+}
+
+.shop-sort-wrap.is-open .shop-sort-button::after {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.shop-sort-button-prefix {
+  color: #8f887f;
+  font-size: 0.64rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.shop-sort-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 30;
+  width: 250px;
+  padding: 8px 0;
+  border: 1px solid rgba(63, 54, 44, 0.14);
+  border-radius: 4px;
+  background: rgba(255, 254, 251, 0.96);
+  box-shadow: 0 24px 60px rgba(33, 31, 28, 0.14);
+  backdrop-filter: blur(18px) saturate(1.08);
+  -webkit-backdrop-filter: blur(18px) saturate(1.08);
+}
+
+.shop-sort-menu[hidden] {
+  display: none;
+}
+
+.shop-sort-option {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 44px;
+  border: 0;
+  padding: 10px 20px;
+  background: transparent;
+  color: #5f574e;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 300;
+  letter-spacing: 0;
+  text-align: left;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.shop-sort-option:hover,
+.shop-sort-option:focus-visible {
+  background: rgba(120, 125, 98, 0.08);
+  color: #211f1c;
+}
+
+.shop-sort-option[aria-selected="true"] {
+  color: #94372b;
+  font-weight: 400;
+}
+
+.shop-sort-option[aria-selected="true"]::before {
+  content: "";
+  width: 16px;
+  height: 1px;
+  margin-right: 10px;
+  background: currentColor;
+}
+
+.gallery-artwork-card.is-featured .gallery-card-surface {
+  grid-template-columns: minmax(320px, 1.2fr) minmax(300px, 0.8fr);
+  min-height: clamp(470px, 42vw, 620px);
+  border-color: rgba(120, 125, 98, 0.28);
+  background:
+    linear-gradient(132deg, rgba(255, 253, 248, 0.84), rgba(255, 255, 255, 0.44) 48%, rgba(246, 242, 233, 0.7)) padding-box,
+    linear-gradient(145deg, rgba(120, 125, 98, 0.42), rgba(255, 255, 255, 0.3) 44%, rgba(143, 109, 57, 0.3)) border-box;
+  box-shadow: 0 34px 96px rgba(63, 54, 44, 0.11);
+}
+
+.gallery-artwork-card.is-featured .gallery-record-body {
+  padding: clamp(34px, 4.2vw, 66px);
+}
+
+.gallery-artwork-card.is-featured .gallery-card-title {
+  font-size: clamp(1.55rem, 1.3rem + 0.8vw, 2.25rem);
+}
+
+.gallery-artwork-card.is-featured .gallery-card-note {
+  max-width: 48ch;
+  font-size: clamp(0.92rem, 0.86rem + 0.18vw, 1.04rem);
+}
+
+.gallery-featured-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: clamp(20px, 2.4vw, 34px);
+  color: #787d62;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.gallery-featured-mark-line {
+  width: 42px;
+  height: 1px;
+  background: currentColor;
+}
+
+@media (max-width: 1199px) {
+  .artwork-search-control {
+    flex-basis: 100%;
+    max-width: 420px;
+  }
+}
+
+@media (max-width: 767px) {
+  .gallery-filter-dock,
+  .collector-filter-dock {
+    align-items: stretch;
+    gap: 18px;
+  }
+
+  .artwork-search-control {
+    flex-basis: auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+  }
+
+  .gallery-filter-dock .gallery-filter-rail,
+  .collector-filter-dock .shop-filter-rail {
+    flex-basis: 100%;
+  }
+
+  .shop-filter-actions {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
+
+  .shop-sort-custom {
+    min-width: min(220px, 62vw);
+  }
+
+  .shop-sort-menu {
+    right: 0;
+    width: min(270px, 88vw);
+  }
+
+  .gallery-artwork-card.is-featured .gallery-card-surface {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .gallery-artwork-card.is-featured .gallery-record-body {
+    padding: 28px 24px 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .artwork-search-control,
+  .shop-sort-button::after,
+  .shop-sort-option {
+    transition: none;
+  }
+}
+
 .artwork-purchase-panel[data-availability="sold"] .btn-add-cart:disabled {
   border: 1px solid rgba(148, 55, 43, 0.3);
   background: rgba(148, 55, 43, 0.08);

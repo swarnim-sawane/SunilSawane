@@ -234,6 +234,18 @@
 
             <!-- Category Filters -->
             <div class="collector-filter-dock">
+                <div class="artwork-search-control shop-search-control">
+                    <svg width="20" height="20" aria-hidden="true">
+                        <use xlink:href="#search"></use>
+                    </svg>
+                    <label for="shop-search" class="visually-hidden">Search artworks</label>
+                    <input id="shop-search" type="search" autocomplete="off" aria-label="Search artworks"
+                        placeholder="Search title, medium or subject">
+                    <button type="button" class="artwork-search-clear" id="shop-search-clear"
+                        aria-label="Clear artwork search" hidden>
+                        <svg width="14" height="14" aria-hidden="true"><use xlink:href="#close"></use></svg>
+                    </button>
+                </div>
                 <div class="filter-section shop-filter-rail">
                     <h5 class="visually-hidden">Filter artworks by category</h5>
                     <div class="category-buttons">
@@ -245,7 +257,7 @@
                 </div>
                 <div class="shop-filter-actions">
                     <span id="result-count" class="shop-result-count" aria-live="polite">Loading works...</span>
-                    <div class="shop-sort-wrap">
+                    <div class="shop-sort-wrap" id="shop-sort-wrap">
                         <label for="sort-select" class="visually-hidden">Sort artworks</label>
                         <select class="form-select shop-sort-select" id="sort-select" onchange="sortArtworks()">
                             <option value="default">Sort By</option>
@@ -254,6 +266,21 @@
                             <option value="name">Name: A-Z</option>
                             <option value="newest">Newest First</option>
                         </select>
+                        <div class="shop-sort-custom">
+                            <button type="button" class="shop-sort-button" id="shop-sort-button"
+                                aria-haspopup="listbox" aria-expanded="false" aria-controls="shop-sort-menu">
+                                <span class="shop-sort-button-prefix">Sort</span>
+                                <span id="shop-sort-value">Curated order</span>
+                            </button>
+                            <div class="shop-sort-menu" id="shop-sort-menu" role="listbox"
+                                aria-label="Sort artworks" tabindex="-1" hidden>
+                                <button type="button" class="shop-sort-option" role="option" aria-selected="true" data-sort-value="default">Curated order</button>
+                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="price-low">Price, low to high</button>
+                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="price-high">Price, high to low</button>
+                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="name">Title, A to Z</button>
+                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="newest">Newest first</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -348,8 +375,9 @@
         <script src="js/dom-utils.js?v=shop-refine-20260607b"></script>
         <script src="js/api.js?v=shop-refine-20260607b"></script>
         <script src="js/artwork-availability.js?v=availability-20260908a"></script>
-        <script src="js/shop.js?v=collector-flow-20260611a"></script>
-    <script src="js/cart.js?v=checkout-availability-20260613a"></script>
+        <script src="js/artwork-discovery.js?v=discovery-20260909a"></script>
+        <script src="js/shop.js?v=discovery-20260909a"></script>
+    <script src="js/cart.js?v=discovery-20260909a"></script>
 
 
 

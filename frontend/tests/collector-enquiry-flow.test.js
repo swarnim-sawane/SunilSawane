@@ -62,12 +62,12 @@ test('browsing surfaces communicate unavailable works without purchase affordanc
 
   assert.match(shopHtml, /js\/artwork-availability\.js/);
   assert.match(galleryHtml, /js\/artwork-availability\.js/);
-  assert.match(shopJs, /artworkAvailability\.getStatus/);
-  assert.match(shopJs, /artworkAvailability\.getStatusLabel/);
+  assert.match(shopJs, /shopArtworkAvailability\.getStatus/);
+  assert.match(shopJs, /shopArtworkAvailability\.getStatusLabel/);
   assert.match(shopJs, /premium-availability-tag/);
   assert.match(shopJs, /is-unavailable/);
 
-  assert.match(galleryJs, /artworkAvailability\.getStatus/);
+  assert.match(galleryJs, /galleryArtworkAvailability\.getStatus/);
   assert.match(galleryJs, /function createGalleryStatusPill/);
   assert.match(galleryJs, /gallery-status-pill/);
   assert.match(galleryJs, /is-unavailable/);
@@ -91,7 +91,7 @@ test('cart refreshes artwork availability and blocks checkout for unavailable wo
   assert.match(cartJs, /function cartHasUnavailableItems/);
   assert.match(cartJs, /function updateCheckoutAvailabilityState/);
   assert.match(cartJs, /cart-item-unavailable/);
-  assert.match(cartJs, /artworkAvailability\.getUnavailableMessage/);
+  assert.match(cartJs, /cartArtworkAvailability\.getUnavailableMessage/);
   assert.match(cartJs, /Remove unavailable work before checkout/);
   assert.match(cartJs, /artAPI\.fetchArtworks/);
   assert.match(cartJs, /availabilityStatus/);

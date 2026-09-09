@@ -43,8 +43,8 @@ test('shop page keeps the catalogue controls seamless and restrained', () => {
   assert.match(shopJs, /function isProductSold/);
   assert.match(shopJs, /premium-product-card collector-plinth-card is-unavailable/);
   assert.match(shopJs, /premium-availability-tag/);
-  assert.match(shopJs, /artworkAvailability\.getStatusLabel/);
-  assert.match(shopJs, /artworkAvailability\.getUnavailableMessage/);
+  assert.match(shopJs, /shopArtworkAvailability\.getStatusLabel/);
+  assert.match(shopJs, /shopArtworkAvailability\.getUnavailableMessage/);
   assert.match(shopJs, /if \(!isProductAvailable\(product\)\)/);
   assert.match(shopJs, /formatShopResultCount/);
   assert.match(shopJs, /`\$\{total\} works`/);
@@ -126,6 +126,34 @@ test('shop cards use responsive artwork variants without eagerly decoding the fu
   assert.match(shopJs, /formats\?\.large/);
   assert.match(shopJs, /formats\?\.medium/);
   assert.match(shopJs, /formats\?\.small/);
+});
+
+test('shop discovery controls provide search and an enhanced accessible sort menu', () => {
+  const shopHtml = read('shop.html');
+  const shopJs = read('js/shop.js');
+  const css = read('style.css');
+
+  assert.match(shopHtml, /id="shop-search"/);
+  assert.match(shopHtml, /aria-label="Search artworks"/);
+  assert.match(shopHtml, /id="shop-sort-button"/);
+  assert.match(shopHtml, /role="listbox"/);
+  assert.match(shopHtml, /js\/artwork-discovery\.js/);
+  assert.match(shopJs, /getPopulatedCategories/);
+  assert.match(shopJs, /filterArtworks/);
+  assert.match(shopJs, /initShopSortMenu/);
+  assert.match(shopJs, /grid\.empty\(\);\s*updateResultCount\(\);\s*if \(!products/s);
+  assert.match(css, /\.artwork-search-control/);
+  assert.match(css, /\.shop-sort-menu/);
+  assert.match(css, /\.shop-sort-option\[aria-selected="true"\]/);
+});
+
+test('shop and cart scripts do not redeclare the availability helper globally', () => {
+  const shopJs = read('js/shop.js');
+  const cartJs = read('js/cart.js');
+
+  assert.match(shopJs, /const shopArtworkAvailability = window\.artworkAvailability/);
+  assert.match(cartJs, /const cartArtworkAvailability = window\.artworkAvailability/);
+  assert.doesNotMatch(shopJs + cartJs, /const artworkAvailability = window\.artworkAvailability/);
 });
 
 test('product detail page uses artwork-led purchase layout', () => {
