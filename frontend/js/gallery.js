@@ -1,5 +1,6 @@
 let allArtworks = [];
 let currentCategory = 'all';
+let currentSeries = '';
 let currentGallerySearch = '';
 const galleryDom = window.domUtils || {};
 const galleryArtworkAvailability = window.artworkAvailability;
@@ -23,6 +24,7 @@ async function initGallery() {
 
     allArtworks = artworks;
     loadCategoryFilters(galleryDiscovery.getPopulatedCategories(categories, allArtworks));
+    loadSeriesFilters(galleryDiscovery.getPopulatedSeries(allArtworks));
     applyGalleryFilters();
     hideLoading();
   } catch (error) {
@@ -74,8 +76,9 @@ function loadCategoryFilters(categories) {
 
 function filterByCategory(categorySlug) {
   currentCategory = categorySlug;
+  currentSeries = '';
 
-  $('.category-buttons .gallery-filter-button')
+  $('.gallery-filter-button')
     .removeClass('active')
     .attr('aria-pressed', 'false');
 
@@ -83,6 +86,53 @@ function filterByCategory(categorySlug) {
   if (activeButton) {
     activeButton.classList.add('active');
     activeButton.setAttribute('aria-pressed', 'true');
+  }
+
+  applyGalleryFilters();
+}
+
+function loadSeriesFilters(series) {
+  const group = document.getElementById('gallery-series-filter-group');
+  const container = $('#gallery-series-filters');
+  container.empty();
+
+  if (!group || !series.length) {
+    if (group) group.hidden = true;
+    return;
+  }
+
+  group.hidden = false;
+  series.forEach((entry, index) => {
+    const button = $('<button>')
+      .addClass('btn gallery-filter-button series-filter-button')
+      .attr({
+        id: `gallery-series-${index}`,
+        type: 'button',
+        'aria-pressed': 'false'
+      })
+      .append(
+        document.createTextNode(entry.name),
+        $('<span>').addClass('gallery-filter-count').text(entry.count)
+      )
+      .on('click', function () {
+        filterBySeries(entry.name, this);
+      });
+
+    container.append(button);
+  });
+}
+
+function filterBySeries(seriesName, button) {
+  currentCategory = 'all';
+  currentSeries = seriesName;
+
+  $('.gallery-filter-button')
+    .removeClass('active')
+    .attr('aria-pressed', 'false');
+
+  if (button) {
+    button.classList.add('active');
+    button.setAttribute('aria-pressed', 'true');
   }
 
   applyGalleryFilters();
@@ -111,6 +161,7 @@ function initGallerySearch() {
 function applyGalleryFilters() {
   const filtered = galleryDiscovery.filterArtworks(allArtworks, {
     categorySlug: currentCategory,
+    seriesName: currentSeries,
     query: currentGallerySearch,
   });
   displayArtworks(filtered);
@@ -320,7 +371,7 @@ function getCategoryArtworkCount(categorySlug) {
 
 function formatGalleryResultCount(count, total) {
   if (total === 0) return 'No works';
-  if (currentCategory === 'all' && !currentGallerySearch.trim()) return `${total} works`;
+  if (currentCategory === 'all' && !currentSeries && !currentGallerySearch.trim()) return `${total} works`;
   if (count === 0) return 'No works shown';
   return `${count} of ${total}`;
 }

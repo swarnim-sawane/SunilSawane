@@ -60,6 +60,23 @@
     return (categories || []).filter((category) => populatedSlugs.has(getCategorySlug(category)));
   }
 
+  function getPopulatedSeries(artworks) {
+    const series = new Map();
+
+    (artworks || []).forEach((artwork) => {
+      const name = getArtworkSeriesName(artwork);
+      if (!name) return;
+
+      const key = normalizeSearchValue(name);
+      const existing = series.get(key);
+      series.set(key, existing
+        ? { ...existing, count: existing.count + 1 }
+        : { name, count: 1 });
+    });
+
+    return Array.from(series.values());
+  }
+
   function normalizeSearchValue(value) {
     return String(value || '')
       .normalize('NFKD')
@@ -82,12 +99,14 @@
 
   function filterArtworks(artworks, options = {}) {
     const categorySlug = options.categorySlug || 'all';
+    const seriesName = normalizeSearchValue(options.seriesName);
     const query = normalizeSearchValue(options.query);
 
     return (artworks || []).filter((artwork) => {
       const categoryMatches = categorySlug === 'all' || getArtworkCategorySlug(artwork) === categorySlug;
+      const seriesMatches = !seriesName || normalizeSearchValue(getArtworkSeriesName(artwork)) === seriesName;
       const queryMatches = !query || getArtworkSearchText(artwork).includes(query);
-      return categoryMatches && queryMatches;
+      return categoryMatches && seriesMatches && queryMatches;
     });
   }
 
@@ -99,6 +118,7 @@
     getArtworkSeriesName,
     getCategorySlug,
     getPopulatedCategories,
+    getPopulatedSeries,
     isFeaturedArtwork,
     isSeriesArtwork,
     normalizeSearchValue,

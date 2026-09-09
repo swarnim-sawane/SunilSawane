@@ -12,7 +12,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="style.css?v=collector-flow-20260611a">
+    <link rel="stylesheet" type="text/css" href="style.css?v=series-filter-20260909a">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
@@ -234,52 +234,62 @@
 
             <!-- Category Filters -->
             <div class="collector-filter-dock">
-                <div class="artwork-search-control shop-search-control">
-                    <svg width="20" height="20" aria-hidden="true">
-                        <use xlink:href="#search"></use>
-                    </svg>
-                    <label for="shop-search" class="visually-hidden">Search artworks</label>
-                    <input id="shop-search" type="search" autocomplete="off" aria-label="Search artworks"
-                        placeholder="Search title, medium or subject">
-                    <button type="button" class="artwork-search-clear" id="shop-search-clear"
-                        aria-label="Clear artwork search" hidden>
-                        <svg width="14" height="14" aria-hidden="true"><use xlink:href="#close"></use></svg>
-                    </button>
-                </div>
-                <div class="filter-section shop-filter-rail">
-                    <h5 class="visually-hidden">Filter artworks by category</h5>
-                    <div class="category-buttons">
-                        <button class="btn shop-filter-button active" onclick="filterShop('all')" id="filter-all">
-                            All Artworks
+                <div class="discovery-primary shop-discovery-primary">
+                    <div class="artwork-search-control shop-search-control">
+                        <svg width="20" height="20" aria-hidden="true">
+                            <use xlink:href="#search"></use>
+                        </svg>
+                        <label for="shop-search" class="visually-hidden">Search artworks</label>
+                        <input id="shop-search" type="search" autocomplete="off" aria-label="Search artworks"
+                            placeholder="Search title, medium or subject">
+                        <button type="button" class="artwork-search-clear" id="shop-search-clear"
+                            aria-label="Clear artwork search" hidden>
+                            <svg width="14" height="14" aria-hidden="true"><use xlink:href="#close"></use></svg>
                         </button>
-                        <span id="category-filter-buttons"></span>
+                    </div>
+                    <div class="shop-filter-actions">
+                        <span id="result-count" class="shop-result-count" aria-live="polite">Loading works...</span>
+                        <div class="shop-sort-wrap" id="shop-sort-wrap">
+                            <label for="sort-select" class="visually-hidden">Sort artworks</label>
+                            <select class="form-select shop-sort-select" id="sort-select" onchange="sortArtworks()">
+                                <option value="default">Sort By</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="name">Name: A-Z</option>
+                                <option value="newest">Newest First</option>
+                            </select>
+                            <div class="shop-sort-custom">
+                                <button type="button" class="shop-sort-button" id="shop-sort-button"
+                                    aria-haspopup="listbox" aria-expanded="false" aria-controls="shop-sort-menu">
+                                    <span class="shop-sort-button-prefix">Sort</span>
+                                    <span id="shop-sort-value">Curated order</span>
+                                </button>
+                                <div class="shop-sort-menu" id="shop-sort-menu" role="listbox"
+                                    aria-label="Sort artworks" tabindex="-1" hidden>
+                                    <button type="button" class="shop-sort-option" role="option" aria-selected="true" data-sort-value="default">Curated order</button>
+                                    <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="price-low">Price, low to high</button>
+                                    <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="price-high">Price, high to low</button>
+                                    <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="name">Title, A to Z</button>
+                                    <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="newest">Newest first</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="shop-filter-actions">
-                    <span id="result-count" class="shop-result-count" aria-live="polite">Loading works...</span>
-                    <div class="shop-sort-wrap" id="shop-sort-wrap">
-                        <label for="sort-select" class="visually-hidden">Sort artworks</label>
-                        <select class="form-select shop-sort-select" id="sort-select" onchange="sortArtworks()">
-                            <option value="default">Sort By</option>
-                            <option value="price-low">Price: Low to High</option>
-                            <option value="price-high">Price: High to Low</option>
-                            <option value="name">Name: A-Z</option>
-                            <option value="newest">Newest First</option>
-                        </select>
-                        <div class="shop-sort-custom">
-                            <button type="button" class="shop-sort-button" id="shop-sort-button"
-                                aria-haspopup="listbox" aria-expanded="false" aria-controls="shop-sort-menu">
-                                <span class="shop-sort-button-prefix">Sort</span>
-                                <span id="shop-sort-value">Curated order</span>
+                <div class="filter-section shop-filter-rail">
+                    <h5 class="visually-hidden">Filter artworks by category or series</h5>
+                    <div class="shop-filter-scroll" tabindex="0" aria-label="Artwork filters">
+                        <div class="discovery-filter-group category-buttons">
+                            <span class="discovery-filter-label" aria-hidden="true">Browse</span>
+                            <button class="btn shop-filter-button active" onclick="filterShop('all')" id="filter-all"
+                                type="button" aria-pressed="true">
+                                All Artworks
                             </button>
-                            <div class="shop-sort-menu" id="shop-sort-menu" role="listbox"
-                                aria-label="Sort artworks" tabindex="-1" hidden>
-                                <button type="button" class="shop-sort-option" role="option" aria-selected="true" data-sort-value="default">Curated order</button>
-                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="price-low">Price, low to high</button>
-                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="price-high">Price, high to low</button>
-                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="name">Title, A to Z</button>
-                                <button type="button" class="shop-sort-option" role="option" aria-selected="false" data-sort-value="newest">Newest first</button>
-                            </div>
+                            <span id="category-filter-buttons"></span>
+                        </div>
+                        <div class="discovery-filter-group series-filter-group" id="shop-series-filter-group" hidden>
+                            <span class="discovery-filter-label">Series</span>
+                            <span id="shop-series-filters" class="series-filter-buttons"></span>
                         </div>
                     </div>
                 </div>
@@ -375,8 +385,8 @@
         <script src="js/dom-utils.js?v=shop-refine-20260607b"></script>
         <script src="js/api.js?v=shop-refine-20260607b"></script>
         <script src="js/artwork-availability.js?v=availability-20260908a"></script>
-        <script src="js/artwork-discovery.js?v=series-20260909b"></script>
-        <script src="js/shop.js?v=discovery-20260909a"></script>
+    <script src="js/artwork-discovery.js?v=series-filter-20260909a"></script>
+    <script src="js/shop.js?v=series-filter-20260909a"></script>
     <script src="js/cart.js?v=discovery-20260909a"></script>
 
 

@@ -9327,3 +9327,180 @@ body.contact-page {
     min-height: 44px;
   }
 }
+
+/* Series-aware discovery: quiet primary tools with one uninterrupted browse rail. */
+.gallery-filter-dock,
+.collector-filter-dock {
+  display: block;
+  padding: 16px 0 14px;
+}
+
+.discovery-primary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(24px, 4vw, 64px);
+  width: 100%;
+}
+
+.discovery-primary .artwork-search-control {
+  flex: 0 1 390px;
+  width: min(390px, 100%);
+  max-width: 390px;
+}
+
+.discovery-primary .gallery-filter-actions,
+.discovery-primary .shop-filter-actions {
+  align-items: center;
+  margin-left: auto;
+}
+
+.discovery-primary .gallery-result-count,
+.discovery-primary .shop-result-count {
+  padding-bottom: 0;
+}
+
+.gallery-filter-dock .gallery-filter-rail.filter-section,
+.collector-filter-dock .shop-filter-rail.filter-section {
+  width: 100%;
+  margin: 14px 0 0;
+  padding: 12px 0 0;
+  border: 0;
+  border-top: 1px solid rgba(63, 54, 44, 0.09);
+  background: transparent;
+}
+
+.gallery-filter-scroll,
+.shop-filter-scroll {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gallery-filter-scroll::-webkit-scrollbar,
+.shop-filter-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.discovery-filter-group,
+.gallery-filter-dock #category-buttons,
+.collector-filter-dock #category-filter-buttons,
+.series-filter-buttons {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 24px;
+}
+
+.series-filter-group[hidden] {
+  display: none;
+}
+
+.discovery-filter-label {
+  flex: 0 0 auto;
+  color: #a0978d;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.61rem;
+  font-weight: 500;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.series-filter-group {
+  position: relative;
+  padding-left: 27px;
+}
+
+.series-filter-group::before {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 0;
+  width: 1px;
+  background: rgba(91, 69, 105, 0.2);
+  content: "";
+}
+
+.gallery-filter-dock .series-filter-button,
+.collector-filter-dock .series-filter-button {
+  color: #68576f;
+}
+
+.gallery-filter-dock .series-filter-button::after,
+.collector-filter-dock .series-filter-button::after {
+  background: #68576f;
+}
+
+.gallery-filter-dock .series-filter-button:hover,
+.gallery-filter-dock .series-filter-button.active,
+.collector-filter-dock .series-filter-button:hover,
+.collector-filter-dock .series-filter-button.active {
+  color: #4e3d57;
+}
+
+@media (max-width: 767px) {
+  .gallery-filter-dock,
+  .collector-filter-dock {
+    padding: 14px 0 10px;
+  }
+
+  .discovery-primary {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .discovery-primary .artwork-search-control {
+    flex-basis: 44px;
+    width: 100%;
+    max-width: none;
+  }
+
+  .discovery-primary .gallery-filter-actions,
+  .discovery-primary .shop-filter-actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .gallery-filter-dock .gallery-filter-rail.filter-section,
+  .collector-filter-dock .shop-filter-rail.filter-section {
+    margin-top: 12px;
+    padding-top: 6px;
+  }
+
+  .gallery-filter-scroll,
+  .shop-filter-scroll {
+    gap: 22px;
+    margin-right: -12px;
+    padding: 0 12px 2px 0;
+  }
+
+  .discovery-filter-group,
+  .gallery-filter-dock #category-buttons,
+  .collector-filter-dock #category-filter-buttons,
+  .series-filter-buttons {
+    width: auto;
+    gap: 18px;
+  }
+
+  .gallery-filter-dock .gallery-filter-button,
+  .collector-filter-dock .shop-filter-button {
+    flex: 0 0 auto;
+    width: auto;
+    min-width: max-content;
+    margin-bottom: 0;
+  }
+
+  .series-filter-group {
+    padding-left: 23px;
+  }
+}

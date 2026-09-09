@@ -131,7 +131,7 @@ test('gallery discovery controls and featured works use an accessible editorial 
   assert.match(galleryHtml, /js\/artwork-discovery\.js/);
   assert.match(galleryJs, /getPopulatedCategories/);
   assert.match(galleryJs, /filterArtworks/);
-  assert.match(galleryJs, /currentCategory === 'all' && !currentGallerySearch\.trim\(\)/);
+  assert.match(galleryJs, /currentCategory === 'all' && !currentSeries && !currentGallerySearch\.trim\(\)/);
   assert.match(galleryJs, /gallery-featured-mark/);
   assert.match(galleryJs, /is-featured/);
   assert.match(css, /\.gallery-artwork-card\.is-featured/);
@@ -154,4 +154,19 @@ test('series artworks keep the gallery layout while receiving restrained series 
   assert.match(css, /\.gallery-artwork-card\.is-series\s+\.gallery-card-surface/);
   assert.match(css, /\.gallery-series-label/);
   assert.match(css, /\.artwork-series-context/);
+});
+
+test('gallery discovery separates primary tools from a horizontally scrollable series filter rail', () => {
+  const galleryHtml = read('gallery.html');
+  const galleryJs = read('js/gallery.js');
+  const css = read('style.css');
+
+  assert.match(galleryHtml, /gallery-discovery-primary/);
+  assert.match(galleryHtml, /id="gallery-series-filters"/);
+  assert.match(galleryHtml, /gallery-filter-scroll/);
+  assert.match(galleryJs, /getPopulatedSeries/);
+  assert.match(galleryJs, /filterBySeries/);
+  assert.match(galleryJs, /seriesName:\s*currentSeries/);
+  assert.match(galleryJs, /currentCategory === 'all' && !currentSeries && !currentGallerySearch\.trim\(\)/);
+  assert.match(css, /\.gallery-filter-scroll[\s\S]*overflow-x:\s*auto/);
 });

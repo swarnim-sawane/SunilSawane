@@ -54,6 +54,37 @@ test('normalizes optional series names without assigning a series to ordinary ar
   assert.equal(discovery.isSeriesArtwork(artworks[1]), false);
 });
 
+test('discovers populated series and filters an exact series alongside search', () => {
+  const catalogue = [
+    ...artworks,
+    {
+      id: 3,
+      title: 'Wild Kin',
+      Description: 'A shared breath between figure and forest.',
+      seriesName: 'Garden of Kinship',
+      category: { slug: 'pen-ink', Name: 'Pen & Ink' },
+    },
+    {
+      id: 4,
+      title: 'Other Breath',
+      seriesName: 'All That Breathes',
+      category: { slug: 'pen-ink', Name: 'Pen & Ink' },
+    },
+  ];
+
+  assert.deepEqual(discovery.getPopulatedSeries(catalogue), [
+    { name: 'Garden of Kinship', count: 2 },
+    { name: 'All That Breathes', count: 1 },
+  ]);
+  assert.deepEqual(
+    discovery.filterArtworks(catalogue, {
+      seriesName: 'garden of kinship',
+      query: 'wild',
+    }).map((art) => art.id),
+    [3]
+  );
+});
+
 test('combines category and search filters without mutating the catalogue', () => {
   const original = [...artworks];
   const result = discovery.filterArtworks(artworks, {

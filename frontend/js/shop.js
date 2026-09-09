@@ -2,6 +2,7 @@
 let allProducts = [];
 let filteredProducts = [];
 let currentFilter = 'all';
+let currentSeriesFilter = '';
 let currentShopSearch = '';
 let likedArtworks = [];
 const WISHLIST_STORAGE_KEY = 'sunilSawaneLikedArtworks';
@@ -39,6 +40,7 @@ async function initShop() {
         filteredProducts = [...allProducts];
 
         loadCategoryFilters(shopDiscovery.getPopulatedCategories(categories, allProducts));
+        loadSeriesFilters(shopDiscovery.getPopulatedSeries(allProducts));
         applyShopFilters();
         updateResultCount();
         hideLoading();
@@ -193,7 +195,11 @@ function loadCategoryFilters(categories) {
 
         const button = $('<button>')
             .addClass('btn shop-filter-button')
-            .attr('id', `filter-${categorySlug}`)
+            .attr({
+                id: `filter-${categorySlug}`,
+                type: 'button',
+                'aria-pressed': 'false'
+            })
             .append(
                 $('<span>').text(categoryName),
                 $('<span>').addClass('shop-filter-count').text(productCount)
@@ -433,11 +439,59 @@ function getProductImageUrl(product) {
 
 function filterShop(categorySlug) {
     currentFilter = categorySlug;
+    currentSeriesFilter = '';
 
     // Update active button
-    $('.category-buttons .btn').removeClass('active');
+    $('.shop-filter-button').removeClass('active').attr('aria-pressed', 'false');
     const activeButton = document.getElementById(`filter-${categorySlug}`);
-    if (activeButton) activeButton.classList.add('active');
+    if (activeButton) {
+        activeButton.classList.add('active');
+        activeButton.setAttribute('aria-pressed', 'true');
+    }
+
+    applyShopFilters();
+}
+
+function loadSeriesFilters(series) {
+    const group = document.getElementById('shop-series-filter-group');
+    const container = $('#shop-series-filters');
+    container.empty();
+
+    if (!group || !series.length) {
+        if (group) group.hidden = true;
+        return;
+    }
+
+    group.hidden = false;
+    series.forEach((entry, index) => {
+        const button = $('<button>')
+            .addClass('btn shop-filter-button series-filter-button')
+            .attr({
+                id: `shop-series-${index}`,
+                type: 'button',
+                'aria-pressed': 'false'
+            })
+            .append(
+                $('<span>').text(entry.name),
+                $('<span>').addClass('shop-filter-count').text(entry.count)
+            )
+            .on('click', function () {
+                filterShopBySeries(entry.name, this);
+            });
+
+        container.append(button);
+    });
+}
+
+function filterShopBySeries(seriesName, button) {
+    currentFilter = 'all';
+    currentSeriesFilter = seriesName;
+
+    $('.shop-filter-button').removeClass('active').attr('aria-pressed', 'false');
+    if (button) {
+        button.classList.add('active');
+        button.setAttribute('aria-pressed', 'true');
+    }
 
     applyShopFilters();
 }
@@ -527,6 +581,7 @@ function initShopSortMenu() {
 function applyShopFilters() {
     filteredProducts = shopDiscovery.filterArtworks(allProducts, {
         categorySlug: currentFilter,
+        seriesName: currentSeriesFilter,
         query: currentShopSearch,
     });
     sortArtworks();

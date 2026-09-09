@@ -147,6 +147,20 @@ test('shop discovery controls provide search and an enhanced accessible sort men
   assert.match(css, /\.shop-sort-option\[aria-selected="true"\]/);
 });
 
+test('shop discovery uses a clean two-row layout with a populated series filter', () => {
+  const shopHtml = read('shop.html');
+  const shopJs = read('js/shop.js');
+  const css = read('style.css');
+
+  assert.match(shopHtml, /shop-discovery-primary/);
+  assert.match(shopHtml, /id="shop-series-filters"/);
+  assert.match(shopHtml, /shop-filter-scroll/);
+  assert.match(shopJs, /getPopulatedSeries/);
+  assert.match(shopJs, /filterShopBySeries/);
+  assert.match(shopJs, /seriesName:\s*currentSeriesFilter/);
+  assert.match(css, /\.shop-filter-scroll[\s\S]*overflow-x:\s*auto/);
+});
+
 test('shop and cart scripts do not redeclare the availability helper globally', () => {
   const shopJs = read('js/shop.js');
   const cartJs = read('js/cart.js');

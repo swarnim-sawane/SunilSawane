@@ -12,7 +12,7 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="style.css?v=series-20260909b">
+  <link rel="stylesheet" type="text/css" href="style.css?v=series-filter-20260909a">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -195,29 +195,39 @@
 
       <!-- Filters -->
       <div class="gallery-filter-dock">
-        <div class="artwork-search-control gallery-search-control">
-          <svg width="20" height="20" aria-hidden="true">
-            <use xlink:href="#search"></use>
-          </svg>
-          <label for="gallery-search" class="visually-hidden">Search artworks</label>
-          <input id="gallery-search" type="search" autocomplete="off" aria-label="Search artworks"
-            placeholder="Search title, medium or subject">
-          <button type="button" class="artwork-search-clear" id="gallery-search-clear"
-            aria-label="Clear artwork search" hidden>
-            <svg width="14" height="14" aria-hidden="true"><use xlink:href="#close"></use></svg>
-          </button>
-        </div>
-        <div class="filter-section gallery-filter-rail">
-          <h5 class="visually-hidden">Filter artworks by category</h5>
-          <div class="category-buttons">
-            <button class="btn gallery-filter-button active" id="btn-all" onclick="filterByCategory('all')">
-              All Artworks
+        <div class="discovery-primary gallery-discovery-primary">
+          <div class="artwork-search-control gallery-search-control">
+            <svg width="20" height="20" aria-hidden="true">
+              <use xlink:href="#search"></use>
+            </svg>
+            <label for="gallery-search" class="visually-hidden">Search artworks</label>
+            <input id="gallery-search" type="search" autocomplete="off" aria-label="Search artworks"
+              placeholder="Search title, medium or subject">
+            <button type="button" class="artwork-search-clear" id="gallery-search-clear"
+              aria-label="Clear artwork search" hidden>
+              <svg width="14" height="14" aria-hidden="true"><use xlink:href="#close"></use></svg>
             </button>
-            <span id="category-buttons"></span>
+          </div>
+          <div class="gallery-filter-actions">
+            <span id="gallery-result-count" class="gallery-result-count" aria-live="polite">Loading works...</span>
           </div>
         </div>
-        <div class="gallery-filter-actions">
-          <span id="gallery-result-count" class="gallery-result-count" aria-live="polite">Loading works...</span>
+        <div class="filter-section gallery-filter-rail">
+          <h5 class="visually-hidden">Filter artworks by category or series</h5>
+          <div class="gallery-filter-scroll" tabindex="0" aria-label="Artwork filters">
+            <div class="discovery-filter-group category-buttons">
+              <span class="discovery-filter-label" aria-hidden="true">Browse</span>
+              <button class="btn gallery-filter-button active" id="btn-all" onclick="filterByCategory('all')"
+                type="button" aria-pressed="true">
+                All Artworks
+              </button>
+              <span id="category-buttons"></span>
+            </div>
+            <div class="discovery-filter-group series-filter-group" id="gallery-series-filter-group" hidden>
+              <span class="discovery-filter-label">Series</span>
+              <span id="gallery-series-filters" class="series-filter-buttons"></span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -313,8 +323,8 @@
   <script src="js/dom-utils.js?v=gallery-editorial-20260608a"></script>
   <script src="js/api.js?v=gallery-editorial-20260608a"></script>
   <script src="js/artwork-availability.js?v=availability-20260908a"></script>
-  <script src="js/artwork-discovery.js?v=series-20260909b"></script>
-  <script src="js/gallery.js?v=series-20260909b"></script>
+  <script src="js/artwork-discovery.js?v=series-filter-20260909a"></script>
+  <script src="js/gallery.js?v=series-filter-20260909a"></script>
 
 </body>
 
