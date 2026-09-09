@@ -285,3 +285,61 @@ test('strapi build includes JavaScript helpers required by compiled controllers'
   assert.match(orderController, /require\('\.\.\/utils\/order-email'\)/);
   assert.ok(fs.existsSync(path.join(backendRoot, 'src', 'api', 'order', 'utils', 'order-email.js')));
 });
+
+test('artwork price migration updates every record once and preserves rollback values', async () => {
+  const {
+    MIGRATION_KEY,
+    TARGET_PRICE,
+    migrateArtworkPrices,
+  } = require('../src/utils/artwork-price-migration');
+  const records = [
+    { id: 1, documentId: 'artwork-one', price: 5000 },
+    { id: 2, documentId: 'artwork-two', price: '6500' },
+  ];
+  let migrationState = null;
+  let updateCalls = 0;
+  const strapi = {
+    store(options) {
+      assert.equal(options.key, MIGRATION_KEY);
+      return {
+        async get() {
+          return migrationState;
+        },
+        async set({ value }) {
+          migrationState = value;
+        },
+      };
+    },
+    db: {
+      query(uid) {
+        assert.equal(uid, 'api::artwork.artwork');
+        return {
+          async findMany() {
+            return records.map((record) => ({ ...record }));
+          },
+          async updateMany({ data }) {
+            updateCalls += 1;
+            records.forEach((record) => {
+              record.price = data.price;
+            });
+            return { count: records.length };
+          },
+        };
+      },
+    },
+    log: { info() {} },
+  };
+
+  const first = await migrateArtworkPrices(strapi);
+  assert.equal(first.status, 'completed');
+  assert.equal(first.updatedCount, 2);
+  assert.deepEqual(records.map((record) => record.price), [TARGET_PRICE, TARGET_PRICE]);
+  assert.deepEqual(first.previousPrices, [
+    { id: 1, documentId: 'artwork-one', price: 5000 },
+    { id: 2, documentId: 'artwork-two', price: '6500' },
+  ]);
+
+  const second = await migrateArtworkPrices(strapi);
+  assert.equal(second.skipped, true);
+  assert.equal(updateCalls, 1);
+});
