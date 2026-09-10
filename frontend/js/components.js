@@ -24,7 +24,7 @@
                 <nav id="header-nav" class="navbar navbar-expand-lg px-3 mb-3">
                     <div class="container-fluid">
                         <a class="navbar-brand" href="index.html">
-                            <img src="images/main-logo.png" class="logo" alt="Sunil Sawane Art Gallery">
+                            <img src="images/main-logo.png?v=20260909-hd" class="logo" alt="Sunil Sawane Art Gallery">
                         </a>
                         
                         <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" 
@@ -39,7 +39,7 @@
                              aria-labelledby="bdNavbarOffcanvasLabel">
                             <div class="offcanvas-header px-4 pb-0">
                                 <a class="navbar-brand" href="index.html">
-                                    <img src="images/main-logo.png" class="logo" alt="Sunil Sawane">
+                                    <img src="images/main-logo.png?v=20260909-hd" class="logo" alt="Sunil Sawane">
                                 </a>
                                 <button type="button" class="btn-close btn-close-black" 
                                         data-bs-dismiss="offcanvas" aria-label="Close" 
@@ -89,7 +89,7 @@
                     <div class="gallery-footer-grid">
                         <div class="footer-brand-panel">
                             <a class="footer-logo-link" href="index.html" aria-label="Sunil Sawane Art Gallery home">
-                                <img src="images/main-logo.png" alt="Sunil A. Sawane" class="footer-logo">
+                                <img src="images/main-logo.png?v=20260909-hd" alt="Sunil A. Sawane" class="footer-logo">
                             </a>
                             <p class="footer-brand-note">Original pen, ink, and color works by Sunil A. Sawane, curated for collectors and art lovers.</p>
                             <a class="footer-primary-link" href="gallery.html">View Gallery</a>

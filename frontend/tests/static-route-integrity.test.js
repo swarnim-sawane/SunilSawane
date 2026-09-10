@@ -59,3 +59,17 @@ test('Vercel publishes the static frontend directory', () => {
   assert.equal(vercelConfig.outputDirectory, 'frontend');
   assert.equal(vercelConfig.framework, null);
 });
+
+test('every static route publishes the branded favicon assets', () => {
+  const pngPath = path.join(frontendRoot, 'favicon.png');
+  const icoPath = path.join(frontendRoot, 'favicon.ico');
+
+  assert.ok(fs.statSync(pngPath).size > 1000, 'favicon.png should contain the branded source');
+  assert.ok(fs.statSync(icoPath).size > 1000, 'favicon.ico should contain the browser icon');
+
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(path.join(frontendRoot, file), 'utf8');
+    assert.match(html, /rel="icon"[^>]+href="favicon\.png\?v=20260910a"/, `${file} should declare favicon.png`);
+    assert.match(html, /rel="alternate icon"[^>]+href="favicon\.ico\?v=20260910a"/, `${file} should declare favicon.ico`);
+  }
+});
