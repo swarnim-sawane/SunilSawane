@@ -480,6 +480,10 @@ export interface ApiArtworkArtwork extends Struct.CollectionTypeSchema {
     orders: Schema.Attribute.Relation<'manyToMany', 'api::order.order'>;
     price: Schema.Attribute.Decimal;
     publishedAt: Schema.Attribute.DateTime;
+    seriesName: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 80;
+      }>;
     shippingNote: Schema.Attribute.Text;
     slug: Schema.Attribute.UID<'title'>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
