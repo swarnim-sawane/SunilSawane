@@ -296,7 +296,8 @@ test('checkout page carries collector assurance details before payment', () => {
   assert.match(checkoutHtml, /checkout-payment-panel/);
   assert.match(checkoutHtml, /checkout-assurance-panel/);
   assert.match(checkoutHtml, /Collector assurance/);
-  assert.match(configJs, /https:\/\/p01--gallery-cms--j8lsdfx9pj57\.code\.run\/api/);
+  assert.match(configJs, /https:\/\/api\.sunilsawane\.com\/api/);
+  assert.doesNotMatch(configJs, /\.code\.run\/api/);
   assert.doesNotMatch(configJs, /growing-approval-51840080fc\.strapiapp\.com/);
   assert.match(checkoutHtml, /Securely packed for shipping/);
   assert.match(checkoutHtml, /Certificate of authenticity/);
@@ -304,7 +305,7 @@ test('checkout page carries collector assurance details before payment', () => {
   assert.match(checkoutHtml, /id="shipping-fast"/);
   assert.match(checkoutHtml, /id="gift"/);
   assert.match(checkoutHtml, /id="return"/);
-  assert.match(checkoutHtml, /js\/config\.js\?v=local-api-20260610/);
+  assert.match(checkoutHtml, /js\/config\.js\?v=api-domain-20260912/);
   assert.match(checkoutHtml, /js\/checkout\.js\?v=collector-flow-20260611a/);
   assert.doesNotMatch(checkoutHtml, /list-group mt-3 mb-4/);
   assert.doesNotMatch(checkoutHtml, /class="cart-totals bg-grey padding-medium"/);
