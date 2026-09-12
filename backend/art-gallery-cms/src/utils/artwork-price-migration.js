@@ -3,9 +3,9 @@
 const ARTWORK_UID = 'api::artwork.artwork';
 const MIGRATION_KEY = 'artwork-price-7999-v1';
 const TARGET_PRICE = 7999;
-const TIER_MIGRATION_KEY = 'artwork-featured-price-10000-v1';
+const TIER_MIGRATION_KEY = 'artwork-featured-price-9999-v2';
 const STANDARD_PRICE = TARGET_PRICE;
-const FEATURED_PRICE = 10000;
+const FEATURED_PRICE = 9999;
 
 function getMigrationStore(strapi) {
   return strapi.store({

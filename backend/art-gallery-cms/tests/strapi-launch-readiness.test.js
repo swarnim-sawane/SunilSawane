@@ -346,13 +346,15 @@ test('artwork price migration updates every record once and preserves rollback v
   assert.equal(updateCalls, 1);
 });
 
-test('artwork tier migration prices featured works at 10000 and all others at 7999 once', async () => {
+test('artwork tier migration prices featured works at 9999 and all others at 7999 once', async () => {
   const {
     FEATURED_PRICE,
     STANDARD_PRICE,
     TIER_MIGRATION_KEY,
     migrateArtworkTierPrices,
   } = require('../src/utils/artwork-price-migration');
+  assert.equal(FEATURED_PRICE, 9999);
+  assert.equal(TIER_MIGRATION_KEY, 'artwork-featured-price-9999-v2');
   const records = [
     { id: 1, documentId: 'featured-one', price: 7999, isFeatured: true },
     { id: 2, documentId: 'standard-one', price: 5000, isFeatured: false },
@@ -405,7 +407,7 @@ test('artwork lifecycle keeps prices aligned when the featured flag changes', ()
 
   const featuredCreate = { params: { data: { title: 'Featured', isFeatured: true, price: 7999 } } };
   lifecycle.beforeCreate(featuredCreate);
-  assert.equal(featuredCreate.params.data.price, 10000);
+  assert.equal(featuredCreate.params.data.price, 9999);
 
   const standardCreate = { params: { data: { title: 'Standard' } } };
   lifecycle.beforeCreate(standardCreate);
@@ -413,7 +415,7 @@ test('artwork lifecycle keeps prices aligned when the featured flag changes', ()
 
   const featureToggle = { params: { data: { isFeatured: true } } };
   lifecycle.beforeUpdate(featureToggle);
-  assert.equal(featureToggle.params.data.price, 10000);
+  assert.equal(featureToggle.params.data.price, 9999);
 
   const unrelatedUpdate = { params: { data: { title: 'Renamed' } } };
   lifecycle.beforeUpdate(unrelatedUpdate);
